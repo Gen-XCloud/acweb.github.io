@@ -1,0 +1,30 @@
+/**
+ * PostContentEditor 移动端样式
+ */
+
+@import '../common/variables.scss';
+
+/* ========== 编辑器容器 ========== */
+.editor-wrapper {
+  width: 100%;
+  min-width: 0;
+}
+
+/* ========== 移动端折叠面板 ========== */
+.mobile-content-collapse {
+  margin-top: $spacing-base;
+  border: none;
+  background: $background-color-base;
+
+  :deep(.el-collapse-item__header) {
+    background: white;
+    padding: 0 $spacing-base;
+    font-weight: 500;
+    border-bottom: 1px solid $border-color-light;
+  }
+
+  :deep(.el-collapse-item__content) {
+    padding: $spacing-base;
+    background: white;
+  }
+}

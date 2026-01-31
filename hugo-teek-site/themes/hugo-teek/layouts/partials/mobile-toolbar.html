@@ -1,0 +1,25 @@
+{{/* Mobile Toolbar - 移动端顶部工具栏 */}}
+<div class="mobile-toolbar">
+  <div class="mobile-toolbar__container">
+    {{/* 左侧菜单按钮 */}}
+    <button class="mobile-toolbar__btn mobile-toolbar__btn--menu" id="mobile-toolbar-menu-btn" aria-label="打开菜单" title="菜单">
+      <svg class="toolbar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <span class="toolbar-label">菜单</span>
+    </button>
+
+    {{/* 右侧本页导航按钮 - 始终显示 */}}
+    <button class="mobile-toolbar__btn mobile-toolbar__btn--toc" id="mobile-toolbar-toc-btn" aria-label="打开本页导航" title="本页导航">
+      <span class="toolbar-label">本页导航</span>
+      <svg class="toolbar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  {{/* 遮罩层 - 点击关闭弹层 */}}
+  <div class="mobile-toolbar-overlay" id="mobile-toolbar-overlay"></div>
+</div>

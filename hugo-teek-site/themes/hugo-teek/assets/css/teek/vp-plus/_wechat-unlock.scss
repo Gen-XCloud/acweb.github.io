@@ -1,0 +1,407 @@
+// ========================================
+// 公众号解锁功能样式 (WeChat Unlock Styles)
+// ========================================
+
+// ============ 默认隐藏解锁门后的内容（防止闪烁）============
+// 只有在未解锁状态下才隐藏内容
+html:not(.wechat-unlocked) .wechat-unlock-gate ~ * {
+  display: none;
+}
+
+// ============ 已解锁状态：隐藏解锁门 ============
+html.wechat-unlocked .wechat-unlock-gate {
+  display: none;
+}
+
+// ============ 解锁门 - 简洁按钮样式 ============
+.wechat-unlock-gate {
+  margin: 2rem 0;
+  text-align: center;
+
+  .unlock-card-simple {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+    background: transparent;
+    border: none;
+  }
+
+  .unlock-button-simple {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--vp-c-text-1);
+    background: var(--vp-c-bg-soft);
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--vp-c-bg-mute);
+      border-color: var(--vp-c-brand-1);
+      color: var(--vp-c-brand-1);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    .button-icon-lock {
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+
+    .button-text {
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+  }
+
+  .unlock-hint {
+    display: none; // 隐藏提示文字
+  }
+
+  // 加载和错误状态
+  .unlock-loading,
+  .unlock-error {
+    padding: 2rem;
+    text-align: center;
+    color: var(--vp-c-text-2);
+  }
+
+  .unlock-error {
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1.5rem;
+      background: var(--vp-c-brand-1);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+// ============ 解锁弹窗（简洁版）============
+.wechat-unlock-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: modalFadeIn 0.3s ease;
+
+  .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 420px;
+    background: var(--vp-c-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 2.5rem 2rem;
+    animation: modalSlideUp 0.3s ease;
+    text-align: center;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--vp-c-text-3);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+      color: var(--vp-c-text-1);
+      transform: rotate(90deg);
+    }
+  }
+
+  .modal-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--vp-c-text-1);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+
+    .highlight {
+      color: var(--vp-c-brand-1);
+      font-weight: 600;
+    }
+  }
+
+  .modal-subtitle {
+    font-size: 0.95rem;
+    color: var(--vp-c-text-2);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.5;
+
+    .keyword {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: var(--vp-c-brand-soft);
+      color: var(--vp-c-brand-1);
+      border-radius: 4px;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+      margin: 0 0.25rem;
+    }
+  }
+
+  .modal-description {
+    font-size: 0.9rem;
+    color: var(--vp-c-brand-1);
+    margin: 0 0 1.5rem 0;
+    font-weight: 500;
+  }
+
+  // ============ 二维码 ============
+  .qrcode-container {
+    display: inline-block;
+    padding: 1.25rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    margin: 0 0 1.5rem 0;
+
+    .qrcode-image {
+      display: block;
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+    }
+  }
+
+  // ============ 验证码输入 ============
+  .code-input-container {
+    margin: 0 0 1rem 0;
+  }
+
+  .unlock-code-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 3px;
+    text-align: center;
+    text-transform: uppercase;
+    border: 2px solid var(--vp-c-divider);
+    border-radius: 8px;
+    background: var(--vp-c-bg-soft);
+    color: var(--vp-c-text-1);
+    outline: none;
+    transition: all 0.2s ease;
+
+    &:focus {
+      border-color: var(--vp-c-brand-1);
+      box-shadow: 0 0 0 3px var(--vp-c-brand-soft);
+    }
+
+    &::placeholder {
+      color: var(--vp-c-text-3);
+      letter-spacing: normal;
+      font-size: 0.9rem;
+    }
+  }
+
+  .error-message {
+    display: none;
+    margin: 0.75rem 0;
+    padding: 0.75rem;
+    background: var(--vp-c-danger-soft);
+    border-left: 3px solid var(--vp-c-danger-1);
+    border-radius: 4px;
+    color: var(--vp-c-danger-1);
+    font-size: 0.9rem;
+  }
+
+  .remaining-attempts {
+    display: none;
+    margin: 0.5rem 0;
+    font-size: 0.85rem;
+    color: var(--vp-c-warning-1);
+    text-align: center;
+  }
+
+  .unlock-submit-btn {
+    width: 100%;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #07c160 0%, #06ae56 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(7, 193, 96, 0.35);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .modal-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--vp-c-divider);
+    font-size: 0.8rem;
+    color: var(--vp-c-text-3);
+  }
+}
+
+// ============ 动画 ============
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============ 响应式设计 ============
+@media (max-width: 768px) {
+  .wechat-unlock-gate {
+    padding: 1.5rem;
+    margin: 2rem 0;
+
+    .unlock-title {
+      font-size: 1.25rem;
+    }
+
+    .unlock-desc {
+      font-size: 0.9rem;
+    }
+
+    .unlock-button {
+      padding: 0.625rem 1.5rem;
+      font-size: 0.95rem;
+    }
+  }
+
+  .wechat-unlock-modal {
+    .modal-content {
+      width: 95%;
+      padding: 1.5rem;
+      max-height: 95vh;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-steps {
+      gap: 1.5rem;
+    }
+
+    .step {
+      flex-direction: column;
+      gap: 0.75rem;
+
+      .step-number {
+        margin: 0 auto;
+      }
+
+      .step-content {
+        text-align: center;
+
+        h3 {
+          font-size: 1rem;
+        }
+
+        p {
+          font-size: 0.85rem;
+        }
+      }
+    }
+
+    .qrcode-container {
+      .qrcode-image {
+        width: 160px;
+        height: 160px;
+      }
+    }
+
+    .keyword-box {
+      font-size: 1rem;
+      padding: 0.625rem 1.25rem;
+    }
+
+    .unlock-code-input {
+      font-size: 1rem;
+      letter-spacing: 3px;
+    }
+  }
+}
+
+// ============ 深色模式适配 ============
+html.dark {
+  .wechat-unlock-gate {
+    background: linear-gradient(135deg, var(--vp-c-bg-soft) 0%, var(--vp-c-bg-mute) 100%);
+  }
+
+  .wechat-unlock-modal {
+    .modal-overlay {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .qrcode-container {
+      background: #fff; // 二维码背景保持白色
+    }
+  }
+}

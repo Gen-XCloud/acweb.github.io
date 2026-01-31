@@ -1,0 +1,55 @@
+{{/* Mobile TOC Drawer - 移动端本页大纲抽屉（从右侧滑出） */}}
+<div class="mobile-toc-drawer" id="mobile-toc-drawer">
+  <div class="mobile-toc-drawer__container">
+    {{/* 标题 */}}
+    <div class="mobile-toc-drawer__header">
+      <h2 class="drawer-title">本页导航</h2>
+      <button class="drawer-close" id="mobile-toc-close" aria-label="关闭大纲">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    {{/* TOC 内容 - 根据是否有TOC显示不同内容 */}}
+    <div class="mobile-toc-drawer__content">
+      {{- with .TableOfContents }}
+        {{- if in . "<li" }}
+          {{- /* 有TOC：显示目录列表 */ -}}
+          {{- $toc := . -}}
+          {{- $toc = replace $toc "<nav id=\"TableOfContents\">" "" -}}
+          {{- $toc = replace $toc "</nav>" "" -}}
+          {{- $toc = replace $toc "<ul>" "<ul class=\"mobile-toc-list\">" -}}
+          {{- $toc = replace $toc "<li>" "<li class=\"mobile-toc-item\">" -}}
+          {{- $toc = replace $toc "<a href" "<a class=\"mobile-toc-link\" href" -}}
+          {{- $toc | safeHTML }}
+        {{- else }}
+          {{- /* 无TOC：显示空状态提示 */ -}}
+          <div class="mobile-toc-empty">
+            <svg class="mobile-toc-empty__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="12" y1="18" x2="12" y2="12"></line>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+            <p class="mobile-toc-empty__text">本页暂无大纲内容</p>
+            <p class="mobile-toc-empty__hint">文章需要包含标题才能生成目录</p>
+          </div>
+        {{- end }}
+      {{- else }}
+        {{- /* TableOfContents完全为空 */ -}}
+        <div class="mobile-toc-empty">
+          <svg class="mobile-toc-empty__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <line x1="9" y1="15" x2="15" y2="15"></line>
+          </svg>
+          <p class="mobile-toc-empty__text">本页暂无大纲内容</p>
+          <p class="mobile-toc-empty__hint">文章需要包含标题才能生成目录</p>
+        </div>
+      {{- end }}
+    </div>
+  </div>
+</div>

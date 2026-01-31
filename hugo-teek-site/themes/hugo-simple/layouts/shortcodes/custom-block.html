@@ -1,0 +1,37 @@
+{{- $type := .Get "type" | default "info" | lower -}}
+{{- $title := .Get "title" | default "" -}}
+{{- $collapsed := .Get "collapsed" | default "false" -}}
+
+{{- $definitions := dict
+  "info" (dict "title" "信息")
+  "note" (dict "title" "NOTE")
+  "tip" (dict "title" "提示")
+  "warning" (dict "title" "警告")
+  "danger" (dict "title" "危险")
+  "important" (dict "title" "IMPORTANT")
+  "caution" (dict "title" "CAUTION")
+  "details" (dict "title" "详情")
+-}}
+
+{{- $definition := index $definitions $type -}}
+{{- $displayTitle := $title -}}
+{{- if and (not $title) $definition -}}
+  {{- $displayTitle = $definition.title -}}
+{{- end -}}
+
+<div class="custom-block {{ $type }}" {{ if eq $type "details" }}data-collapsed="{{ $collapsed }}"{{ end }}>
+  <p class="title custom-block-title">{{ $displayTitle }}</p>
+  {{- if eq $type "details" -}}
+    <div class="custom-block-content">
+      {{- $inner := .Inner -}}
+      {{- /* 将单个换行转换为 Markdown 硬换行（行尾两个空格） */ -}}
+      {{- $inner = replaceRE "([^\n])\n([^\n])" "$1  \n$2" $inner -}}
+      {{- $inner | markdownify -}}
+    </div>
+  {{- else -}}
+    {{- $inner := .Inner -}}
+    {{- /* 将单个换行转换为 Markdown 硬换行（行尾两个空格） */ -}}
+    {{- $inner = replaceRE "([^\n])\n([^\n])" "$1  \n$2" $inner -}}
+    {{- $inner | markdownify -}}
+  {{- end -}}
+</div>

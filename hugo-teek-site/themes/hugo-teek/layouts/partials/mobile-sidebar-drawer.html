@@ -1,0 +1,20 @@
+{{/* Mobile Sidebar Drawer - 移动端文档导航抽屉（从左侧滑出） */}}
+<div class="mobile-sidebar-drawer" id="mobile-sidebar-drawer">
+  <div class="mobile-sidebar-drawer__container">
+    {{/* 标题 */}}
+    <div class="mobile-sidebar-drawer__header">
+      <h2 class="drawer-title">文档导航</h2>
+      <button class="drawer-close" id="mobile-sidebar-close" aria-label="关闭导航">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    {{/* 侧边栏内容（使用simple-sidebar系统） */}}
+    <div class="mobile-sidebar-drawer__content">
+      {{ partial "simple-sidebar-container.html" (dict "context" .context "categorySlug" .categorySlug "isMobile" true) }}
+    </div>
+  </div>
+</div>

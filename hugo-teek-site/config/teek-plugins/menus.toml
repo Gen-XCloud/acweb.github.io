@@ -1,0 +1,280 @@
+# ========================================
+# 菜单配置文件 (Menu Configuration)
+# ========================================
+# 通用菜单配置，所有主题共用
+# 由 Hugo Teek Admin 管理后台维护
+# ========================================
+
+[[main]]
+  name = "🏡 首页"
+  url = "/"
+  weight = 1.0
+
+[[main]]
+  identifier = "tech"
+  name = "📚 技术分类"
+  url = "#"
+  weight = 2.0
+
+[[main]]
+  name = "🖥️ 运维"
+  parent = "tech"
+  url = "/linux/"
+  weight = 3.0
+  [main.params]
+    icon = "monitor"
+
+[[main]]
+  name = "🎨 前端"
+  parent = "tech"
+  url = "/frontend/"
+  weight = 4.0
+  [main.params]
+    icon = "code"
+
+[[main]]
+  name = "💻 编程"
+  parent = "tech"
+  url = "/code/"
+  weight = 5.0
+  [main.params]
+    icon = "code-slash"
+
+[[main]]
+  name = "🔐 黑客"
+  parent = "tech"
+  url = "/hacker/"
+  weight = 6.0
+  [main.params]
+    icon = "shield"
+
+[[main]]
+  identifier = "topics"
+  name = "🛠️ 专题"
+  url = "#"
+  weight = 7.0
+
+[[main]]
+  name = "📝 博客搭建"
+  parent = "topics"
+  url = "/topic/"
+  weight = 8.0
+  [main.params]
+    icon = "book"
+
+[[main]]
+  name = "🎯 前端Demo"
+  parent = "topics"
+  url = "/topic/qianduan-demo/"
+  weight = 9.0
+  [main.params]
+    icon = "layout"
+
+[[main]]
+  name = "🔧 Git"
+  parent = "topics"
+  url = "/topic/git/"
+  weight = 10.0
+  [main.params]
+    icon = "git-branch"
+
+[[main]]
+  name = "💼 面试"
+  parent = "topics"
+  url = "/topic/mianshi/"
+  weight = 11.0
+  [main.params]
+    icon = "briefcase"
+
+[[main]]
+  name = "🗄️ NAS"
+  parent = "topics"
+  url = "/topic/nas/"
+  weight = 12.0
+  [main.params]
+    icon = "database"
+
+[[main]]
+  name = "📜 脚本"
+  parent = "topics"
+  url = "/topic/scripts/"
+  weight = 13.0
+  [main.params]
+    icon = "file-code"
+
+[[main]]
+  name = "🔨 工具"
+  parent = "topics"
+  url = "/tools/"
+  weight = 14.0
+  [main.params]
+    icon = "tool"
+
+[[main]]
+  name = "🌟 开源项目"
+  parent = "topics"
+  url = "/topic/opensource/"
+  weight = 15.0
+  [main.params]
+    icon = "github"
+
+[[main]]
+  identifier = "fun"
+  name = "🏓 娱乐"
+  url = "#"
+  weight = 16.0
+
+[[main]]
+  name = "📷 相册"
+  parent = "fun"
+  url = "/fun/photo/"
+  weight = 17.0
+  [main.params]
+    icon = "camera"
+
+[[main]]
+  name = "🎬 电影"
+  parent = "fun"
+  url = "/fun/movie/"
+  weight = 18.0
+  [main.params]
+    icon = "film"
+
+[[main]]
+  name = "🎵 音乐"
+  parent = "fun"
+  url = "/fun/music/"
+  weight = 19.0
+  [main.params]
+    icon = "music"
+
+[[main]]
+  identifier = "index"
+  name = "👏 索引"
+  url = "#"
+  weight = 20.0
+
+[[main]]
+  name = "📃 分类页"
+  parent = "index"
+  url = "/categories/"
+  weight = 22.0
+  [main.params]
+    icon = "folder"
+
+[[main]]
+  name = "🔖 标签页"
+  parent = "index"
+  url = "/tags/"
+  weight = 21.0
+  [main.params]
+    icon = "tag"
+
+[[main]]
+  name = "📚 归档页"
+  parent = "index"
+  url = "/archives/"
+  weight = 23.0
+  [main.params]
+    icon = "archive"
+
+[[main]]
+  name = "📋 清单页"
+  parent = "index"
+  url = "/articleOverview/"
+  weight = 24.0
+  [main.params]
+    icon = "list"
+
+[[main]]
+  identifier = "about"
+  name = "🍷 关于"
+  url = "#"
+  weight = 25.0
+
+[[main]]
+  name = "👋 关于我"
+  parent = "about"
+  url = "/about/me/"
+  weight = 26.0
+  [main.params]
+    icon = "user"
+
+[[main]]
+  name = "🎉 关于本站"
+  parent = "about"
+  url = "/about/website/"
+  weight = 27.0
+  [main.params]
+    icon = "info"
+
+[[main]]
+  name = "💖 友链"
+  parent = "about"
+  url = "/about/friend-links/"
+  weight = 28.0
+  [main.params]
+    icon = "link"
+
+[[main]]
+  name = "🌐 网站导航"
+  parent = "about"
+  url = "/about/websites/"
+  weight = 29.0
+  [main.params]
+    icon = "compass"
+
+[[main]]
+  name = "👂 留言区"
+  parent = "about"
+  url = "/about/liuyanqu/"
+  weight = 30.0
+  [main.params]
+    icon = "message"
+
+[[main]]
+  name = "💡 思考"
+  parent = "about"
+  url = "/about/thinking/"
+  weight = 31.0
+  [main.params]
+    icon = "lightbulb"
+
+[[main]]
+  name = "⏱️ 时间轴"
+  parent = "about"
+  url = "https://wiki.xxdevops.cn/"
+  weight = 32.0
+  [main.params]
+    icon = "clock"
+    external = true
+    target = "_blank"
+
+[[main]]
+  name = "📊 网站统计"
+  parent = "about"
+  url = "https://umami.xxdevops.cn/share/qccg5h22ZNjycizb/xxdevops.cn"
+  weight = 33.0
+  [main.params]
+    icon = "bar-chart"
+    external = true
+    target = "_blank"
+
+[[main]]
+  name = "🔍 站点监控"
+  parent = "about"
+  url = "https://status.xxdevops.cn/status/dashboard"
+  weight = 34.0
+  [main.params]
+    icon = "activity"
+    external = true
+    target = "_blank"
+
+[[main]]
+  name = "🙏 致谢名单"
+  parent = "about"
+  url = "/about/thanks/"
+  weight = 35.0
+  [main.params]
+    icon = "heart"
+

@@ -1,0 +1,73 @@
+<div class="tk-widget-card tk-hot-tags">
+  <div class="tk-widget-header">
+    <h3 class="tk-widget-title tk-widget-title-clickable" data-action="show-all-tags">
+      <svg class="tk-widget-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+        <line x1="7" y1="7" x2="7.01" y2="7"/>
+      </svg>
+      热门标签
+    </h3>
+  </div>
+
+  <div class="tk-carousel-container">
+    <div class="tk-tags-cloud">
+      {{/* 直接从 docAnalysis.json 读取全站标签统计 */}}
+      {{ $docAnalysis := .Site.Data.docAnalysis }}
+      {{ $sortedTags := $docAnalysis.tagStats | default slice }}
+
+      {{ $limit := .Site.Params.tag.limit | default 21 }}
+      {{ $tagColors := slice
+        (dict "border" "#bfdbfe" "bg" "#eff6ff" "text" "#1d4ed8")
+        (dict "border" "#e9d5ff" "bg" "#faf5ff" "text" "#7c3aed")
+        (dict "border" "#fbcfe8" "bg" "#fdf2f8" "text" "#be185d")
+        (dict "border" "#a7f3d0" "bg" "#ecfdf5" "text" "#047857")
+        (dict "border" "#fde68a" "bg" "#fffbeb" "text" "#b45309")
+        (dict "border" "#a5f3fc" "bg" "#ecfeff" "text" "#0e7490")
+        (dict "border" "#c7d2fe" "bg" "#eef2ff" "text" "#4338ca")
+      }}
+      {{ range $index, $tag := $sortedTags }}
+        {{ $colorIndex := mod $index (len $tagColors) }}
+        {{ $color := index $tagColors $colorIndex }}
+        <a href="#tag-{{ $tag.name | urlize }}"
+           class="tk-tag-item filter-tag{{ if ge $index $limit }} tk-tag-hidden{{ end }}"
+           data-tag="{{ $tag.name }}"
+           data-count="{{ $tag.count }}"
+           style="background: {{ $color.bg }}; color: {{ $color.text }}; border-color: {{ $color.border }};"
+           aria-label="{{ $tag.name }}">
+          <span>{{ $tag.name }}</span>
+          <span class="tk-tag-count">{{ $tag.count }}</span>
+        </a>
+      {{ end }}
+      {{ if gt (len $sortedTags) $limit }}
+      <button class="tk-tag-item tk-tag-more" onclick="toggleTags(this)">
+        更多 ...
+      </button>
+      {{ end }}
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTags(button) {
+  const container = button.closest('.tk-tags-cloud');
+  const hiddenItems = container.querySelectorAll('.tk-tag-hidden');
+  const isExpanded = button.classList.contains('tk-expanded');
+
+  if (isExpanded) {
+    hiddenItems.forEach(item => item.style.display = 'none');
+    button.textContent = '更多 ...';
+    button.classList.remove('tk-expanded');
+  } else {
+    hiddenItems.forEach(item => item.style.display = 'inline-flex');
+    button.textContent = '收起 ...';
+    button.classList.add('tk-expanded');
+  }
+}
+
+// 初始化隐藏状态
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.tk-tag-hidden').forEach(item => {
+    item.style.display = 'none';
+  });
+});
+</script>

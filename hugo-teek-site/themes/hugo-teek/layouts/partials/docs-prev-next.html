@@ -1,0 +1,48 @@
+{{/* 极致优化版本的上一篇/下一篇导航 */}}
+{{- $current := . -}}
+{{- $root := site.GetPage "/docs" -}}
+
+{{/* 使用缓存的辅助函数获取 topSection（按当前页面的 section 缓存） */}}
+{{- $topSection := partialCached "get-top-section.html" (dict "current" $current "root" $root "rootPathWithSlash" "/docs/") $current.Section -}}
+
+{{/* 使用全局缓存的 weights（所有页面共享同一份） */}}
+{{- $weights := partialCached "get-sidebar-weights.html" . "global-sidebar-weights" -}}
+
+{{/* 使用缓存的扁平化页面列表（按 topSection 缓存） */}}
+{{- $flatPages := partialCached "docs-prev-next-cached.html" (dict "topSection" $topSection "weights" $weights) $topSection.RelPermalink -}}
+
+{{/* 关键优化：使用二分查找的思路，但先尝试直接用 where 过滤 */}}
+{{- $currentPermalink := $current.RelPermalink -}}
+{{- $prev := false -}}
+{{- $next := false -}}
+{{- $found := false -}}
+
+{{/* 优化的索引查找：一次遍历同时找 prev 和 next */}}
+{{- range $index, $page := $flatPages -}}
+  {{- if eq $page.RelPermalink $currentPermalink -}}
+    {{- $found = true -}}
+    {{- if gt $index 0 -}}
+      {{- $prev = index $flatPages (sub $index 1) -}}
+    {{- end -}}
+    {{- if lt $index (sub (len $flatPages) 1) -}}
+      {{- $next = index $flatPages (add $index 1) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{ if or $prev $next }}
+  <div class="tk-doc-pagination">
+    {{ with $prev }}
+      <a href="{{ .RelPermalink }}" class="tk-doc-pagination__item prev">
+        <span class="tk-doc-pagination__label">上一篇</span>
+        <span class="tk-doc-pagination__title">{{ .Title }}</span>
+      </a>
+    {{ end }}
+    {{ with $next }}
+      <a href="{{ .RelPermalink }}" class="tk-doc-pagination__item next">
+        <span class="tk-doc-pagination__label">下一篇</span>
+        <span class="tk-doc-pagination__title">{{ .Title }}</span>
+      </a>
+    {{ end }}
+  </div>
+{{ end }}

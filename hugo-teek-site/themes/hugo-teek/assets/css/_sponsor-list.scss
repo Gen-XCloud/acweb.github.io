@@ -1,0 +1,533 @@
+// ========================================
+// 致谢名单页面样式
+// Sponsor List Page Styles
+// ========================================
+
+// ========================================
+// 0. 致谢页面整体布局
+// ========================================
+.thanks-page {
+  h1 {
+    font-size: 0.875rem !important;
+    color: var(--text-secondary, #999) !important;
+    font-weight: 400 !important;
+    margin: 0 0 1.5rem 0 !important;
+    text-align: left !important;
+
+    @media (max-width: 640px) {
+      font-size: 0.8rem !important;
+      margin: 0 0 1rem 0 !important;
+    }
+  }
+
+  .post-content {
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+// ========================================
+// 1. 容器和布局
+// ========================================
+.sponsor-list-container {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+
+  @media (max-width: 640px) {
+    padding: 0 1rem 1.5rem;
+  }
+}
+
+// ========================================
+// 2. 介绍文字
+// ========================================
+.sponsor-intro {
+  margin-bottom: 2.5rem;
+
+  p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-secondary, #666);
+    text-align: center;
+    margin: 0;
+
+    @media (max-width: 640px) {
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+  }
+}
+
+// ========================================
+// 3. 标题区域（带按钮）
+// ========================================
+.sponsor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding: 0;
+
+  @media (max-width: 640px) {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.sponsor-title {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  color: var(--text-color, #333) !important;
+  margin: 0 !important;
+  background: none !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  display: block !important;
+  text-align: left !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  overflow: visible !important;
+  text-indent: 0 !important;
+  line-height: 1.4 !important;
+
+  @media (max-width: 640px) {
+    font-size: 1.5rem !important;
+  }
+}
+
+.sponsor-button {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  border-radius: 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  transition: all 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @media (max-width: 640px) {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+}
+
+// ========================================
+// 3. 赞助者卡片网格
+// ========================================
+.sponsor-grid {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+
+  // 响应式列数
+  grid-template-columns: 1fr;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+// ========================================
+// 4. 赞助者卡片
+// ========================================
+.sponsor-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--vp-c-divider, rgba(60, 60, 67, 0.12));
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  cursor: default;
+  min-height: 120px;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+
+  // PC端有留言时才显示pointer
+  @media (min-width: 769px) {
+    &[data-has-message="true"] {
+      cursor: pointer;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        border-color: var(--primary-color, #0891b2);
+
+        .sponsor-card-content {
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .sponsor-message {
+          opacity: 1;
+          pointer-events: auto;
+        }
+      }
+    }
+
+    // 没有留言的卡片也有轻微hover效果
+    &[data-has-message="false"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  @media (max-width: 640px) {
+    padding: 1.25rem 0.875rem;
+    min-height: 100px;
+  }
+}
+
+// ========================================
+// 5. 卡片内容（默认显示）
+// ========================================
+.sponsor-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  transition: opacity 0.3s ease;
+  opacity: 1;
+  pointer-events: auto;
+
+  @media (max-width: 640px) {
+    gap: 0.625rem;
+  }
+}
+
+.sponsor-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color, #333);
+  text-align: center;
+  line-height: 1.4;
+  width: 100%;
+
+  @media (max-width: 640px) {
+    font-size: 1rem;
+  }
+}
+
+.sponsor-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.sponsor-amount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 1rem;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+
+  @media (max-width: 640px) {
+    padding: 0.35rem 0.875rem;
+    font-size: 0.875rem;
+  }
+}
+
+.sponsor-date {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #666);
+  text-align: right;
+
+  @media (max-width: 640px) {
+    font-size: 0.75rem;
+  }
+}
+
+// ========================================
+// 6. 留言内容（hover时显示）
+// ========================================
+.sponsor-message {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: var(--card-bg, #ffffff);
+  color: var(--text-color, #333);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  word-break: break-word;
+
+  @media (max-width: 640px) {
+    font-size: 0.875rem;
+    padding: 1.25rem;
+  }
+}
+
+// 移动端：点击显示留言
+@media (max-width: 768px) {
+  .sponsor-card.show-message {
+    .sponsor-card-content {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .sponsor-message {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
+
+// ========================================
+// 7. 赞赏模态框
+// ========================================
+.sponsor-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  &.active {
+    display: flex;
+    opacity: 1;
+  }
+}
+
+.sponsor-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+.sponsor-modal-content {
+  position: relative;
+  width: 90%;
+  max-width: 560px;
+  background: var(--card-bg, #ffffff);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  animation: modalSlideIn 0.3s ease;
+
+  @media (max-width: 640px) {
+    width: 95%;
+    max-width: none;
+    padding: 1.5rem 1rem;
+    border-radius: 12px;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-20px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.sponsor-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--text-secondary, #666);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover {
+    background: var(--vp-c-bg-soft, rgba(142, 150, 170, 0.14));
+    color: var(--text-color, #333);
+    transform: rotate(90deg);
+  }
+
+  @media (max-width: 640px) {
+    width: 40px;
+    height: 40px;
+    font-size: 1.75rem;
+  }
+}
+
+.sponsor-modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color, #333);
+  text-align: center;
+  margin: 0 0 0.5rem 0;
+
+  @media (max-width: 640px) {
+    font-size: 1.25rem;
+  }
+}
+
+.sponsor-modal-message {
+  font-size: 1rem;
+  color: var(--primary-color, #0891b2);
+  text-align: center;
+  margin: 0 0 2rem 0;
+  font-weight: 500;
+
+  @media (max-width: 640px) {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+// ========================================
+// 8. 二维码区域
+// ========================================
+.sponsor-qrcodes {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+.qrcode-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+
+  img {
+    width: 180px;
+    height: 180px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: white;
+    padding: 8px;
+
+    @media (max-width: 640px) {
+      width: 200px;
+      height: 200px;
+    }
+  }
+}
+
+.qrcode-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-color, #333);
+  text-align: center;
+
+  @media (max-width: 640px) {
+    font-size: 0.875rem;
+  }
+}
+
+// ========================================
+// 9. 暗色模式适配
+// ========================================
+.dark-mode {
+  .sponsor-card {
+    background: var(--vp-c-bg-soft, #1a1a1a);
+    border-color: var(--vp-c-divider, rgba(84, 84, 88, 0.48));
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  .sponsor-message {
+    background: var(--vp-c-bg-soft, #1a1a1a);
+  }
+
+  .sponsor-modal-content {
+    background: var(--vp-c-bg, #1a1a1a);
+  }
+
+  .sponsor-modal-overlay {
+    background: rgba(0, 0, 0, 0.75);
+  }
+
+  .qrcode-item img {
+    background: white;
+  }
+}
+
+// ========================================
+// 10. 防止模态框打开时页面滚动
+// ========================================
+body.sponsor-modal-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}

@@ -1,0 +1,169 @@
+// ========================================
+// VitePress Layout Switch (ported from vitepress-theme-teek)
+// Controls layout width variants via layout-mode attribute on <html>
+// ========================================
+
+html[layout-mode="fullWidth"] {
+  @media (min-width: 1280px) {
+    .VPNavBar.has-sidebar > .wrapper > .container > .title {
+      padding-left: #{'max(32px, calc((100% - (var(--tk-layout-full-width-max-width) - 64px)) / 2))'} !important;
+      width: calc((100% - (var(--tk-layout-full-width-max-width) - 64px)) / 2 + var(--vp-sidebar-width) - 32px) !important;
+    }
+
+    .VPNavBar > .wrapper > .container,
+    .VPNavBar.has-sidebar > .wrapper > .container {
+      max-width: var(--tk-layout-full-width-max-width) !important;
+    }
+
+    .VPNavBar.has-sidebar > .wrapper > .container > .content {
+      padding-left: #{'max(32px, var(--vp-sidebar-width))'} !important;
+      padding-right: 32px !important;
+      width: 100% !important;
+    }
+
+    .VPSidebar {
+      padding-left: #{'max(32px, calc((100% - (var(--tk-layout-full-width-max-width) - 64px)) / 2))'} !important;
+      width: calc((100% - (var(--tk-layout-full-width-max-width) - 64px)) / 2 + var(--vp-sidebar-width) - 32px) !important;
+    }
+
+    // 修改：不再使用 !important 覆盖，让 vitepress-teek-docs.scss 中的布局生效
+    // .VPContent.has-sidebar {
+    //   padding-left: calc(
+    //     (100vw - var(--tk-layout-full-width-max-width)) / 2 +
+    //     var(--vp-sidebar-width) - var(--tk-sidebar-trigger-doc-offset, 0px)
+    //   ) !important;
+    //   padding-right: calc((100vw - var(--tk-layout-full-width-max-width)) / 2) !important;
+    // }
+
+    .VPDoc.has-aside .content-container,
+    .VPDoc:not(.has-sidebar) .container,
+    .VPDoc:not(.has-sidebar) .container > .content {
+      max-width: var(--tk-layout-full-width-max-width);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .VPNavBar > .wrapper > .container,
+    .VPNavBar.has-sidebar > .wrapper > .container {
+      max-width: var(--tk-layout-full-width-max-width);
+    }
+
+    .VPNavBar.has-sidebar > .divider {
+      padding-left: calc((100vw - var(--tk-layout-full-width-max-width)) / 2 + var(--vp-sidebar-width)) !important;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .VPNavBar > .wrapper > .container,
+    .VPDoc .container {
+      max-width: var(--tk-layout-full-width-max-width);
+    }
+  }
+}
+
+html[layout-mode="sidebarWidthAdjustableOnly"] {
+  @media (min-width: 1280px) {
+    .VPNavBar.has-sidebar > .wrapper > .container > .title {
+      padding-left: #{'max(32px, calc((100% - (var(--tk-layout-page-max-width) - 64px)) / 2))'} !important;
+      width: calc((100% - (var(--tk-layout-page-max-width) - 64px)) / 2 + var(--vp-sidebar-width) - 32px) !important;
+    }
+
+    .VPNavBar > .wrapper > .container,
+    .VPNavBar.has-sidebar > .wrapper > .container {
+      max-width: var(--tk-layout-page-max-width) !important;
+    }
+
+    .VPNavBar.has-sidebar > .wrapper > .container > .content {
+      padding-left: #{'max(32px, var(--vp-sidebar-width))'} !important;
+      padding-right: 32px !important;
+      width: 100% !important;
+    }
+
+    .VPSidebar {
+      padding-left: #{'max(32px, calc((100% - (var(--tk-layout-page-max-width) - 64px)) / 2))'} !important;
+      width: calc((100% - (var(--tk-layout-page-max-width) - 64px)) / 2 + var(--vp-sidebar-width) - 32px) !important;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .VPNavBar > .wrapper > .container,
+    .VPNavBar.has-sidebar > .wrapper > .container {
+      max-width: var(--tk-layout-page-max-width) !important;
+    }
+
+    .VPNavBar.has-sidebar > .divider {
+      padding-left: calc((100vw - var(--tk-layout-page-max-width)) / 2 + var(--vp-sidebar-width)) !important;
+    }
+
+    // 修改：不再使用 !important 覆盖，让 vitepress-teek-docs.scss 中的布局生效
+    // .VPContent.has-sidebar {
+    //   padding-left: calc(
+    //     (100vw - var(--tk-layout-doc-max-width)) / 2 +
+    //     var(--vp-sidebar-width) - var(--tk-sidebar-trigger-doc-offset, 0px)
+    //   ) !important;
+    //   padding-right: calc((100vw - var(--tk-layout-doc-max-width)) / 2) !important;
+    // }
+  }
+}
+
+html[layout-mode="bothWidthAdjustable"] {
+  @media (min-width: 1280px) {
+    .VPNavBar.has-sidebar > .wrapper > .container > .title {
+      padding-left: #{'max(32px, calc((100% - (var(--tk-layout-page-max-width) - 64px)) / 2))'} !important;
+      width: calc((100% - (var(--tk-layout-page-max-width) - 64px)) / 2 + var(--vp-sidebar-width) - 32px) !important;
+    }
+
+    .VPNavBar > .wrapper > .container,
+    .VPNavBar.has-sidebar > .wrapper > .container {
+      max-width: var(--tk-layout-page-max-width) !important;
+    }
+
+    .VPNavBar.has-sidebar > .wrapper > .container > .content {
+      padding-left: #{'max(32px, var(--vp-sidebar-width))'} !important;
+      padding-right: 32px !important;
+      width: 100% !important;
+    }
+
+    .VPSidebar {
+      padding-left: #{'max(32px, calc((100% - (var(--tk-layout-page-max-width) - 64px)) / 2))'} !important;
+      width: calc((100% - (var(--tk-layout-page-max-width) - 64px)) / 2 + var(--vp-sidebar-width) - 32px) !important;
+    }
+
+    .VPDoc.has-aside .content-container,
+    .VPDoc:not(.has-sidebar) .container,
+    .VPDoc:not(.has-sidebar) .container > .content {
+      max-width: var(--tk-layout-doc-max-width);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .VPNavBar > .wrapper > .container,
+    .VPNavBar.has-sidebar > .wrapper > .container {
+      max-width: var(--tk-layout-page-max-width) !important;
+    }
+
+    .VPNavBar.has-sidebar > .divider {
+      padding-left: calc((100vw - var(--tk-layout-page-max-width)) / 2 + var(--vp-sidebar-width)) !important;
+    }
+
+    // 修改：不再使用 !important 覆盖，让 vitepress-teek-docs.scss 中的布局生效
+    // .VPContent.has-sidebar {
+    //   padding-left: calc(
+    //     (100vw - var(--tk-layout-doc-max-width)) / 2 +
+    //     var(--vp-sidebar-width) - var(--tk-sidebar-trigger-doc-offset, 0px)
+    //   ) !important;
+    //   padding-right: calc((100vw - var(--tk-layout-doc-max-width)) / 2) !important;
+    // }
+  }
+
+  @media (min-width: 1536px) {
+    .VPNavBar > .wrapper > .container,
+    .VPNavBar.has-sidebar > .wrapper > .container {
+      max-width: var(--tk-layout-page-max-width) !important;
+    }
+
+    .VPDoc .container {
+      max-width: var(--tk-layout-doc-max-width);
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{{/* 递归函数：按侧边栏顺序扁平化 section 中的所有页面 */}}
+{{- $section := .section -}}
+{{- $weights := .weights -}}
+{{- $pages := .pages -}}
+
+{{- $childSections := $section.Sections -}}
+{{- $childPages := $section.RegularPages -}}
+
+{{/* 处理子 sections - 按权重排序（与侧边栏逻辑相同） */}}
+{{- $sortedSections := slice -}}
+{{- range $childSections -}}
+  {{- $relPath := .File.Path -}}
+  {{- $relPath = strings.TrimPrefix "/" $relPath -}}
+  {{- $relPath = strings.TrimPrefix ".content-vp-converted/docs/" $relPath -}}
+  {{- $relPath = strings.TrimPrefix "content/docs/" $relPath -}}
+  {{- $relPath = strings.TrimPrefix "docs/" $relPath -}}
+  {{- $weight := index $weights $relPath | default 9999 -}}
+  {{- $sortedSections = $sortedSections | append (dict "item" . "weight" $weight) -}}
+{{- end -}}
+
+{{/* 处理子 pages - 按权重排序（与侧边栏逻辑相同） */}}
+{{- $sortedPages := slice -}}
+{{- range $childPages -}}
+  {{- $relPath := .File.Path -}}
+  {{- $relPath = strings.TrimPrefix "/" $relPath -}}
+  {{- $relPath = strings.TrimPrefix ".content-vp-converted/docs/" $relPath -}}
+  {{- $relPath = strings.TrimPrefix "content/docs/" $relPath -}}
+  {{- $relPath = strings.TrimPrefix "docs/" $relPath -}}
+  {{- $weight := index $weights $relPath | default 9999 -}}
+  {{- $sortedPages = $sortedPages | append (dict "item" . "weight" $weight) -}}
+{{- end -}}
+
+{{/* 按顺序添加到扁平列表：先 sections（递归），再 pages */}}
+{{- range sort $sortedSections "weight" "item.Title" -}}
+  {{- $pages = partial "docs-prev-next-flatten" (dict "section" .item "weights" $weights "pages" $pages) -}}
+{{- end -}}
+
+{{- range sort $sortedPages "weight" "item.Title" -}}
+  {{- $pages = $pages | append .item -}}
+{{- end -}}
+
+{{- return $pages -}}

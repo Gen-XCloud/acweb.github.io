@@ -1,0 +1,21 @@
+@import 'variables';
+
+// ========================================
+// 方案5: 默认色（浅灰蓝/深灰蓝）
+// ========================================
+
+:root[data-color-scheme="scheme5"]:not([data-theme="dark"]) {
+  --bg-primary: #{$scheme-default-light-bg};
+  --bg-secondary: #{$scheme-default-light-bg-secondary};
+  --text-primary: #{$scheme-default-light-text};
+  --text-secondary: #{$scheme-default-light-text-secondary};
+  --border-color: #{$scheme-default-light-border};
+}
+
+:root[data-color-scheme="scheme5"][data-theme="dark"] {
+  --bg-primary: #{$scheme-default-dark-bg};
+  --bg-secondary: #{$scheme-default-dark-bg-secondary};
+  --text-primary: #{$scheme-default-dark-text};
+  --text-secondary: #{$scheme-default-dark-text-secondary};
+  --border-color: #{$scheme-default-dark-border};
+}

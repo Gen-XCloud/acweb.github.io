@@ -1,0 +1,97 @@
+hugo-teek-site/public/
+hugo-teek-site/resources/
+*.md
+!/README.md
+.gocache/
+vitepress-theme-teek-1.5.1/
+hugo-teek-site/data/sidebarOrder.json
+hugo-teek-site/data/sidebar-order.json
+settings.*.json
+_index.md
+manifest.json
+# FlexSearch 搜索索引自动生成的清单文件
+hugo-teek-site/static/data/search/manifest.json
+
+# 图库数据文件（不提交，可通过同步功能从文件系统重建）
+hugo-teek-site/data/gallery.json
+hugo-teek-site/data/albums.json
+.content-vp-converted
+hugo-teek-site/.content-vp-converted/
+# 注意：_index.md 文件对侧边栏树结构至关重要，需要提交到仓库
+# 如果是自动生成的，应该和其他生成文件（如 sidebarOrder.json）一样被提交
+# hugo-teek-site/content/docs/**/_index.md
+
+# 二进制文件
+hugo
+
+# Windows 自动下载的二进制文件（不提交）
+bin/windows/hugo.exe
+
+*.exe
+# 保留已编译的构建工具（提交到仓库）
+# bin/windows/*.exe 中的其他文件会被保留
+
+# Linux 构建工具二进制文件（不提交，CI/CD 环境中自动提供）
+bin/linux/*
+!bin/linux/README.md
+
+# 截图和临时图片
+*.jpg
+*.png
+*.gif
+PixPin_*
+
+*RULES
+*.pid
+# Windows binary build output
+../hugo-teek-binary/
+coverImageIndex.json
+docAnalysis.json
+.content-watcher.log
+content-watcher
+.content-watcher.log
+lighthouse-reports/
+tools/
+
+# 配置文件（用户个性化配置，不提交）
+config.yaml
+docs_bak/
+
+# 特殊处理：先忽略整个 docs，再放出博客搭建目录
+# 忽略 docs 下的所有内容
+hugo-teek-site/content/docs/**
+
+# 然后取消忽略博客搭建目录（必须逐层取消忽略父目录）
+!hugo-teek-site/content/docs/
+!hugo-teek-site/content/docs/40.专题/
+!hugo-teek-site/content/docs/40.专题/博客搭建/
+!hugo-teek-site/content/docs/40.专题/博客搭建/**
+
+# 忽略根目录下的 docs 文件夹（仅匹配根目录）
+/docs/
+# 如果你希望你的文档，在提交到仓库时，不会被忽略，那么请麻烦删除上方的  docs/  ，祝您建站愉快，我的hugo-teek小伙伴~~
+# config.yaml.example 会被提交作为模板参考
+
+hugo-teek-site/config/_default/params.toml
+hugo-teek-site/config/_default/menus.toml
+hugo-teek-site/config/_default/module.toml
+.config-server.log
+vditor.tar.gz
+# Admin 管理后台
+tools/admin-server/web/dist/
+.admin-server.pid
+.admin-server.log
+!admin-frontend/dist
+
+
+# 环境变量配置（不提交）
+.env
+
+# 自动生成的数据文件（不提交，运行 hugo-teek-tools.exe sidebar 生成）
+hugo-teek-site/static/data/sidebarOrder.json
+hugo-teek-site/static/data/sidebar/
+hugo-teek-site/data/sidebar/
+.cover-image-index.json
+hugo-teek-site/static/unlocked/*
+index.json.gz
+skills

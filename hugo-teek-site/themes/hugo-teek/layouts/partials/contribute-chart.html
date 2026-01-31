@@ -1,0 +1,214 @@
+{{/* Contribution Chart - GitHub style heatmap */}}
+{{/* 类似 GitHub 的文章贡献热力图 */}}
+
+<div class="contribute-chart" id="contributeChart"></div>
+
+<script src="https://cdn.xxdevops.cn/projects/echarts/5.4.3/echarts.min.js"></script>
+<script>
+(function() {
+  {{/* 在 Hugo 模板中统计每天的文章数量 */}}
+  {{ $contributeMap := dict }}
+  {{ range .Site.RegularPages }}
+    {{ if .Date }}
+      {{ $dateStr := .Date.Format "2006-01-02" }}
+      {{ $count := index $contributeMap $dateStr | default 0 }}
+      {{ $contributeMap = merge $contributeMap (dict $dateStr (add $count 1)) }}
+    {{ end }}
+  {{ end }}
+
+  {{/* 转换为 ECharts 需要的格式 [[date, count], ...] */}}
+  {{ $contributeList := slice }}
+  {{ range $date, $count := $contributeMap }}
+    {{ $contributeList = $contributeList | append (slice $date $count) }}
+  {{ end }}
+
+  // Hugo jsonify 会将嵌套数组扁平化,需要在 JS 中重新转换
+  // 扁平数组: [date1, count1, date2, count2, ...]
+  const flatArray = {{ $contributeList | jsonify | safeJS }};
+
+  // 转换为二维数组: [[date1, count1], [date2, count2], ...]
+  const contributeList = [];
+  for (let i = 0; i < flatArray.length; i += 2) {
+    contributeList.push([flatArray[i], flatArray[i + 1]]);
+  }
+
+  // 计算日期范围（显示最近一年）
+  const today = new Date();
+  const oneYearAgo = new Date(today.getTime() - 364 * 24 * 60 * 60 * 1000);
+
+  const formatDate = (date) => {
+    return date.toISOString().substring(0, 10);
+  };
+
+  // 检查深色模式
+  const isDarkMode = () => {
+    return document.body.classList.contains('dark-mode');
+  };
+
+  // ECharts 配置
+  const getOption = () => {
+    const dark = isDarkMode();
+    const isMobile = window.innerWidth <= 768;
+    const isSmallMobile = window.innerWidth <= 480;
+
+    return {
+      tooltip: {
+        formatter: function (params) {
+          return `${params.value[0]} <br/> ${params.value[1]} 篇文章`;
+        },
+        backgroundColor: dark ? '#1e293b' : '#ffffff',
+        borderColor: dark ? '#334155' : '#e5e7eb',
+        textStyle: {
+          color: dark ? '#f3f4f6' : '#1f2937'
+        }
+      },
+      visualMap: {
+        show: false,
+        type: 'piecewise',
+        min: 0,
+        max: 5,
+        splitNumber: 5,
+        pieces: [
+          { value: 0, color: dark ? '#161b22' : '#ebedf0' },  // 0篇 - 灰色
+          { min: 1, max: 1, color: dark ? '#0e4429' : '#9be9a8' },  // 1篇 - 最浅绿
+          { min: 2, max: 2, color: dark ? '#006d32' : '#40c463' },  // 2篇 - 浅绿
+          { min: 3, max: 4, color: dark ? '#26a641' : '#30a14e' },  // 3-4篇 - 中绿
+          { min: 5, color: dark ? '#39d353' : '#216e39' }           // 5+篇 - 深绿
+        ]
+      },
+      calendar: {
+        top: isMobile ? 30 : 40,
+        left: isSmallMobile ? 30 : isMobile ? 50 : 70,
+        right: isSmallMobile ? 30 : isMobile ? 50 : 70,
+        bottom: isMobile ? 5 : 10,
+        cellSize: isSmallMobile ? ['auto', 10] : isMobile ? ['auto', 12] : ['auto', 15],
+        range: [formatDate(oneYearAgo), formatDate(today)],
+        itemStyle: {
+          color: dark ? '#161b22' : '#ebedf0',
+          borderWidth: 0.5,
+          borderColor: dark ? '#0d1117' : '#fff',
+          shadowBlur: 0
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: dark ? '#21262d' : '#ebedf0',
+            width: 0.5
+          }
+        },
+        dayLabel: {
+          firstDay: 7,
+          nameMap: 'ZH',
+          color: dark ? '#8b949e' : '#3c3c43',
+          fontSize: isMobile ? 10 : 12
+        },
+        monthLabel: {
+          nameMap: 'ZH',
+          color: dark ? '#8b949e' : '#3c3c43',
+          fontSize: isMobile ? 10 : 12
+        },
+        yearLabel: {
+          show: true,
+          position: 'right',
+          color: dark ? '#8b949e' : '#3c3c43',
+          fontSize: isMobile ? 12 : 14
+        }
+      },
+      series: {
+        type: 'heatmap',
+        coordinateSystem: 'calendar',
+        data: contributeList
+      }
+    };
+  };
+
+  // 初始化图表
+  let chart = null;
+
+  const initChart = () => {
+    const chartDom = document.getElementById('contributeChart');
+    if (!chartDom) return;
+
+    if (chart) {
+      chart.dispose();
+    }
+
+    chart = echarts.init(chartDom);
+    chart.setOption(getOption());
+
+    // 响应式
+    window.addEventListener('resize', () => {
+      chart.setOption(getOption());
+      chart.resize();
+    });
+  };
+
+  // 监听深色模式切换
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.attributeName === 'class') {
+        if (chart) {
+          chart.setOption(getOption());
+        }
+      }
+    });
+  });
+
+  // 页面加载完成后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initChart();
+      observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    });
+  } else {
+    initChart();
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+  }
+})();
+</script>
+
+<style>
+.contribute-chart-wrapper {
+  margin: 32px 0;
+  padding: 24px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.contribute-chart {
+  width: 100%;
+  height: 200px;
+  min-height: 200px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 768px) {
+  .contribute-chart-wrapper {
+    padding: 16px;
+  }
+
+  .contribute-chart {
+    height: 180px;
+    min-height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contribute-chart {
+    height: 160px;
+    min-height: 160px;
+  }
+}
+
+.dark-mode .contribute-chart-wrapper {
+  background: var(--card-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+</style>

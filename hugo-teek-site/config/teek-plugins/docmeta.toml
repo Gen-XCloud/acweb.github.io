@@ -1,0 +1,38 @@
+# ========================================
+# 文档元数据配置 (Document Metadata Configuration)
+# ========================================
+# 本文件包含文档相关的元数据和版权信息。
+# 这些配置属于内容层，与主题UI无关。
+#
+# 配置范围 (Scope):
+#   - 文档版权信息
+#   - 许可证信息
+#   - 作者归属
+#
+# 注意事项:
+#   - 修改后需运行 'make dev' 或 'make build' 自动合并
+#   - 版权信息会显示在文档页面底部
+#   - 主题决定如何展示这些信息的UI样式
+# ========================================
+
+[params.docCopyright]
+  # 是否启用文档版权声明
+  enabled = true
+
+  # 作者名称
+  authorName = "余温Gueen"
+
+  # 作者主页链接
+  authorUrl = "https://wiki.xxdevops.cn/"
+
+  # 许可证名称
+  licenseName = "CC BY-NC-SA 4.0"
+
+  # 许可证链接
+  licenseUrl = "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
+
+  # 站点名称
+  siteName = "余温Gueen Blog"
+
+  # 站点链接
+  siteUrl = "https://xxdevops.cn"

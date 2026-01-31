@@ -1,0 +1,28 @@
+{{- $type := .Get 0 | default "info" | lower -}}
+{{- $title := .Get 1 | default "" -}}
+
+{{- $definitions := dict
+  "info" (dict "title" "信息")
+  "note" (dict "title" "NOTE")
+  "tip" (dict "title" "提示")
+  "warning" (dict "title" "警告")
+  "danger" (dict "title" "危险")
+  "important" (dict "title" "IMPORTANT")
+  "caution" (dict "title" "CAUTION")
+  "details" (dict "title" "详情")
+-}}
+
+{{- $definition := index $definitions $type -}}
+{{- $displayTitle := $title -}}
+{{- if and (not $title) $definition -}}
+  {{- $displayTitle = $definition.title -}}
+{{- end -}}
+
+<div class="custom-block {{ $type }}" {{ if eq $type "details" }}data-collapsed="true"{{ end }}>
+  <p class="title custom-block-title">{{ $displayTitle }}</p>
+  {{- if eq $type "details" -}}
+    <div class="custom-block-content">{{ .Inner | markdownify }}</div>
+  {{- else -}}
+    {{ .Inner | markdownify }}
+  {{- end -}}
+</div>

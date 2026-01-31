@@ -1,0 +1,97 @@
+{{ define "main" }}
+{{ $sectionCount := len .Sections }}
+{{/* 自动判断：有子分类则显示为目录页，否则显示为普通列表页 */}}
+{{ $isCatalogue := gt $sectionCount 0 }}
+{{ $isArticle := not $isCatalogue }}
+
+<div class="VPDoc has-sidebar tk-card">
+  <div class="container">
+    <aside class="VPSidebar" id="VPSidebarContainer" aria-label="文档导航">
+      {{- $topSection := . -}}
+      {{- /* 使用实际 URL 路径（兼容自定义 url front matter） */}}
+      {{- $relPermalink := .RelPermalink -}}
+      {{- /* 从 URL 中提取第一级路径，例如 /topic/ -> topic, /linux/docker/ -> linux */}}
+      {{- $pathParts := split (trim $relPermalink "/") "/" -}}
+      {{- $firstLevel := index $pathParts 0 -}}
+      {{- $rootPath := printf "/%s/" $firstLevel -}}
+      {{- $root := site.GetPage $rootPath -}}
+      {{- if and $root (or (eq . $root) (.IsDescendant $root)) -}}
+        {{- $temp := . -}}
+        {{- range seq 10 -}}
+          {{- if $temp.Parent -}}
+            {{- if eq $temp.Parent.RelPermalink $rootPath -}}
+              {{- $topSection = $temp -}}
+              {{- break -}}
+            {{- end -}}
+            {{- $temp = $temp.Parent -}}
+          {{- else -}}
+            {{- break -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+      {{- /* 推断分类slug用于缓存key（按分类缓存而非按页面） */}}
+      {{- $categorySlug := .CurrentSection.Params.category | default $firstLevel -}}
+      {{ partialCached "simple-sidebar-container.html" (dict "context" $topSection "categorySlug" $categorySlug "isMobile" false) $categorySlug "mobile" false }}
+    </aside>
+
+    <div id="swup" class="transition-fade">
+      <div class="content">
+        <div class="content-container">
+        {{/* 统一使用文章模板样式的布局 */}}
+        <header class="tk-doc-header">
+          <div class="tk-doc-header__info" aria-label="文章信息">
+            {{ $cacheKey := .RelPermalink }}
+            {{ with .File }}{{ $cacheKey = .Path }}{{ end }}
+            {{ partialCached "docs-breadcrumbs-fast.html" . $cacheKey }}
+            {{ partialCached "docs-meta.html" . $cacheKey }}
+          </div>
+          <h1 class="tk-doc-header__title">{{ .Title }}</h1>
+        </header>
+
+        <div class="tk-vp-container">
+          <div class="vp-doc tk-doc-content">
+            {{ .Content }}
+          </div>
+        </div>
+
+        {{ partialCached "doc-copyright.html" . .Section }}
+        {{ partialCached "appreciation.html" . .Section }}
+        {{/* 极速版：O(1) 查表，零计算开销 */}}
+        {{ $cacheKey := .RelPermalink }}
+        {{ with .File }}{{ $cacheKey = .Path }}{{ end }}
+        {{ partialCached "docs-prev-next-fast.html" . $cacheKey }}
+        {{ partialCached "docs-update.html" . .Section }}
+
+        {{/* 评论区 */}}
+        {{ if .Site.Params.comment.enabled }}
+        <div class="tk-doc-comment">
+          {{ partial "comment.html" . }}
+        </div>
+        {{ end }}
+        </div>
+      </div>
+
+      <aside class="aside" aria-label="页面目录">
+        <div class="aside-container">
+          <div class="aside-curtain"></div>
+          <div class="aside-content">
+            <div class="content tk-toc-wrapper">
+              {{/* 始终显示分享按钮 + TOC */}}
+              {{ $cacheKey := .RelPermalink }}
+              {{ with .File }}{{ $cacheKey = .Path }}{{ end }}
+              {{ partialCached "docs-toc.html" (dict "page" . "variant" "docs") $cacheKey }}
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {{/* 移动端组件 */}}
+      {{ partialCached "mobile-fab-buttons.html" . .Section }}
+      {{ partial "mobile-toc-drawer.html" . }}
+    </div>
+  </div>
+
+  {{/* 移动端侧边栏抽屉 - 按分类缓存 */}}
+  {{ partialCached "mobile-sidebar-drawer.html" (dict "context" $topSection "categorySlug" $categorySlug) $categorySlug "mobile" true }}
+</div>
+{{ end }}

@@ -1,0 +1,231 @@
+// ========================================
+// Mobile Floating Action Buttons (FAB)
+// 移动端悬浮操作按钮
+// ========================================
+
+.mobile-fab-container {
+  // 仅在移动端显示
+  display: none;
+
+  @media (max-width: 960px) {
+    display: block;
+  }
+}
+
+.mobile-fab {
+  position: fixed;
+  top: 40%; // 悬浮在屏幕中上部
+  transform: translateY(-50%); // 垂直居中对齐
+  min-width: 56px; // 最小宽度保持圆形
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 24px; // 胶囊形状
+  background: var(--primary-color, #0891b2);
+  border: none;
+  cursor: pointer;
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px; // 图标和文字之间的间距
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+  // 只对需要动画的属性过渡，排除transform保持垂直居中
+  transition:
+    width 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    min-width 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    right 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-tap-highlight-color: transparent;
+  will-change: left, right, width, opacity;
+  white-space: nowrap;
+
+  .fab-icon {
+    color: white;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    transition: opacity 0.15s ease; // 只对透明度过渡，不改变大小
+  }
+
+  .fab-label {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    transition: opacity 0.15s ease, width 0.15s ease;
+    opacity: 1;
+  }
+
+  // 收起状态 - 贴边露出一部分，保持可见和可点击
+  &.collapsed {
+    width: 24px;
+    min-width: 24px;
+    padding: 0;
+    opacity: 0.6; // 适度透明，既不遮挡又保持可见
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+
+    .fab-icon {
+      opacity: 0.9; // 图标稍微透明，但不改变大小
+    }
+
+    .fab-label {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+    }
+
+    // 扩大点击区域 - 使用伪元素创建更大的可点击区域
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 64px; // 扩大点击区域，包含屏幕外的部分
+      height: 64px;
+      // 调试时可以取消注释查看点击区域
+      // background: rgba(255, 0, 0, 0.2);
+      pointer-events: auto; // 确保可点击
+      cursor: pointer;
+    }
+
+    // 收起状态下稍微增强悬停效果（移动端不生效）
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+
+  // Hover 效果 (触屏设备不触发)
+  &:hover:not(.collapsed) {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  // Active 点击效果 - 只修改阴影，不改变位置
+  &:active {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0.9;
+  }
+
+  // 聚焦效果 (无障碍)
+  &:focus {
+    outline: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 3px rgba(8, 145, 178, 0.3);
+  }
+}
+
+// 左侧 - 文档树按钮
+.mobile-fab-menu {
+  left: 20px;
+
+  &.collapsed {
+    left: -8px; // 收起时贴边，露出约2/3（16px）
+  }
+
+  @media (max-width: 640px) {
+    left: 12px;
+    height: 44px;
+    padding: 0 12px;
+
+    .fab-label {
+      font-size: 13px;
+    }
+
+    &.collapsed {
+      left: -6px; // 小屏幕露出约3/4（18px）
+      width: 24px;
+      min-width: 24px;
+      padding: 0;
+    }
+  }
+}
+
+// 右侧 - TOC按钮
+.mobile-fab-toc {
+  right: 20px;
+
+  &.collapsed {
+    right: -8px; // 收起时贴边，露出约2/3（16px）
+  }
+
+  @media (max-width: 640px) {
+    right: 12px;
+    height: 44px;
+    padding: 0 12px;
+
+    .fab-label {
+      font-size: 13px;
+    }
+
+    &.collapsed {
+      right: -6px; // 小屏幕露出约3/4（18px）
+      width: 24px;
+      min-width: 24px;
+      padding: 0;
+    }
+  }
+}
+
+// 遮罩层
+.mobile-fab-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 900;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// 暗色模式适配
+.dark-mode {
+  .mobile-fab {
+    background: var(--primary-color, #06b6d4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4), 0 3px 6px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .mobile-fab-overlay {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
+// 优化 VPSidebar 移动端体验
+@media (max-width: 960px) {
+  .VPSidebar {
+    // 加快动画速度
+    transition:
+      opacity 0.2s ease,
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      z-index: 950;
+    }
+  }
+}
+
+// 防止页面滚动 (当弹层打开时)
+body.mobile-drawer-open {
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}

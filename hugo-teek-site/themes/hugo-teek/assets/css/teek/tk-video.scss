@@ -1,0 +1,14 @@
+.tk-video-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.tk-video-container__iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: 12px;
+  box-shadow: var(--vp-shadow-2);
+}

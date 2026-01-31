@@ -1,0 +1,305 @@
+// ========================================
+// 双主题代码高亮 CSS 变量
+// 完美复刻 VitePress 的亮色/暗色主题切换
+// ========================================
+
+// ========================================
+// 亮色主题 (VitePress Teek Light)
+// ========================================
+:root {
+  // 背景和前景色（与 VitePress Teek 一致）
+  --code-bg: #e8f5f5;  // 浅青色/薄荷色背景（类似编辑器风格）
+  --code-fg: #383a42;  // 亮色模式文本颜色
+
+  // 关键字 (Keyword) - 蓝色/紫色系（适配浅色背景）
+  --code-keyword: #0066d6;
+  --code-keyword-constant: #0066d6;
+  --code-keyword-declaration: #0066d6;
+  --code-keyword-namespace: #d73a49;
+  --code-keyword-pseudo: #0066d6;
+  --code-keyword-reserved: #0066d6;
+  --code-keyword-type: #6f42c1;
+
+  // 名称 (Name) - 深色系（适配浅色背景）
+  --code-name-attribute: #6f42c1;
+  --code-name-builtin: #383a42;
+  --code-name-class: #6f42c1;
+  --code-name-constant: #0066d6;
+  --code-name-decorator: #6f42c1;
+  --code-name-entity: #383a42;
+  --code-name-exception: #6f42c1;
+  --code-name-function: #6f42c1;
+  --code-name-label: #383a42;
+  --code-name-namespace: #383a42;
+  --code-name-other: #6f42c1;
+  --code-name-property: #383a42;
+  --code-name-tag: #22863a;
+  --code-name-variable: #e36209;
+
+  // 字符串 (String) - 绿色系（适配浅色背景）
+  --code-string: #032f62;
+  --code-string-affix: #032f62;
+  --code-string-backtick: #032f62;
+  --code-string-char: #032f62;
+  --code-string-delimiter: #032f62;
+  --code-string-doc: #032f62;
+  --code-string-double: #032f62;
+  --code-string-escape: #6f42c1;
+  --code-string-heredoc: #032f62;
+  --code-string-interpol: #032f62;
+  --code-string-other: #032f62;
+  --code-string-regex: #032f62;
+  --code-string-single: #032f62;
+  --code-string-symbol: #032f62;
+
+  // 数字 (Number) - 橙色系（适配浅色背景）
+  --code-number: #0066d6;
+  --code-number-bin: #0066d6;
+  --code-number-float: #0066d6;
+  --code-number-hex: #0066d6;
+  --code-number-integer: #0066d6;
+  --code-number-oct: #0066d6;
+
+  // 运算符 (Operator) - 深色
+  --code-operator: #d73a49;
+  --code-operator-word: #d73a49;
+
+  // 标点符号 (Punctuation)
+  --code-punctuation: #24292e;
+
+  // 注释 (Comment) - 灰色系（适配浅色背景）
+  --code-comment: #6a737d;
+  --code-comment-hashbang: #6a737d;
+  --code-comment-multiline: #6a737d;
+  --code-comment-single: #6a737d;
+  --code-comment-special: #6a737d;
+  --code-comment-preproc: #6a737d;
+  --code-comment-preprocfile: #6a737d;
+
+  // 通用 (Generic)
+  --code-generic-deleted: #d73a49;
+  --code-generic-inserted: #22863a;
+  --code-generic-subheading: #6a737d;
+
+  // 错误 (Error)
+  --code-error: #d73a49;
+
+  // 行号和高亮（适配浅色背景）
+  --code-line-number: rgba(0, 0, 0, 0.3);
+  --code-line-highlight: rgba(0, 0, 0, 0.05);
+  --code-line-number-border: rgba(0, 0, 0, 0.1);
+}
+
+// ========================================
+// 暗色主题 (VitePress Teek Dark)
+// ========================================
+.dark-mode {
+  // 背景和前景色（与 VitePress Teek 一致）
+  --code-bg: #262727;  // VitePress Teek 暗色背景
+  --code-fg: #d4d4d4;  // 暗色模式文本颜色
+
+  // 关键字 - 更亮的蓝色
+  --code-keyword: #89ddff;
+  --code-keyword-constant: #89ddff;
+  --code-keyword-declaration: #89ddff;
+  --code-keyword-namespace: #ff5370;
+  --code-keyword-pseudo: #89ddff;
+  --code-keyword-reserved: #89ddff;
+  --code-keyword-type: #89ddff;
+
+  // 名称 - 更亮的绿色
+  --code-name-attribute: #c3e88d;
+  --code-name-builtin: #d4d4d4;
+  --code-name-class: #ffcb6b;
+  --code-name-constant: #89ddff;
+  --code-name-decorator: #c3e88d;
+  --code-name-entity: #d4d4d4;
+  --code-name-exception: #c3e88d;
+  --code-name-function: #82aaff;
+  --code-name-label: #d4d4d4;
+  --code-name-namespace: #d4d4d4;
+  --code-name-other: #c3e88d;
+  --code-name-property: #d4d4d4;
+  --code-name-tag: #ff5370;
+  --code-name-variable: #d4d4d4;
+
+  // 字符串 - 更柔和的绿色
+  --code-string: #c3e88d;
+  --code-string-affix: #c3e88d;
+  --code-string-backtick: #c3e88d;
+  --code-string-char: #c3e88d;
+  --code-string-delimiter: #c3e88d;
+  --code-string-doc: #c3e88d;
+  --code-string-double: #c3e88d;
+  --code-string-escape: #c792ea;
+  --code-string-heredoc: #c3e88d;
+  --code-string-interpol: #c3e88d;
+  --code-string-other: #c3e88d;
+  --code-string-regex: #c3e88d;
+  --code-string-single: #c3e88d;
+  --code-string-symbol: #c3e88d;
+
+  // 数字 - 紫色
+  --code-number: #c792ea;
+  --code-number-bin: #c792ea;
+  --code-number-float: #c792ea;
+  --code-number-hex: #c792ea;
+  --code-number-integer: #c792ea;
+  --code-number-oct: #c792ea;
+
+  // 运算符 - 亮红色
+  --code-operator: #ff5370;
+  --code-operator-word: #ff5370;
+
+  // 标点符号
+  --code-punctuation: #d4d4d4;
+
+  // 注释 - 灰色
+  --code-comment: #676e95;
+  --code-comment-hashbang: #676e95;
+  --code-comment-multiline: #676e95;
+  --code-comment-single: #676e95;
+  --code-comment-special: #676e95;
+  --code-comment-preproc: #676e95;
+  --code-comment-preprocfile: #676e95;
+
+  // 通用
+  --code-generic-deleted: #ff5370;
+  --code-generic-inserted: #c3e88d;
+  --code-generic-subheading: #676e95;
+
+  // 错误
+  --code-error: #ff5370;
+
+  // 行号和高亮
+  --code-line-number: rgba(255, 255, 255, 0.4);
+  --code-line-highlight: rgba(255, 255, 255, 0.12);
+  --code-line-number-border: rgba(255, 255, 255, 0.15);
+}
+
+// ========================================
+// 应用 CSS 变量到 Chroma Token
+// 使用 !important 确保覆盖原有样式
+// ========================================
+.chroma {
+  // 错误
+  .err { color: var(--code-error) !important; }
+
+  // 行号和表格
+  .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
+  .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
+  .hl { background-color: var(--code-line-highlight) !important; }
+  .lnt { color: var(--code-line-number) !important; padding-right: 6px; }
+  .ln { color: var(--code-line-number) !important; padding-right: 6px; }
+
+  // 关键字 (Keyword)
+  .k { color: var(--code-keyword) !important; }
+  .kc { color: var(--code-keyword-constant) !important; }
+  .kd { color: var(--code-keyword-declaration) !important; }
+  .kn { color: var(--code-keyword-namespace) !important; }
+  .kp { color: var(--code-keyword-pseudo) !important; }
+  .kr { color: var(--code-keyword-reserved) !important; }
+  .kt { color: var(--code-keyword-type) !important; }
+
+  // 名称 (Name)
+  .na { color: var(--code-name-attribute) !important; }
+  .nb { color: var(--code-name-builtin) !important; }
+  .nc { color: var(--code-name-class) !important; }
+  .no { color: var(--code-name-constant) !important; }
+  .nd { color: var(--code-name-decorator) !important; }
+  .ni { color: var(--code-name-entity) !important; }
+  .ne { color: var(--code-name-exception) !important; }
+  .nf { color: var(--code-name-function) !important; }
+  .nl { color: var(--code-name-label) !important; }
+  .nn { color: var(--code-name-namespace) !important; }
+  .nx { color: var(--code-name-other) !important; }
+  .py { color: var(--code-name-property) !important; }
+  .nt { color: var(--code-name-tag) !important; }
+  .nv { color: var(--code-name-variable) !important; }
+
+  // 字符串 (String)
+  .s { color: var(--code-string) !important; }
+  .sa { color: var(--code-string-affix) !important; }
+  .sb { color: var(--code-string-backtick) !important; }
+  .sc { color: var(--code-string-char) !important; }
+  .dl { color: var(--code-string-delimiter) !important; }
+  .sd { color: var(--code-string-doc) !important; }
+  .s2 { color: var(--code-string-double) !important; }
+  .se { color: var(--code-string-escape) !important; }
+  .sh { color: var(--code-string-heredoc) !important; }
+  .si { color: var(--code-string-interpol) !important; }
+  .sx { color: var(--code-string-other) !important; }
+  .sr { color: var(--code-string-regex) !important; }
+  .s1 { color: var(--code-string-single) !important; }
+  .ss { color: var(--code-string-symbol) !important; }
+
+  // 数字 (Number)
+  .m { color: var(--code-number) !important; }
+  .mb { color: var(--code-number-bin) !important; }
+  .mf { color: var(--code-number-float) !important; }
+  .mh { color: var(--code-number-hex) !important; }
+  .mi { color: var(--code-number-integer) !important; }
+  .il { color: var(--code-number-integer) !important; }
+  .mo { color: var(--code-number-oct) !important; }
+
+  // 运算符 (Operator)
+  .o { color: var(--code-operator) !important; }
+  .ow { color: var(--code-operator-word) !important; }
+
+  // 标点符号 (Punctuation)
+  .p { color: var(--code-punctuation) !important; }
+
+  // 注释 (Comment)
+  .c { color: var(--code-comment) !important; }
+  .ch { color: var(--code-comment-hashbang) !important; }
+  .cm { color: var(--code-comment-multiline) !important; }
+  .c1 { color: var(--code-comment-single) !important; }
+  .cs { color: var(--code-comment-special) !important; }
+  .cp { color: var(--code-comment-preproc) !important; }
+  .cpf { color: var(--code-comment-preprocfile) !important; }
+
+  // 通用 (Generic)
+  .gd { color: var(--code-generic-deleted) !important; }
+  .ge { font-style: italic; }
+  .gi { color: var(--code-generic-inserted) !important; }
+  .gs { font-weight: bold; }
+  .gu { color: var(--code-generic-subheading) !important; }
+}
+
+// ========================================
+// 优化行号显示
+// ========================================
+.highlight .lntd:first-child {
+  width: 1%;
+  user-select: none;
+  position: relative;  // 为伪元素定位
+
+  // 用伪元素画竖线，从第二行（代码内容）开始
+  &::before {
+    content: '';
+    position: absolute;
+    top: var(--tk-code-block-fold-height, 40px);  // 从工具栏下方开始
+    right: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(0, 0, 0, 0.15);  // 黑色竖线
+    z-index: 10;
+  }
+
+  pre {
+    color: var(--code-line-number);
+    text-align: center !important;  // 行号居中显示
+    border-right: none !important;  // 不在 pre 上画竖线
+  }
+}
+
+// 暗色模式
+.dark-mode .highlight .lntd:first-child {
+  &::before {
+    background: rgba(255, 255, 255, 0.15);  // 暗色模式浅色竖线
+  }
+}
+
+.highlight .lntd:last-child pre {
+  padding-left: 6px !important;    // 代码左边距（减少以靠近行号）- 强制覆盖
+}

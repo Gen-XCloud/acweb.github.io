@@ -1,0 +1,40 @@
+{{ define "main" }}
+<div class="tk-archives">
+  {{/* 页面头部：标题 + 文章总数 */}}
+  <div class="tk-archives__header">
+    <h1>文章归档</h1>
+    <span class="count">共 {{ len .Site.RegularPages }} 篇文章</span>
+  </div>
+
+  {{/* 贡献图 + 时间轴容器 */}}
+  <div class="contribute-chart-wrapper">
+    {{/* 贡献图 Contribution Chart */}}
+    {{ partial "contribute-chart.html" . }}
+
+    {{/* 时间轴容器 - 通过 JavaScript 懒加载渲染 */}}
+    <div class="tk-archives__timeline" id="archivesTimeline">
+      <div class="archives-loading">加载中...</div>
+    </div>
+  </div>
+</div>
+
+{{/* 将所有文章数据传递给 JavaScript */}}
+<script>
+  window.archivesData = {
+    posts: [
+      {{ range .Site.RegularPages.ByPublishDate.Reverse }}
+      {
+        date: "{{ .Date.Format "2006-01-02" }}",
+        year: "{{ .Date.Format "2006" }}",
+        month: "{{ .Date.Format "01" }}",
+        monthNum: {{ .Date.Format "01" }},
+        day: "{{ .Date.Format "02" }}",
+        title: {{ .Title | jsonify | safeJS }},
+        url: "{{ .RelPermalink }}",
+        tags: [{{ range $i, $tag := (.Params.tags | default slice) }}{{ if $i }},{{ end }}{{ $tag | jsonify | safeJS }}{{ end }}]
+      },
+      {{ end }}
+    ]
+  };
+</script>
+{{ end }}

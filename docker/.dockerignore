@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+
+# Hugo 构建产物
+hugo-teek-site/public
+hugo-teek-site/resources
+
+# Go 缓存
+.gocache
+
+# 开发文件
+.claude
+*.md_bak
+*.yml_bak
+
+# 临时文件
+*.log
+*.tmp
+*.png
+*.jpg
+
+# IDE
+.vscode
+.idea
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml

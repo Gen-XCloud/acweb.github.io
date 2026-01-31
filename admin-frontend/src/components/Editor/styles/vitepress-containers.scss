@@ -1,0 +1,327 @@
+// ================================================
+// VitePress 容器样式 - 现代卡片设计
+// ================================================
+// 支持 5 种容器类型:
+// - info: 信息提示 (蓝色)
+// - tip: 技巧提示 (绿色)
+// - warning: 警告提示 (橙色)
+// - danger: 危险提示 (红色)
+// - details: 折叠详情 (灰色)
+// ================================================
+
+/* ==================== 基础容器样式 ==================== */
+.vp-container {
+  margin: 1.2em 0;
+  padding: var(--editor-spacing-md);
+  padding-left: calc(var(--editor-spacing-md) + 32px); // 为Emoji预留空间
+  border-radius: var(--editor-radius-md);
+  border-left: 4px solid;
+  position: relative;
+  transition: all var(--editor-transition-base);
+  box-shadow: var(--editor-shadow-sm);
+
+  // 左上角Emoji图标
+  &::before {
+    position: absolute;
+    top: var(--editor-spacing-md);
+    left: var(--editor-spacing-md);
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  // 悬停效果
+  &:hover {
+    box-shadow: var(--editor-shadow-md);
+    transform: translateY(-1px);
+  }
+
+  // 内容区域
+  .vp-container-content {
+    color: inherit;
+
+    > *:first-child {
+      margin-top: 0;
+    }
+
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // 标题（可选）
+  .vp-container-title {
+    font-weight: 600;
+    font-size: 0.95em;
+    margin-bottom: var(--editor-spacing-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: var(--editor-spacing-xs);
+  }
+
+  // 段落间距优化
+  p {
+    margin: 0.6em 0;
+    line-height: 1.7;
+  }
+
+  // 列表样式
+  ul, ol {
+    margin: 0.6em 0;
+    padding-left: 1.5em;
+  }
+
+  // 代码块样式
+  code:not(.hljs) {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* ==================== Info 容器 (蓝色信息提示) ==================== */
+.vp-container.info {
+  background: var(--vp-info-bg);
+  border-color: var(--vp-info-border);
+  color: var(--vp-info-text);
+
+  &::before {
+    content: 'ℹ️';
+  }
+
+  .vp-container-title {
+    color: var(--vp-info-title);
+  }
+
+  a {
+    color: var(--vp-info-border);
+
+    &:hover {
+      color: var(--vp-info-title);
+    }
+  }
+}
+
+/* ==================== Tip 容器 (绿色技巧提示) ==================== */
+.vp-container.tip {
+  background: var(--vp-tip-bg);
+  border-color: var(--vp-tip-border);
+  color: var(--vp-tip-text);
+
+  &::before {
+    content: '💡';
+  }
+
+  .vp-container-title {
+    color: var(--vp-tip-title);
+  }
+
+  a {
+    color: var(--vp-tip-border);
+
+    &:hover {
+      color: var(--vp-tip-title);
+    }
+  }
+}
+
+/* ==================== Warning 容器 (橙色警告提示) ==================== */
+.vp-container.warning {
+  background: var(--vp-warning-bg);
+  border-color: var(--vp-warning-border);
+  color: var(--vp-warning-text);
+
+  &::before {
+    content: '⚠️';
+  }
+
+  .vp-container-title {
+    color: var(--vp-warning-title);
+  }
+
+  a {
+    color: var(--vp-warning-border);
+
+    &:hover {
+      color: var(--vp-warning-title);
+    }
+  }
+}
+
+/* ==================== Danger 容器 (红色危险提示) ==================== */
+.vp-container.danger {
+  background: var(--vp-danger-bg);
+  border-color: var(--vp-danger-border);
+  color: var(--vp-danger-text);
+
+  &::before {
+    content: '🚨';
+  }
+
+  .vp-container-title {
+    color: var(--vp-danger-title);
+  }
+
+  a {
+    color: var(--vp-danger-border);
+
+    &:hover {
+      color: var(--vp-danger-title);
+    }
+  }
+}
+
+/* ==================== Details 容器 (折叠详情) ==================== */
+.vp-container.details {
+  background: var(--vp-details-bg);
+  border-color: var(--vp-details-border);
+  color: var(--vp-details-text);
+
+  &::before {
+    content: '📋';
+  }
+
+  .vp-container-title {
+    color: var(--vp-details-title);
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: var(--editor-spacing-xs);
+    transition: color var(--editor-transition-fast);
+
+    // 折叠箭头
+    &::after {
+      content: '▶';
+      font-size: 0.8em;
+      transition: transform var(--editor-transition-base);
+      display: inline-block;
+    }
+
+    &:hover {
+      color: var(--editor-link);
+    }
+  }
+
+  // 默认折叠状态
+  &.collapsed {
+    .vp-container-content {
+      display: none;
+    }
+
+    .vp-container-title::after {
+      transform: rotate(0deg);
+    }
+  }
+
+  // 展开状态
+  &.open {
+    .vp-container-content {
+      display: block;
+      animation: slideDown var(--editor-transition-base) ease-out;
+    }
+
+    .vp-container-title {
+      margin-bottom: var(--editor-spacing-sm);
+      padding-bottom: var(--editor-spacing-sm);
+      border-bottom: 1px solid var(--vp-details-border);
+
+      &::after {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  a {
+    color: var(--editor-link);
+
+    &:hover {
+      color: var(--editor-link-hover);
+    }
+  }
+}
+
+/* ==================== 嵌套容器优化 ==================== */
+.vp-container {
+  .vp-container {
+    margin: 0.8em 0;
+    box-shadow: none;
+    border-left-width: 3px;
+
+    &::before {
+      font-size: 16px;
+      top: calc(var(--editor-spacing-md) - 2px);
+    }
+
+    &:hover {
+      box-shadow: var(--editor-shadow-sm);
+      transform: none;
+    }
+  }
+}
+
+/* ==================== 编辑区域中的容器 ==================== */
+.vditor-ir .vp-container {
+  // 在IR模式下也保持完整样式
+  display: block;
+
+  // 确保内部Markdown正确渲染
+  .vp-container-content {
+    > p, > ul, > ol, > blockquote, > pre {
+      margin: 0.6em 0;
+    }
+  }
+}
+
+/* ==================== 预览区域中的容器 ==================== */
+.vditor-preview__content .vp-container {
+  // 预览模式下的微调
+  font-size: inherit;
+
+  // 确保容器内元素间距合理
+  .vp-container-content {
+    > p:first-child {
+      margin-top: 0;
+    }
+
+    > p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+/* ==================== 容器内代码块样式优化 ==================== */
+.vp-container {
+  pre {
+    margin: 0.8em 0;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  blockquote {
+    margin: 0.8em 0;
+    background: rgba(0, 0, 0, 0.02);
+    border-left-color: rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* ==================== 打印样式优化 ==================== */
+@media print {
+  .vp-container {
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd;
+
+    &:hover {
+      transform: none;
+    }
+
+    &.details.collapsed .vp-container-content {
+      display: block;
+    }
+
+    &.details .vp-container-title::after {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,25 @@
+// ==========================================
+// 自定义光标样式
+// ==========================================
+// 从 yuwen-blog VitePress 主题移植
+// 提供自定义的鼠标光标效果，提升用户体验
+// ==========================================
+
+/* 默认光标 */
+body {
+  cursor: url(/mouse/default.cur), auto;
+}
+
+/* 可交互元素的指针光标 */
+a,
+button,
+img,
+svg,
+input,
+textarea,
+select,
+option,
+label,
+span {
+  cursor: url(/mouse/pointer.cur), auto !important;
+}

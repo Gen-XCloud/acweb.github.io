@@ -1,0 +1,191 @@
+{
+  "links": [
+    {
+      "title": "个人站点",
+      "desc": "",
+      "list": [
+        {
+          "name": "One",
+          "url": "https://onedayxyy.cn/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/xyy-logo.avif",
+          "description": "明心静性，爱自己（基于vitepress）",
+          "irregular": true
+        },
+        {
+          "name": "One",
+          "url": "https://zola.onedayxyy.cn/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/xyy-logo.avif",
+          "description": "明心静性，爱自己（基于rust开发的zola，移植自张洪heo博客）",
+          "irregular": true
+        }
+      ]
+    },
+    {
+      "title": "VitePress",
+      "desc": "",
+      "list": [
+        {
+          "name": "vitepress-theme-teek",
+          "url": "https://vp.teek.top/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/logo.avif",
+          "description": "一个轻量、简洁高效、灵活配置，易于扩展的 VitePress 主题",
+          "irregular": true
+        },
+        {
+          "name": "VitePress",
+          "url": "https://vitepress.dev/zh/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/vitepress-logo-mini.svg",
+          "description": "由 Vite 和 Vue 驱动的静态站点生成器",
+          "irregular": true
+        }
+      ]
+    },
+    {
+      "title": "Teek道友",
+      "desc": "",
+      "list": [
+        {
+          "name": "天客 - Teeker",
+          "url": "https://notes.teek.top/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/notes.teek.top.avif",
+          "description": "朝圣的使徒，正在走向编程的至高殿堂！（Teek作者，大佬666）",
+          "badge": "Teek作者",
+          "irregular": true
+        },
+        {
+          "name": "One",
+          "url": "https://onedayxyy.cn/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/xyy-logo.ico",
+          "description": "明心静性，爱自己",
+          "irregular": true
+        },
+        {
+          "name": "Hyde Blog",
+          "url": "https://teek.seasir.top/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/hyde.avif",
+          "description": "前端大佬,666",
+          "badge": "前端大佬",
+          "irregular": true
+        },
+        {
+          "name": "二丫讲梵",
+          "url": "https://jenkinsguide.opsre.top/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/eryajiangfan.avif",
+          "description": "💻学习📝记录🔗分享",
+          "irregular": true
+        },
+        {
+          "name": "威威 Blog",
+          "url": "https://dl-web.top/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/dl-web.top.avif",
+          "description": "teek伙伴",
+          "irregular": true
+        },
+        {
+          "name": "W3C",
+          "url": "https://teek.w3c.cool/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/teek.w3c.cool.svg",
+          "description": "teek伙伴",
+          "irregular": true
+        },
+        {
+          "name": "时光驿站",
+          "url": "https://kandu.cxcare.top/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/kandu.cxcare.top.svg",
+          "description": "干活满满的技术笔记",
+          "irregular": true
+        },
+        {
+          "name": "凿壁偷光不算偷 Blog",
+          "url": "https://sinc.us.kg/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/sinc-us-kg-favicon.ico",
+          "description": "teek道友",
+          "irregular": true
+        },
+        {
+          "name": "SnowLin Blog",
+          "url": "https://blog.snowlinlan.com/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/SnowLinBlog-logo.avif",
+          "description": "喵喵(?",
+          "irregular": true
+        },
+        {
+          "name": "心流笔记",
+          "url": "http://blog.wilsonzy.cn/c/StreamNotes/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/blog.wilsonzy.cn.ico",
+          "description": "坚持 & 汲取 & 分享（一个记录生活与学习过程中灵感和感悟的空间）",
+          "irregular": true
+        },
+        {
+          "name": "科技语者",
+          "url": "https://www.uopy.top/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/www.uopy.top.ico",
+          "description": "拥抱科技奔赴星辰大海",
+          "irregular": true
+        },
+        {
+          "name": "OpForge",
+          "url": "https://opforge.srebro.cn/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/opforge.srebro.cn.avif",
+          "description": "运维锻造，知识沉淀",
+          "irregular": true
+        },
+        {
+          "name": "乔克视界",
+          "url": "https://jokerbai.com/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/jokerbai.com.ico",
+          "description": "云原生爱好者",
+          "irregular": true
+        },
+        {
+          "name": "记得勇敢",
+          "url": "https://vp.xiaoying.org.cn/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/vp.xiaoying.org.cn.avif",
+          "description": "常用组件及代码封装",
+          "irregular": true
+        },
+        {
+          "name": "骏骏骏的博客",
+          "url": "https://blog.azhxsn.cn/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/blog.azhxsn.cn.svg",
+          "description": "后端程序员",
+          "irregular": true
+        },
+        {
+          "name": "MaraPython",
+          "url": "https://marapython.com/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/marapython.com.avif",
+          "description": "行而不辍，未来可期",
+          "irregular": true
+        },
+        {
+          "name": "Mujin Blog",
+          "url": "https://blog.charily.top/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/blog.charily.top.ico",
+          "description": "只要一息尚存，就还有希望",
+          "irregular": true
+        },
+        {
+          "name": "白木",
+          "url": "https://st.samgame.cn/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/st.samgame.cn.avif",
+          "description": "SCUM中文服务器后台说明文档",
+          "irregular": true
+        }
+      ]
+    },
+    {
+      "title": "漂亮的博客",
+      "desc": "",
+      "list": [
+        {
+          "name": "王嘉祥",
+          "url": "https://blog.jiaxiang.wang/",
+          "avatar": "https://img.xxdevops.cn/blog/friend-logo/blog.jiaxiang.wang.avif",
+          "description": "唱响科普和人生兴事，分享科技与美好生活（rust写的zola主题，移植于张洪heo）",
+          "irregular": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+<article class="article-card {{ if .Params.sticky }}is-sticky{{ end }} {{ if .Params.featured }}is-featured{{ end }}">
+  {{ if .Params.coverImg }}
+  <div class="card-cover">
+    <a href="{{ .RelPermalink }}">
+      <img src="{{ .Params.coverImg }}" alt="{{ .Title }}" loading="lazy">
+      {{ if or .Params.sticky .Params.featured }}
+      <div class="card-badges">
+        {{ if .Params.sticky }}
+        <span class="badge badge-sticky">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
+          </svg>
+          置顶
+        </span>
+        {{ end }}
+        {{ if .Params.featured }}
+        <span class="badge badge-featured">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
+          </svg>
+          推荐
+        </span>
+        {{ end }}
+      </div>
+      {{ end }}
+    </a>
+  </div>
+  {{ end }}
+
+  <div class="card-content">
+    <h2 class="card-title">
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </h2>
+
+    {{ if and .Description (ne .Description "") }}
+    <p class="card-excerpt">{{ .Description }}</p>
+    {{ else if .Summary }}
+    <p class="card-excerpt">{{ .Summary | truncate 120 }}</p>
+    {{ end }}
+
+    <div class="card-meta">
+      <span class="meta-date">
+        <i class="icon-calendar"></i>
+        {{ .Date.Format "2006-01-02" }}
+      </span>
+
+      {{ with .Params.categories }}
+      <span class="meta-category">
+        <i class="icon-folder"></i>
+        {{ index . 0 }}
+      </span>
+      {{ end }}
+
+      <span class="meta-readtime">
+        <i class="icon-clock"></i>
+        {{ .ReadingTime }} 分钟
+      </span>
+    </div>
+
+    {{ with .Params.tags }}
+    <div class="card-tags">
+      {{ range first 3 . }}
+      <span class="tag">{{ . }}</span>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+</article>

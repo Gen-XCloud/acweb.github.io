@@ -1,0 +1,18 @@
+.vp-doc table {
+  width: 100%;
+  border-collapse: separate;
+}
+
+.vp-doc th,
+.vp-doc td {
+  border: none;
+  min-width: 50px;
+}
+
+.vp-doc tr:nth-child(2n) {
+  background-color: transparent;
+}
+
+.vp-doc tr:last-child {
+  border-bottom: 1px solid var(--vp-c-divider);
+}

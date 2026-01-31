@@ -1,0 +1,564 @@
+// ========================================
+// VitePress Style Enhancements
+// 从 yuwen-blog 迁移的样式细节
+// ========================================
+
+// ========================================
+// 1. 滚动条样式 (ScrollBar.scss)
+// ========================================
+:root {
+  --color-pink-light: var(--primary-color); /* 亮色主题滚动条颜色 */
+}
+
+.dark-mode {
+  --color-pink-light: #322d31; /* 暗色主题滚动条颜色 */
+}
+
+/* 全局滚动条样式 */
+::-webkit-scrollbar {
+  width: 0.3rem; // 左侧滚动条粗度
+  height: 0.4rem;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 2em;
+}
+
+/* 滚动条滑块样式 */
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-pink-light);
+  background-image: -webkit-linear-gradient(
+    45deg,
+    hsla(0, 0%, 100%, 0.4) 25%,
+    transparent 0,
+    transparent 50%,
+    hsla(0, 0%, 100%, 0.4) 0,
+    hsla(0, 0%, 100%, 0.4) 75%,
+    transparent 0,
+    transparent
+  );
+  border-radius: 2em;
+}
+
+/* 滚动条滑块悬停效果 */
+::-webkit-scrollbar-thumb:hover {
+  background: #aaaaaa;
+  background-image: -webkit-linear-gradient(
+    45deg,
+    hsla(0, 0%, 100%, 0.4) 25%,
+    transparent 0,
+    transparent 50%,
+    hsla(0, 0%, 100%, 0.4) 0,
+    hsla(0, 0%, 100%, 0.4) 75%,
+    transparent 0,
+    transparent
+  );
+  border-radius: 2em;
+}
+
+// ========================================
+// 2. 文字渐变效果 (var.scss mixins)
+// ========================================
+@mixin text-clip-common {
+  background-clip: text; /* 标准语法，裁剪背景到文字 */
+  -webkit-background-clip: text; /* Safari/Chrome 前缀兼容 */
+  color: transparent; /* 让文字透明，露出背景渐变 */
+  display: inline-block; /* 让背景仅包裹文字，而非整行 */
+}
+
+@mixin text-gradient {
+  background-image: linear-gradient(
+    107deg,
+    rgb(255, 182, 133) -30.6%,
+    rgb(255, 111, 29) -1.11%,
+    rgb(252, 181, 232) 39.14%,
+    rgb(135, 148, 255) 73.35%,
+    rgb(60, 112, 255) 97.07%,
+    rgb(60, 112, 255) 118.97%
+  );
+  @include text-clip-common;
+}
+
+// 应用文字渐变到特定元素
+.post-single {
+  h2 {
+    background: -webkit-linear-gradient(10deg, #bd34fe 5%, #e43498 15%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+// ========================================
+// 3. 侧边栏交互效果 (sidebar.scss)
+// ========================================
+.sidebar-widget {
+  /* 侧边栏项基本样式 */
+  .widget-title {
+    align-items: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateX(4px);
+    }
+  }
+
+  .recent-posts {
+    li {
+      a {
+        transition: all 0.3s ease;
+        display: block;
+        padding: 0.5rem;
+        border-radius: 4px;
+
+        &:hover {
+          transform: translateX(4px);
+          background: rgba(8, 145, 178, 0.05);
+        }
+      }
+    }
+  }
+}
+
+// 侧边栏一级标题渐变效果
+.sidebar-widget {
+  .widget-title {
+    &:hover {
+      @include text-gradient;
+      opacity: 0.9;
+    }
+  }
+}
+
+// ========================================
+// 4. 自定义鼠标样式
+// ========================================
+body {
+  cursor: default;
+}
+
+a,
+button,
+img,
+svg,
+input,
+textarea,
+select,
+option,
+label {
+  cursor: pointer !important;
+}
+
+// ========================================
+// 5. 首页特性悬停效果
+// ========================================
+.home-page {
+  .section-title {
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+}
+
+// ========================================
+// 6. 链接下划线样式
+// ========================================
+.post-content {
+  a {
+    text-decoration: none; /* ◀️ 默认不显示下划线 */
+    position: relative;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0; /* ◀️ 紧贴文本底部 */
+      left: 50%; /* ◀️ 初始位置在中间 */
+      right: 50%; /* ◀️ 初始位置在中间 */
+      width: 0; /* ◀️ 初始宽度为0 */
+      height: 2px; /* ◀️ 下划线厚度 */
+      background: var(--primary-color); /* ◀️ 实体颜色，不再使用渐变 */
+      border-radius: 1px; /* ◀️ 圆角效果 */
+      transition: left 0.3s ease, right 0.3s ease, width 0.3s ease; /* ◀️ 过渡效果包含左右位置和宽度 */
+    }
+
+    &:hover {
+      &::after {
+        left: 0; /* ◀️ hover时向左展开 */
+        right: 0; /* ◀️ hover时向右展开 */
+        width: 100%; /* ◀️ hover时宽度为100% */
+      }
+    }
+  }
+}
+
+// ========================================
+// 7. 代码块标题样式 (vp-code-title.scss)
+// ========================================
+.post-content {
+  pre {
+    position: relative;
+
+    &[data-language]::before {
+      content: attr(data-language);
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 0.25rem 0.75rem;
+      background: rgba(0, 0, 0, 0.3);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-bottom-left-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+// ========================================
+// 8. 图片和代码块阴影 (vp-img-shadow.scss, vp-code-shadow.scss)
+// ========================================
+.post-content {
+  img {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+  }
+
+  pre {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+  }
+}
+
+// ========================================
+// 9. 自定义 blockquote 样式 (blockquote-one.scss)
+// ========================================
+.post-content {
+  blockquote {
+    position: relative;
+    margin: 1.5rem 0;
+    padding: 1rem 1rem 1rem 3rem;
+    background: linear-gradient(135deg, rgba(8, 145, 178, 0.05), rgba(6, 182, 212, 0.03));
+    border-left: 4px solid var(--primary-color);
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    &::before {
+      content: '"';
+      position: absolute;
+      left: 1rem;
+      top: 0.5rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      opacity: 0.3;
+      line-height: 1;
+    }
+
+    p {
+      margin: 0;
+      color: var(--text-color);
+      font-style: italic;
+    }
+  }
+}
+
+// ========================================
+// 10. 文字卡片悬停效果 (text-card-hover.scss)
+// ========================================
+.article-card,
+.article-card-compact {
+  .card-title,
+  .card-title-compact {
+    position: relative;
+    transition: all 0.3s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      transition: width 0.3s ease;
+    }
+  }
+
+  &:hover {
+    .card-title,
+    .card-title-compact {
+      color: var(--primary-color);
+
+      &::after {
+        width: 60%;
+      }
+    }
+  }
+}
+
+// ========================================
+// 11. 博主信息卡片背景图层级修复 (blogger-fix.scss)
+// ========================================
+.blogger-card {
+  position: relative;
+  overflow: hidden;
+
+  .avatar-wrapper {
+    position: relative;
+    z-index: 2;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140%;
+      height: 140%;
+      background: radial-gradient(circle, rgba(8, 145, 178, 0.1), transparent);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle,
+      rgba(8, 145, 178, 0.05) 0%,
+      rgba(6, 182, 212, 0.03) 30%,
+      transparent 70%
+    );
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// ========================================
+// 12. 字体优化 (font.scss)
+// ========================================
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code,
+pre {
+  font-family: 'Fira Code', 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
+}
+
+// .clock-time 的字体在 main.scss 中单独定义，不要和 code/pre 混在一起
+
+// ========================================
+// 13. 进度条颜色样式 (从 var.scss)
+// ========================================
+#nprogress {
+  .bar {
+    background: linear-gradient(
+      114.2deg,
+      rgba(184, 215, 21, 1) -15.3%,
+      rgba(148, 187, 233, 1) 14.5%,
+      rgba(21, 215, 182, 1) 38.7%,
+      rgba(129, 189, 240, 1) 58.8%,
+      rgba(219, 108, 205, 1) 77.3%,
+      rgba(240, 129, 129, 1) 88.5%
+    ) !important;
+  }
+}
+
+// ========================================
+// 14. 自定义容器/块样式 (container-one.scss)
+// ========================================
+:root {
+  --custom-block-info-left: #cccccc;
+  --custom-block-info-bg: #fafafa;
+
+  --custom-block-tip-left: #009400;
+  --custom-block-tip-bg: #e6f6e6;
+
+  --custom-block-warning-left: #e6a700;
+  --custom-block-warning-bg: #fff8e6;
+
+  --custom-block-danger-left: #e13238;
+  --custom-block-danger-bg: #ffebec;
+
+  --custom-block-note-left: #4cb3d4;
+  --custom-block-note-bg: #eef9fd;
+
+  --custom-block-important-left: #a371f7;
+  --custom-block-important-bg: #f4eefe;
+
+  --custom-block-caution-left: #e0575b;
+  --custom-block-caution-bg: #fde4e8;
+}
+
+.dark-mode {
+  --custom-block-info-left: #cccccc;
+  --custom-block-info-bg: #474748;
+
+  --custom-block-tip-left: #009400;
+  --custom-block-tip-bg: #003100;
+
+  --custom-block-warning-left: #e6a700;
+  --custom-block-warning-bg: #4d3800;
+
+  --custom-block-danger-left: #e13238;
+  --custom-block-danger-bg: #4b1113;
+
+  --custom-block-note-left: #4cb3d4;
+  --custom-block-note-bg: #193c47;
+
+  --custom-block-important-left: #a371f7;
+  --custom-block-important-bg: #230555;
+
+  --custom-block-caution-left: #e0575b;
+  --custom-block-caution-bg: #391c22;
+}
+
+// 自定义块基础样式
+.custom-block {
+  margin: 1.5rem 0;
+  padding: 1rem 1rem 1rem 3rem;
+  border-radius: 8px;
+  position: relative;
+
+  .custom-block-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+
+    &::before {
+      content: '';
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      vertical-align: middle;
+      position: relative;
+      margin-right: 4px;
+      left: -5px;
+      top: -1px;
+    }
+  }
+
+  // Info 容器
+  &.info {
+    border-left: 5px solid var(--custom-block-info-left);
+    background-color: var(--custom-block-info-bg);
+
+    .custom-block-title::before {
+      background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11v6h2v-6h-2zm0-4v2h2V7h-2z' fill='%23ccc'/%3E%3C/svg%3E");
+    }
+  }
+
+  // Tip 容器
+  &.tip {
+    border-left: 5px solid var(--custom-block-tip-left);
+    background-color: var(--custom-block-tip-bg);
+
+    .custom-block-title::before {
+      background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23009400' d='M7.941 18c-.297-1.273-1.637-2.314-2.187-3a8 8 0 1 1 12.49.002c-.55.685-1.888 1.726-2.185 2.998H7.94zM16 20v1a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-1h8zm-3-9.995V6l-4.5 6.005H11v4l4.5-6H13z'/%3E%3C/svg%3E");
+    }
+  }
+
+  // Warning 容器
+  &.warning {
+    border-left: 5px solid var(--custom-block-warning-left);
+    background-color: var(--custom-block-warning-bg);
+
+    .custom-block-title::before {
+      background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath d='M576.286 752.57v-95.425q0-7.031-4.771-11.802t-11.3-4.772h-96.43q-6.528 0-11.3 4.772t-4.77 11.802v95.424q0 7.031 4.77 11.803t11.3 4.77h96.43q6.528 0 11.3-4.77t4.77-11.803zm-1.005-187.836 9.04-230.524q0-6.027-5.022-9.543-6.529-5.524-12.053-5.524H456.754q-5.524 0-12.053 5.524-5.022 3.516-5.022 10.547l8.538 229.52q0 5.023 5.022 8.287t12.053 3.265h92.913q7.032 0 11.803-3.265t5.273-8.287zM568.25 95.65l385.714 707.142q17.578 31.641-1.004 63.282-8.538 14.564-23.354 23.102t-31.892 8.538H126.286q-17.076 0-31.892-8.538T71.04 866.074q-18.582-31.641-1.004-63.282L455.75 95.65q8.538-15.57 23.605-24.61T512 62t32.645 9.04 23.605 24.61z' fill='%23e6a700'/%3E%3C/svg%3E");
+    }
+  }
+
+  // Danger 容器
+  &.danger {
+    border-left: 5px solid var(--custom-block-danger-left);
+    background-color: var(--custom-block-danger-bg);
+
+    .custom-block-title::before {
+      background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c5.523 0 10 4.477 10 10v3.764a2 2 0 0 1-1.106 1.789L18 19v1a3 3 0 0 1-2.824 2.995L14.95 23a2.5 2.5 0 0 0 .044-.33L15 22.5V22a2 2 0 0 0-1.85-1.995L13 20h-2a2 2 0 0 0-1.995 1.85L9 22v.5c0 .171.017.339.05.5H9a3 3 0 0 1-3-3v-1l-2.894-1.447A2 2 0 0 1 2 15.763V12C2 6.477 6.477 2 12 2zm-4 9a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z' fill='%23e13238'/%3E%3C/svg%3E");
+    }
+  }
+
+  // Note 容器
+  &.note {
+    border-left: 5px solid var(--custom-block-note-left);
+    background-color: var(--custom-block-note-bg);
+
+    .custom-block-title::before {
+      background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11v6h2v-6h-2zm0-4v2h2V7h-2z' fill='%234cb3d4'/%3E%3C/svg%3E");
+    }
+  }
+
+  // Important 容器
+  &.important {
+    border-left: 5px solid var(--custom-block-important-left);
+    background-color: var(--custom-block-important-bg);
+
+    .custom-block-title::before {
+      background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath d='M512 981.333a84.992 84.992 0 0 1-84.907-84.906h169.814A84.992 84.992 0 0 1 512 981.333zm384-128H128v-42.666l85.333-85.334v-256A298.325 298.325 0 0 1 448 177.92V128a64 64 0 0 1 128 0v49.92a298.325 298.325 0 0 1 234.667 291.413v256L896 810.667v42.666zm-426.667-256v85.334h85.334v-85.334h-85.334zm0-256V512h85.334V341.333h-85.334z' fill='%23a371f7'/%3E%3C/svg%3E");
+    }
+  }
+
+  // Caution 容器
+  &.caution {
+    border-left: 5px solid var(--custom-block-caution-left);
+    background-color: var(--custom-block-caution-bg);
+
+    .custom-block-title::before {
+      background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c5.523 0 10 4.477 10 10v3.764a2 2 0 0 1-1.106 1.789L18 19v1a3 3 0 0 1-2.824 2.995L14.95 23a2.5 2.5 0 0 0 .044-.33L15 22.5V22a2 2 0 0 0-1.85-1.995L13 20h-2a2 2 0 0 0-1.995 1.85L9 22v.5c0 .171.017.339.05.5H9a3 3 0 0 1-3-3v-1l-2.894-1.447A2 2 0 0 1 2 15.763V12C2 6.477 6.477 2 12 2zm-4 9a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z' fill='%23e13238'/%3E%3C/svg%3E");
+    }
+  }
+}
+
+// ========================================
+// 15. 响应式优化
+// ========================================
+@media (max-width: 768px) {
+  // 移动端滚动条更细
+  ::-webkit-scrollbar {
+    width: 0.2rem;
+    height: 0.3rem;
+  }
+
+  // 移动端文字渐变效果减弱
+  .post-single h2 {
+    background: var(--primary-color);
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    color: var(--primary-color);
+  }
+}

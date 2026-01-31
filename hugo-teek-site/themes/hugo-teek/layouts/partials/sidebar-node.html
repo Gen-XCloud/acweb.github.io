@@ -1,0 +1,33 @@
+{{- $node := .node -}}
+{{- $currentPath := .currentPath -}}
+{{- $isActive := eq $node.relPermalink $currentPath -}}
+{{- $hasChildren := gt (len $node.children) 0 -}}
+
+<li class="simple-sidebar__item{{ if $isActive }} is-active{{ end }}{{ if $hasChildren }} has-children{{ end }}"
+    data-path="{{ $node.relPermalink }}">
+
+  {{- /* 链接或文件夹标题 */ -}}
+  <div class="simple-sidebar__item-inner"{{ if $hasChildren }} role="button" aria-expanded="false"{{ end }}>
+
+    {{- /* 标题/链接 */ -}}
+    {{- if $node.isFolder -}}
+      <span class="simple-sidebar__title">{{ $node.title }}</span>
+    {{- else -}}
+      <a href="{{ $node.relPermalink }}" class="simple-sidebar__link">{{ $node.title }}</a>
+    {{- end -}}
+
+    {{- /* 折叠箭头（仅文件夹，紧贴文字右侧） */ -}}
+    {{- if $hasChildren -}}
+      <span class="simple-sidebar__chevron" aria-hidden="true"></span>
+    {{- end -}}
+  </div>
+
+  {{- /* 子节点（递归） */ -}}
+  {{- if $hasChildren -}}
+    <ul class="simple-sidebar__children">
+      {{- range $node.children -}}
+        {{- partial "sidebar-node.html" (dict "node" . "currentPath" $currentPath) -}}
+      {{- end -}}
+    </ul>
+  {{- end -}}
+</li>

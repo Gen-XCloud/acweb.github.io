@@ -1,0 +1,40 @@
+{{- $groupName := .Get "group" -}}
+{{- $found := false -}}
+
+{{- range .Site.Data.websites.groups -}}
+  {{- if eq .title $groupName -}}
+    {{- $found = true -}}
+    <!-- 网站导航卡片网格（VitePress Grid 布局） -->
+    <div class="nav-card-grid">
+      {{- range .sites -}}
+      <div class="nav-card-grid__item">
+        <a href="{{ .link }}" class="nav-card-item" title="{{ .name }}" target="_blank" rel="noopener">
+          {{- if .badge -}}
+          <span class="VPBadge {{ .badgeType | default "info" }} badge">{{ .badge }}</span>
+          {{- end -}}
+
+          <div class="nav-card-item__info">
+            {{- if .img -}}
+            <div class="nav-card-item__img skeleton-image">
+              <img src="{{ .img }}" alt="{{ .name }}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.classList.add('loaded')">
+            </div>
+            {{- end -}}
+            <span class="name">{{ .name }}</span>
+          </div>
+
+          {{- if .desc -}}
+          <p class="desc">{{ .desc }}</p>
+          {{- end -}}
+        </a>
+      </div>
+      {{- end -}}
+    </div>
+  {{- end -}}
+{{- end -}}
+
+{{- if not $found -}}
+<!-- 分组 "{{ $groupName }}" 未找到 -->
+<div class="nav-card-not-found">
+  <p>分组 "<strong>{{ $groupName }}</strong>" 在 data/websites.json 中不存在</p>
+</div>
+{{- end -}}

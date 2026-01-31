@@ -1,0 +1,9 @@
+/**
+ * 移动端样式入口
+ * 只包含移动端相关的样式，适用于移动端应用
+ */
+
+@import './common/variables.scss';
+@import './mobile/PostEditorLayout.mobile.scss';
+@import './mobile/PostMetadataForm.mobile.scss';
+@import './mobile/PostContentEditor.mobile.scss';

@@ -1,0 +1,306 @@
+// ========================================
+// Footer Styles
+// ========================================
+.site-footer {
+  background: var(--footer-bg);
+  border-top: 1px solid var(--vp-c-divider, var(--border-color));
+  padding: 2rem 0 1.5rem;
+  margin-top: 3rem;
+  position: relative;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  // 可爱动物装饰 (使用图片)
+  .footer-animals {
+    text-align: center;
+    margin-bottom: 0.75rem; // 缩小与徽章的间距
+    padding: 0.25rem 0; // 减少内边距
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90px; // 预留空间防止布局跳动
+
+    .animals-image {
+      max-width: 100%;
+      height: 90px; // 固定高度防止闪烁
+      width: auto;
+      object-fit: contain;
+      display: block;
+      opacity: 1;
+
+      // 移除可能导致闪烁的hover效果
+      // transition: transform 0.3s ease, filter 0.3s ease;
+      // &:hover {
+      //   transform: scale(1.02);
+      //   filter: brightness(1.05);
+      // }
+    }
+  }
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem; // 缩小徽章和底部文字的间距
+    text-align: center;
+  }
+
+  // 服务徽章 (更突出)
+  .footer-services {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0; // 移除底部margin，由footer-content的gap控制
+    padding: 0.25rem 0; // 减少内边距
+    min-height: 32px; // 预留空间防止布局跳动
+
+    .service-badge {
+      display: inline-block;
+      opacity: 1; // 明确设置初始opacity，防止闪烁
+      transition: transform 0.2s ease; // 只保留transform过渡，移除opacity
+      border-radius: 4px;
+      overflow: hidden;
+
+      &:hover {
+        transform: translateY(-2px); // 简化hover效果，只轻微上移
+      }
+
+      img {
+        display: block;
+        height: 22px; // 固定高度防止加载时跳动
+        width: auto;
+        border-radius: 4px;
+        opacity: 1; // 确保图片不透明
+        vertical-align: middle; // 消除可能的行内空白
+      }
+    }
+  }
+
+  // 底部信息 (紧凑单行版)
+  .footer-info {
+    margin: 0;
+
+    .footer-info-compact {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--vp-c-text-1, var(--text-color)); // 使用主文本颜色提高对比度
+      line-height: 1.8;
+
+      .separator {
+        color: var(--vp-c-text-1, var(--text-color));
+        opacity: 0.8;
+        margin: 0 0.25rem;
+        font-weight: 600;
+      }
+
+      .theme-by,
+      .copyright,
+      .icp-record,
+      .busuanzi-pv,
+      .busuanzi-stats {
+        white-space: nowrap;
+      }
+
+      .busuanzi-stats {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+
+        .busuanzi-item {
+          white-space: nowrap;
+
+          span[id^="busuanzi_"] {
+            color: var(--primary-color); // 使用主题色以保证足够对比度
+            font-weight: 600;
+            margin-left: 0.2rem;
+          }
+        }
+      }
+
+      a {
+        color: var(--primary-color); // 使用主题色以保证足够对比度
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: var(--secondary-color);
+          text-decoration: underline;
+        }
+      }
+
+      // 不蒜子统计值样式
+      #busuanzi_value_site_pv {
+        color: var(--vp-c-brand-1, var(--primary-color));
+        font-weight: 600;
+      }
+    }
+  }
+
+  // 箴言/座右铭样式
+  .footer-motto {
+    margin-top: 0.75rem;
+    text-align: center;
+
+    p {
+      font-size: 0.875rem;
+      font-style: italic;
+      color: var(--vp-c-text-1, var(--text-color)); // 使用主文本颜色提高对比度
+      margin: 0;
+      padding: 0.5rem 1rem;
+      position: relative;
+      line-height: 1.6;
+
+      // 引号装饰
+      &::before {
+        content: '"';
+        font-size: 1.2em;
+        opacity: 0.5;
+        margin-right: 0.25rem;
+      }
+
+      &::after {
+        content: '"';
+        font-size: 1.2em;
+        opacity: 0.5;
+        margin-left: 0.25rem;
+      }
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 768px) {
+    padding: 1.5rem 0 1rem;
+
+    .footer-animals {
+      margin-bottom: 0.5rem; // 缩小间距
+      padding: 0.2rem 0; // 减少内边距
+      min-height: 70px; // 调整平板尺寸的预留空间
+
+      .animals-image {
+        height: 60px; // 固定高度
+      }
+    }
+
+    .footer-content {
+      gap: 0.4rem; // 平板尺寸缩小gap
+    }
+
+    .footer-services {
+      gap: 0.4rem;
+      padding: 0.2rem 0; // 减少内边距
+      min-height: 28px; // 平板尺寸预留空间
+
+      .service-badge img {
+        height: 18px; // 固定高度
+      }
+    }
+
+    .footer-info {
+      .footer-info-compact {
+        font-size: 0.8rem;
+        gap: 0.4rem;
+
+        .separator {
+          margin: 0 0.15rem;
+        }
+      }
+    }
+
+    // 箴言移动端样式
+    .footer-motto {
+      margin-top: 0.5rem;
+
+      p {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.75rem;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-animals {
+      margin-bottom: 0.4rem; // 手机尺寸进一步缩小间距
+      padding: 0.15rem 0; // 进一步减少内边距
+      min-height: 60px; // 调整手机尺寸的预留空间
+
+      .animals-image {
+        height: 50px; // 固定高度
+      }
+    }
+
+    .footer-content {
+      gap: 0.3rem; // 手机尺寸进一步缩小gap
+    }
+
+    .footer-services {
+      gap: 0.3rem;
+      padding: 0.15rem 0; // 减少内边距
+      min-height: 26px; // 手机尺寸预留空间
+
+      .service-badge img {
+        height: 16px; // 固定高度
+      }
+    }
+
+    .footer-info {
+      .footer-info-compact {
+        font-size: 0.75rem;
+
+        // 统计数据在移动端使用Grid布局
+        .busuanzi-stats {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr); // 3列: 今日、昨日、本月
+          grid-template-rows: repeat(2, auto); // 2行: 访客数、访问量
+          gap: 0.35rem 0.5rem;
+          width: 100%; // 占满整行
+          margin-top: 0.3rem; // 与上方内容分开
+
+          .busuanzi-item {
+            font-size: 0.7rem;
+            text-align: center;
+          }
+
+          // 精确控制每个统计项的位置（根据HTML中的实际顺序）
+          // 第1个子元素(今日访客数): 第1行第1列
+          .busuanzi-item:nth-child(1) { grid-area: 1 / 1 / 2 / 2; }
+          // 第3个子元素(今日访问量): 第2行第1列
+          .busuanzi-item:nth-child(3) { grid-area: 2 / 1 / 3 / 2; }
+          // 第5个子元素(昨日访客数): 第1行第2列
+          .busuanzi-item:nth-child(5) { grid-area: 1 / 2 / 2 / 3; }
+          // 第7个子元素(昨日访问量): 第2行第2列
+          .busuanzi-item:nth-child(7) { grid-area: 2 / 2 / 3 / 3; }
+          // 第9个子元素(本月访客数): 第1行第3列
+          .busuanzi-item:nth-child(9) { grid-area: 1 / 3 / 2 / 4; }
+          // 第11个子元素(本月访问量): 第2行第3列
+          .busuanzi-item:nth-child(11) { grid-area: 2 / 3 / 3 / 4; }
+
+          .separator {
+            display: none; // 移动端隐藏分隔符
+          }
+        }
+      }
+    }
+
+    // 箴言超小屏幕样式
+    .footer-motto {
+      margin-top: 0.4rem;
+
+      p {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.5rem;
+      }
+    }
+  }
+}

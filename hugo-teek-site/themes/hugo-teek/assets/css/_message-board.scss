@@ -1,0 +1,119 @@
+// Message Board Page Styles - VitePress Style
+// 留言区页面样式 - 完全复刻 VitePress 风格
+
+// ========================================
+// 页面布局
+// ========================================
+.message-board-layout {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 32px 0 96px;  /* 左右padding改为0，充分利用空间 */
+
+  .page-content-wrapper {
+    max-width: 960px;  /* 扩大内容区宽度 */
+    margin: 0 auto;
+    padding: 0 24px;  /* 内容区保留少量padding */
+    line-height: 1.7;
+    font-size: 16px;
+    color: var(--vp-c-text-1);
+  }
+}
+
+// ========================================
+// 3D 模型 iframe
+// ========================================
+.c-viewer__iframe {
+  width: 100%;
+  height: 300px;
+  border: none;
+  border-radius: 8px;
+  margin: 24px 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+// ========================================
+// 居中提示文字 (VitePress ::: center 容器风格)
+// ========================================
+.message-tips-center {
+  text-align: center;
+  padding: 24px;
+  margin: 32px 0;
+  color: var(--vp-c-text-2);
+  font-size: 15px;
+  line-height: 1.7;
+  border-radius: 8px;
+  background-color: var(--vp-c-bg-soft);
+
+  p {
+    margin: 8px 0;
+  }
+}
+
+// ========================================
+// 评论区
+// ========================================
+.page-comment-section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+// ========================================
+// 移动端适配
+// ========================================
+@media (max-width: 768px) {
+  .message-board-layout {
+    padding: 24px 0 80px;  /* 左右padding改为0 */
+
+    .page-content-wrapper {
+      max-width: 100%;
+      padding: 0 16px;  /* 移动端保留16px padding */
+    }
+  }
+
+  .c-viewer__iframe {
+    height: 250px;
+  }
+
+  .message-tips-center {
+    padding: 16px;
+    font-size: 14px;
+  }
+
+  // 移动端分享按钮调整
+  .message-board-layout .tk-share-wrapper {
+    top: calc(var(--vp-nav-height, 64px) + 24px);
+    right: 5%;  // 移动端距离右侧5%
+
+    .tk-share-button {
+      min-width: auto;
+      padding: 10px 16px;
+
+      .share-text {
+        display: none; // 移动端只显示图标
+      }
+    }
+  }
+}
+
+// ========================================
+// 分享按钮 (固定在右上角)
+// ========================================
+.message-board-layout .tk-share-wrapper {
+  position: fixed;
+  top: calc(var(--vp-nav-height, 64px) + 80px);
+  right: 10%;
+  z-index: 999;
+  margin: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+// ========================================
+// 深色模式
+// ========================================
+.dark-mode {
+  .c-viewer__iframe {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  }
+}

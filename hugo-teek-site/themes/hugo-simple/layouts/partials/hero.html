@@ -1,0 +1,9 @@
+{{ $heroImage := .Site.Params.heroImage | default .Site.Params.heroImage }}
+
+<section class="hero" style="background-image: url('{{ $heroImage }}');">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">{{ .Site.Params.heroTitle | default .Site.Title }}</h1>
+        <p class="hero-subtitle">{{ .Site.Params.heroSubtitle | default "欢迎来到我的博客" }}</p>
+    </div>
+</section>

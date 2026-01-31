@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+{{ $layoutMode := .Site.Params.layoutMode | default "original" }}
+{{ $docsSections := slice "docs" "linux" "frontend" "code" "hacker" "topic" "tools" "life" "love" "entertainment" "teek" }}
+{{ $isDocs := or (eq .Type "docs") (in $docsSections .Section) }}
+{{ $layoutWidths := .Site.Params.layoutWidths | default dict }}
+{{ $htmlStyles := slice }}
+{{ with $layoutWidths.full }}
+  {{ $htmlStyles = $htmlStyles | append (printf "--tk-layout-full-width-max-width:%s" .) }}
+{{ end }}
+{{ with $layoutWidths.page }}
+  {{ $htmlStyles = $htmlStyles | append (printf "--tk-layout-page-max-width:%s" .) }}
+{{ end }}
+{{ with $layoutWidths.doc }}
+  {{ $htmlStyles = $htmlStyles | append (printf "--tk-layout-doc-max-width:%s" .) }}
+{{ end }}
+{{ with $layoutWidths.sidebarTriggerDocOffset }}
+  {{ $htmlStyles = $htmlStyles | append (printf "--tk-sidebar-trigger-doc-offset:%s" .) }}
+{{ end }}
+<html lang="{{ .Site.LanguageCode | default "zh-CN" }}" layout-mode="{{ $layoutMode }}"{{ if $isDocs }} code-block="tk"{{ end }}{{ if gt (len $htmlStyles) 0 }} style="{{ delimit $htmlStyles ";" }};"{{ end }}>
+<head>
+  {{ .Scratch.Set "isDocs" $isDocs }}
+  {{ partial "head.html" . }}
+</head>
+{{ $titleChange := .Site.Params.titleChange | default dict }}
+{{ $titleEnabled := ne (default true $titleChange.enabled) false }}
+{{ $hiddenTitle := default "w(ﾟДﾟ)w 不要走！再看看嘛！" $titleChange.hidden }}
+{{ $returnTitle := default "♪(^∇^*)欢迎回来！" $titleChange.return }}
+{{ $resetDelay := default 2000 $titleChange.resetDelay }}
+{{ $scrollProgress := .Site.Params.scrollProgress | default dict }}
+{{ $bodyClasses := slice }}
+{{/* 移除服务端 darkMode 判断，完全依赖客户端 JavaScript 处理主题 */}}
+{{/* {{ if .Site.Params.darkMode }}
+  {{ $bodyClasses = $bodyClasses | append "dark-mode" }}
+{{ end }} */}}
+{{ if .IsHome }}
+  {{ $bodyClasses = $bodyClasses | append "home-page" }}
+{{ end }}
+{{ if $isDocs }}
+  {{ $bodyClasses = $bodyClasses | append "tk-card" }}
+{{ end }}
+{{ $appClasses := slice "Layout" "tk-layout" }}
+{{ if not $isDocs }}
+  {{ $appClasses = $appClasses | append "tk-layout--hide-vp-home" }}
+{{ else }}
+  {{ $appClasses = $appClasses | append "tk-layout--hide-vp-home" }}
+  {{ if .Site.Params.sidebarTrigger }}
+    {{ $appClasses = $appClasses | append "has-sidebar-trigger" }}
+  {{ end }}
+{{ end }}
+<body class="{{ delimit $bodyClasses " " }}"
+  {{- if $titleEnabled -}}
+    data-title-change="true"
+    data-title-hidden="{{ $hiddenTitle | htmlEscape }}"
+    data-title-return="{{ $returnTitle | htmlEscape }}"
+    data-title-delay="{{ $resetDelay }}"
+  {{- end -}}>
+  <script>
+    // 立即应用主题到 body，避免闪烁（与 head 中的脚本同步）
+    if (window.__INITIAL_THEME__ === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+  </script>
+  {{- partial "svg-sprites.html" . -}}
+  <div id="app"{{ if $appClasses }} class="{{ delimit $appClasses " " }}"{{ end }}>
+    {{ if ne (default true $scrollProgress.enabled) false }}
+      {{ partial "scroll-progress.html" . }}
+    {{ end }}
+    {{ partial "header.html" . }}
+
+    {{ if .IsHome }}
+      {{/* 首页:不使用容器,让Hero全屏 */}}
+      <main class="main-content">
+        {{ block "main" . }}{{ end }}
+      </main>
+    {{ else if $isDocs }}
+      <main id="VPContent" class="VPContent has-sidebar">
+        {{ block "main" . }}{{ end }}
+      </main>
+    {{ else if or (eq .Kind "404") (in (slice "friend-links" "thanks" "album" "websites" "archives") .Layout) }}
+      {{/* 独立页面: 404/友链/致谢/相册/网站导航/归档等 - 全宽画布，无侧边栏 */}}
+      <main class="main-content">
+        {{ block "main" . }}{{ end }}
+      </main>
+    {{ else }}
+      {{/* 其他页面:使用容器和侧边栏 */}}
+      <main class="main-content">
+        <div class="container">
+          <div class="content-wrapper">
+            {{ block "main" . }}{{ end }}
+
+            {{ if .Site.Params.sidebar }}
+            <aside class="sidebar">
+              {{ partial "sidebar.html" . }}
+            </aside>
+            {{ end }}
+          </div>
+        </div>
+      </main>
+    {{ end }}
+
+    {{ if .IsHome }}
+    {{ partial "footer.html" . }}
+    {{ end }}
+  </div>
+
+  {{ partial "back-to-top.html" . }}
+
+  {{ if .Site.Params.search.enabled }}
+  {{ partial "search-modal.html" . }}
+  {{ end }}
+
+  {{ partial "scripts.html" . }}
+</body>
+</html>

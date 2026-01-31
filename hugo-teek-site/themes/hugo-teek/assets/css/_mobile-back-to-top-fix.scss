@@ -1,0 +1,110 @@
+// ========================================
+// 移动端 Back-to-Top 按钮位置修复 - VP火箭样式
+// Mobile Back-to-Top Button Position Fix - VP Rocket Style
+// ========================================
+
+// 修复移动端 back-to-top 按钮与 FAB 按钮的位置冲突
+@media (max-width: 960px) {
+  .back-to-top {
+    // 调整位置避免与右下角FAB按钮冲突
+    bottom: 4rem !important;
+    right: 0.5rem !important;
+    z-index: 1000 !important;
+
+    // 评论按钮尺寸
+    width: 35px !important;
+    height: 35px !important;
+
+    // VP火箭样式 - 确保渐变生效
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+
+    &:hover {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+    }
+
+    // VP进度圆环尺寸（需要匹配HTML中的circle元素）
+    .progress-circle {
+      width: 35px !important;
+      height: 35px !important;
+    }
+
+    // VP火箭图标尺寸
+    .rocket-icon {
+      width: 30% !important;
+      height: 30% !important;
+    }
+
+    // 增强移动端触摸反馈
+    &:active {
+      transform: translateY(-2px) scale(0.95) !important;
+      transition: transform 0.1s ease !important;
+    }
+  }
+
+  .scroll-to-comment {
+    // 评论按钮位置
+    bottom: 1.5rem !important;
+    right: 0.5rem !important;
+    z-index: 1000 !important;
+
+    // 移动端尺寸 - 火箭按钮
+    width: 35px !important;
+    height: 35px !important;
+
+    // 自定义蓝色
+    background: #3a5ccc !important;
+    box-shadow: 0 4px 20px rgba(58, 92, 204, 0.3) !important;
+
+    &:hover {
+      background: #2d4aa8 !important;
+      box-shadow: 0 6px 25px rgba(58, 92, 204, 0.4) !important;
+    }
+
+    .comment-icon {
+      width: 20px !important;
+      height: 20px !important;
+      color: white !important;
+    }
+
+    // 增强移动端触摸反馈
+    &:active {
+      transform: translateY(-2px) scale(0.95) !important;
+      transition: transform 0.1s ease !important;
+    }
+  }
+}
+
+// 超小屏幕优化（小于480px）
+@media (max-width: 480px) {
+  .back-to-top {
+    bottom: 3.5rem !important;
+    right: 0.5rem !important;
+    width: 35px !important;
+    height: 35px !important;
+
+    .progress-circle {
+      width: 35px !important;
+      height: 35px !important;
+    }
+
+    .rocket-icon {
+      width: 45% !important;
+      height: 45% !important;
+    }
+  }
+
+  .scroll-to-comment {
+    bottom: 1rem !important;
+    right: 0.5rem !important;
+    width: 35px !important;
+    height: 35px !important;
+    background: #3a5ccc !important;
+    box-shadow: 0 4px 20px rgba(58, 92, 204, 0.3) !important;
+
+    .comment-icon {
+      width: 20px !important;
+      height: 20px !important;
+      color: white !important;
+    }
+  }
+}

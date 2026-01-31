@@ -1,0 +1,21 @@
+@import 'variables';
+
+// ========================================
+// 方案1: 纯白/纯黑（高对比）
+// ========================================
+
+:root[data-color-scheme="scheme1"]:not([data-theme="dark"]) {
+  --bg-primary: #{$scheme-pure-light-bg};
+  --bg-secondary: #{$scheme-pure-light-bg-secondary};
+  --text-primary: #{$scheme-pure-light-text};
+  --text-secondary: #{$scheme-pure-light-text-secondary};
+  --border-color: #{$scheme-pure-light-border};
+}
+
+:root[data-color-scheme="scheme1"][data-theme="dark"] {
+  --bg-primary: #{$scheme-pure-dark-bg};
+  --bg-secondary: #{$scheme-pure-dark-bg-secondary};
+  --text-primary: #{$scheme-pure-dark-text};
+  --text-secondary: #{$scheme-pure-dark-text-secondary};
+  --border-color: #{$scheme-pure-dark-border};
+}

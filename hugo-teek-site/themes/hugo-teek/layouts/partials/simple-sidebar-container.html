@@ -1,0 +1,68 @@
+{{- $currentPath := .context.RelPermalink -}}
+{{- $categorySlug := .categorySlug | default "" -}}
+{{- $isMobile := .isMobile | default false -}}
+
+{{- /* 读取categories.json，确定当前页面所属分类 */ -}}
+{{- $categoriesData := .context.Site.Data.sidebar.categories -}}
+
+{{- if not $categorySlug -}}
+  {{- range $path, $slug := $categoriesData.mapping -}}
+    {{- if hasPrefix $currentPath $path -}}
+      {{- $categorySlug = $slug -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* 读取分类数据 */ -}}
+{{- if $categorySlug -}}
+  {{- $sidebarData := index .context.Site.Data.sidebar $categorySlug -}}
+
+  {{- if and $sidebarData $sidebarData.tree -}}
+    {{- /* 渲染sidebar容器 */ -}}
+    <div class="simple-sidebar{{ if $isMobile }} simple-sidebar--mobile{{ end }}">
+      {{- /* Collapse按钮（仅PC端） */ -}}
+      {{- if not $isMobile -}}
+      <div class="simple-sidebar__header">
+        <button class="simple-sidebar__collapse-btn"
+                id="sidebar-collapse"
+                title="折叠侧边栏"
+                aria-label="折叠/展开侧边栏"
+                aria-expanded="true">
+          <svg class="simple-sidebar__collapse-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"></line>
+            <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2"></line>
+            <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2"></line>
+          </svg>
+        </button>
+      </div>
+      {{- end -}}
+
+      <nav class="simple-sidebar__nav" id="{{ if $isMobile }}VPSidebarNav-mobile{{ else }}VPSidebarNav{{ end }}" aria-label="文档导航">
+        {{- /* 添加 sidebar-content 容器供 JavaScript 查找和绑定事件 */ -}}
+        <div id="{{ if $isMobile }}sidebar-content-mobile{{ else }}sidebar-content{{ end }}" data-static-rendered="true">
+          <ul class="simple-sidebar__tree">
+            {{- range $sidebarData.tree -}}
+              {{- partial "sidebar-node.html" (dict "node" . "currentPath" $currentPath) -}}
+            {{- end -}}
+          </ul>
+        </div>
+
+        {{- /* Resize Handle（仅PC端） */ -}}
+        {{- if not $isMobile -}}
+        <div class="simple-sidebar__resize-handle"
+             aria-label="拖拽调整侧边栏宽度"
+             role="separator"
+             aria-orientation="vertical"></div>
+        {{- end -}}
+      </nav>
+    </div>
+  {{- else -}}
+    <div class="simple-sidebar simple-sidebar--empty">
+      <p class="simple-sidebar__empty-message">此分类暂无内容</p>
+    </div>
+  {{- end -}}
+{{- else -}}
+  <div class="simple-sidebar simple-sidebar--empty">
+    <p class="simple-sidebar__empty-message">未找到分类</p>
+  </div>
+{{- end -}}

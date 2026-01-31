@@ -1,0 +1,18 @@
+title: "站点公告"
+items:
+  - date: "2025-10-15"
+    text: "欢迎来到余温Gueen的博客!这里分享技术、生活和思考。"
+    new: true
+    link: "/about/"
+    external: false
+
+  - date: "2025-10-14"
+    text: "博客主题已升级,新增精选文章和友链功能。"
+    new: true
+    link: null
+
+  - date: "2025-10-10"
+    text: "已发布 Kubernetes Istio 实战指南,欢迎阅读!"
+    new: false
+    link: "/posts/kubernetes-service-mesh-istio-guide/"
+    external: false

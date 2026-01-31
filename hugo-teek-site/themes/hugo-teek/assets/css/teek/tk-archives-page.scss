@@ -1,0 +1,315 @@
+// VitePress Teek Archives Page Styles
+// 完整移植 VitePress Teek 归档页面时间轴样式
+
+.tk-archives {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 32px 24px;
+
+  // 文章数量统计样式
+  .count {
+    font-size: 13.6px;
+    opacity: 0.8;
+    font-weight: 300;
+    font-style: oblique;
+  }
+
+  // 页面头部
+  &__header {
+    margin-bottom: 32px;
+
+    h1 {
+      display: inline-block;
+      margin-right: 16px;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+
+    .count {
+      font-style: normal;
+      font-size: 1rem;
+    }
+  }
+
+  // 时间轴容器
+  &__timeline {
+    margin: 32px 0;
+
+    // 年份头部 - 粘性定位
+    &--year {
+      position: sticky;
+      top: var(--vp-nav-height);
+      background-color: var(--tk-bg-color);
+      border-bottom: 1px solid var(--tk-line-color);
+      margin-top: 32px;
+      z-index: 1;
+
+      .year {
+        padding: 8px 0;
+        font-size: 24px;
+        font-weight: 500;
+
+        .count {
+          margin-left: 12px;
+          font-size: 14px;
+          opacity: 0.7;
+        }
+      }
+    }
+
+    // 月份容器
+    &__m {
+      margin-top: 16px;
+
+      // 月份头部
+      &--month {
+        border-bottom: 1px solid var(--tk-line-color);
+        margin-top: 16px;
+
+        .month {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-bottom: 8px;
+          font-size: 19px;
+          font-weight: 500;
+          color: var(--tk-text-color);
+
+          .month-name {
+            flex: 1;
+          }
+
+          .count {
+            font-size: 14px;
+            opacity: 0.7;
+            font-weight: 400;
+            margin-left: 12px;
+          }
+        }
+      }
+
+      // 文章列表
+      ul {
+        padding: 8px 16px;
+        list-style: none;
+        margin: 0;
+
+        li {
+          line-height: 2;
+
+          a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            text-decoration: none;
+            color: var(--tk-text-color);
+            transition: padding var(--tk-transition-duration);
+
+            &:hover {
+              padding-left: 16px;
+              color: var(--tk-theme-color);
+              background: var(--tk-fill-color-light);
+
+              .date {
+                color: var(--tk-theme-color);
+              }
+            }
+
+            // 日期样式
+            .date {
+              opacity: 0.6;
+              font-size: 13.6px;
+              margin-right: 8px;
+              flex-shrink: 0;
+              font-family: monospace;
+              transition: color var(--tk-transition-duration);
+            }
+
+            // 标题样式
+            .title {
+              flex: 1;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+
+            // 标签容器（扩展功能）
+            .tags {
+              display: flex;
+              gap: 4px;
+              flex-shrink: 0;
+              align-items: center;
+
+              .tag {
+                font-size: 12px;
+                padding: 2px 8px;
+                background: var(--tk-fill-color);
+                border-radius: 4px;
+                opacity: 0.8;
+                color: var(--tk-text-color);
+                transition: all var(--tk-transition-duration);
+
+                &:hover {
+                  opacity: 1;
+                  background: var(--tk-theme-color);
+                  color: var(--tk-bg-color);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 移动端响应式设计
+  @media (max-width: 768px) {
+    padding: 16px;
+
+    &__header {
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+
+    &__timeline {
+      // 年份头部
+      &--year {
+        .year {
+          font-size: 20px;
+
+          .count {
+            display: block;
+            margin-left: 0;
+            margin-top: 4px;
+            font-size: 12px;
+          }
+        }
+      }
+
+      // 月份
+      &__m {
+        &--month {
+          .month {
+            font-size: 16px;
+          }
+        }
+
+        // 文章列表
+        ul {
+          padding: 8px 8px;
+
+          li a {
+            flex-wrap: wrap;
+            gap: 4px;
+
+            .date {
+              width: 100%;
+              margin-bottom: 4px;
+            }
+
+            .title {
+              width: 100%;
+              white-space: normal;
+            }
+
+            .tags {
+              width: 100%;
+              margin-top: 4px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 小屏幕优化
+  @media (max-width: 480px) {
+    padding: 12px;
+
+    &__timeline {
+      margin: 16px 0;
+
+      &--year {
+        margin-top: 24px;
+      }
+
+      &__m {
+        ul {
+          padding: 4px 4px;
+        }
+      }
+    }
+  }
+}
+
+// 深色模式适配（如果主题有深色模式）
+body.dark-mode .tk-archives {
+  .count {
+    opacity: 0.7;
+  }
+
+  &__timeline {
+    &--year {
+      background-color: var(--tk-bg-color);
+    }
+
+    &__m ul li a {
+      &:hover {
+        background: var(--tk-fill-color);
+      }
+    }
+  }
+}
+
+// ========================================
+// 懒加载指示器样式
+// ========================================
+.archives-loading,
+.archives-no-more,
+.archives-no-data {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary, #64748b);
+  font-size: 14px;
+}
+
+.archives-loading {
+  // 加载动画
+  &::after {
+    content: '...';
+    animation: loading-dots 1.5s steps(4, end) infinite;
+  }
+}
+
+@keyframes loading-dots {
+  0%, 20% {
+    content: '.';
+  }
+  40% {
+    content: '..';
+  }
+  60%, 100% {
+    content: '...';
+  }
+}
+
+.archives-no-more {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.archives-no-data {
+  padding: 60px 20px;
+  font-size: 15px;
+  opacity: 0.8;
+}
+
+body.dark-mode {
+  .archives-loading,
+  .archives-no-more,
+  .archives-no-data {
+    color: var(--text-secondary, #94a3b8);
+  }
+}

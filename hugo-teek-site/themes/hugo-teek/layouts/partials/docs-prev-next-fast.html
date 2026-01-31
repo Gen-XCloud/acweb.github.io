@@ -1,0 +1,48 @@
+{{/*
+  极速版 Prev-Next：O(1) 查表，零计算开销
+
+  性能对比：
+  - 旧版：遍历 flatPages 数组，O(n) 复杂度，50ms/页
+  - 新版：直接查 prevNextMap，O(1) 复杂度，<1ms/页
+
+  支持两种数据源：
+  - 拆分模式：site.Data.sidebar.prevnext (推荐，性能更优)
+  - 传统模式：site.Data.sidebarOrder.prevNextMap (向后兼容)
+*/}}
+{{- $current := . -}}
+
+{{/* 标准化文件路径（去除前缀，保持与 sidebar.go 一致） */}}
+{{- $relPath := "" -}}
+{{- with $current.File -}}
+  {{- $relPath = .Path -}}
+  {{- $relPath = strings.TrimPrefix "/" $relPath -}}
+  {{- $relPath = strings.TrimPrefix ".content-vp-converted/docs/" $relPath -}}
+  {{- $relPath = strings.TrimPrefix "content/docs/" $relPath -}}
+  {{- $relPath = strings.TrimPrefix "docs/" $relPath -}}
+{{- end -}}
+
+{{/* 从预生成的 prevNextMap 中查表 (O(1)) - 支持拆分和传统模式 */}}
+{{- $prevNextMap := site.Data.sidebar.prevnext | default site.Data.sidebarOrder.prevNextMap -}}
+{{- $pn := index $prevNextMap $relPath -}}
+
+{{/* 渲染 prev-next 导航 */}}
+{{ if $pn }}
+  {{ if or $pn.prev $pn.next }}
+    <div class="tk-doc-pagination">
+      {{ if $pn.prev }}
+        {{- $prevUrl := $pn.prevUrl | default (printf "/%s" ($pn.prev | replaceRE `\.md$` "" | replaceRE `/_index$` "")) -}}
+        <a href="{{ $prevUrl }}" class="tk-doc-pagination__item prev">
+          <span class="tk-doc-pagination__label">上一篇</span>
+          <span class="tk-doc-pagination__title">{{ $pn.prevTitle }}</span>
+        </a>
+      {{ end }}
+      {{ if $pn.next }}
+        {{- $nextUrl := $pn.nextUrl | default (printf "/%s" ($pn.next | replaceRE `\.md$` "" | replaceRE `/_index$` "")) -}}
+        <a href="{{ $nextUrl }}" class="tk-doc-pagination__item next">
+          <span class="tk-doc-pagination__label">下一篇</span>
+          <span class="tk-doc-pagination__title">{{ $pn.nextTitle }}</span>
+        </a>
+      {{ end }}
+    </div>
+  {{ end }}
+{{ end }}

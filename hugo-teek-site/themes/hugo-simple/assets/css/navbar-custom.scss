@@ -1,0 +1,56 @@
+// ========================================
+// 导航栏自定义样式
+// 通过 data-navbar-* 属性动态控制
+// ========================================
+
+// 品牌字体大小
+[data-navbar-brand-size] .site-brand {
+  font-size: var(--navbar-brand-size, 1.3rem);
+}
+
+// 品牌字体权重
+[data-navbar-brand-weight] .site-brand {
+  font-weight: var(--navbar-brand-weight, bold);
+}
+
+// 导航链接字体大小
+[data-navbar-link-size] .nav-link {
+  font-size: var(--navbar-link-size, 0.95rem);
+}
+
+// 导航链接字体权重
+[data-navbar-link-weight] .nav-link {
+  font-weight: var(--navbar-link-weight, normal);
+}
+
+// 导航链接颜色
+[data-navbar-link-color] .nav-link {
+  color: var(--navbar-link-color, var(--text-secondary));
+}
+
+[data-navbar-link-color] .nav-link:hover {
+  color: var(--navbar-link-hover-color, var(--text-primary));
+}
+
+// 暗黑模式导航链接颜色
+[data-theme="dark"][data-navbar-link-color-dark] .nav-link {
+  color: var(--navbar-link-color-dark, var(--text-secondary));
+}
+
+[data-theme="dark"][data-navbar-link-color-dark] .nav-link:hover {
+  color: var(--navbar-link-hover-color-dark, var(--text-primary));
+}
+
+// 导航栏背景色
+[data-navbar-bg] .site-header {
+  background: var(--navbar-bg, rgba(0, 0, 0, 0.8));
+}
+
+[data-theme="dark"][data-navbar-bg-dark] .site-header {
+  background: var(--navbar-bg-dark, rgba(15, 23, 42, 0.8));
+}
+
+// 字体类型
+[data-navbar-font-family] {
+  --font-family-base: var(--navbar-font-family);
+}

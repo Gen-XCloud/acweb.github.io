@@ -1,0 +1,8 @@
+{{- $duration := default 15000 (.Get "duration") -}}
+{{- $initial := default 100 (.Get "initial") -}}
+{{- $colors := .Get "colors" -}}
+<div class="teek-confetti" data-confetti data-confetti-duration="{{ $duration }}" data-confetti-initial="{{ $initial }}"{{ if $colors }} data-confetti-colors="{{ $colors }}"{{ end }}>
+  {{- with .Inner -}}
+    {{ . | markdownify }}
+  {{- end -}}
+</div>

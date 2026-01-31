@@ -1,0 +1,31 @@
+{{- $cols := .Get "cols" | default "auto" -}}
+{{- $gap := .Get "gap" | default "20" -}}
+{{- $target := .Get "target" | default "_blank" -}}
+{{- $itemsParam := .Get "items" | default "" -}}
+{{- $data := $itemsParam | transform.Unmarshal | default slice -}}
+
+<div class="tk-share-card-container">
+  <div class="tk-share-card-grid index-{{ $cols }}" style="--row-gap: {{ $gap }}px; --column-gap: {{ $gap }}px;">
+    {{- range $data }}
+      {{- $link := .link | default "" -}}
+      {{- $tag := cond (ne $link "") "a" "div" -}}
+      {{- $bg := .bgColor | default "var(--vp-c-bg-alt)" -}}
+      {{- $text := .textColor | default "var(--vp-c-text-1)" -}}
+      <{{ $tag }}
+        class="tk-share-card-grid__item"
+        {{- if ne $link "" }} href="{{ $link }}" target="{{ $target }}" rel="noopener"{{ end }}
+        style="--item-bg-color: {{ $bg }}; --item-text-color: {{ $text }};"
+      >
+        {{- with .avatar }}
+        <div class="tk-share-card-grid__avatar">
+          <img src="{{ . }}" alt="{{ $.Get "title" | default "share" }}" loading="lazy">
+        </div>
+        {{- end }}
+        <div class="tk-share-card-grid__content">
+          {{- with .name }}<p class="name">{{ . }}</p>{{ end }}
+          {{- with .desc }}<p class="desc">{{ . }}</p>{{ end }}
+        </div>
+      </{{ $tag }}>
+    {{- end }}
+  </div>
+</div>

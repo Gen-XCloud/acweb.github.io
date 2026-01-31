@@ -1,0 +1,58 @@
+# ========================================
+# 外部服务配置 (External Services Configuration)
+# ========================================
+# 本文件集中管理所有外部服务的配置和开关。
+# 包括：统计分析、评论系统、页脚统计组件等。
+# 所有服务都提供统一的 enabled 开关，便于快速启用/禁用。
+# ========================================
+# ⚠️ 注意：此文件会被合并到 params.toml 的 [params] 节点下
+#          因此不需要 [params] 前缀，直接写配置项即可
+# ========================================
+
+# ========================================
+# 统计分析服务 (Analytics Services)
+# ========================================
+
+[analytics]
+
+  # 不蒜子访问统计
+  [analytics.busuanzi]
+    enabled = true  # 总开关：启用/禁用不蒜子统计
+    url = "https://busuanzi-eo.xxdevops.cn/busuanzi.eo.js"
+    prefix = "busuanzi"
+    style = "comma"       # 数字显示格式：comma（千分位）| none（纯数字）
+    pjax = false
+    page_pv = true        # 显示页面浏览量
+    site_pv = true        # 显示站点总浏览量
+    site_uv = true        # 显示站点独立访客数
+    type = 'eo'           # 用于区分 EO 版本和 classic 版本
+    api = 'https://busuanzi-eo.xxdevops.cn/api/count' #  API 端点地址
+
+  # Umami 网站分析
+  [analytics.umami]
+    enabled = true  # 总开关：启用/禁用 Umami 分析
+    url = "https://umami.xxdevops.cn"
+    websiteId = "a50c01fa-f866-488d-a328-3ac73aa639f7"
+
+# ========================================
+# 评论系统 (Comment System)
+# ========================================
+
+[comment]
+  enabled = true  # 总开关：启用/禁用评论系统
+  provider = "twikoo"  # 评论提供商：twikoo | waline | giscus 等
+  envId = "https://twikoo.xxdevops.cn/"  # Twikoo 服务器地址
+  version = "1.6.41"   # Twikoo 版本
+  hideAdmin = false    # 是否隐藏管理员标识
+
+# ========================================
+# 页脚统计组件 (Footer Analytics Widget)
+# ========================================
+
+[footer]
+
+  # 51.LA 统计组件
+  [footer.analytics]
+    la_widget_enabled = true  # 总开关：启用/禁用 LA 统计组件
+    la_widget_id = "3LmZHLhDZIDpMaT0"
+    la_widget_theme = "#1690FF,#333333,#999999,#007BFF,#FFFFFF,#1690FF,12"

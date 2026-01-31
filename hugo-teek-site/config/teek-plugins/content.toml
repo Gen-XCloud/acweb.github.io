@@ -1,0 +1,60 @@
+# ========================================
+# 内容目录配置 (Content Directories Configuration)
+# ========================================
+# 本文件管理文档来源目录和开发模式监听配置。
+# 支持多目录内容合并，实现灵活的内容组织方式。
+#
+# 使用场景：
+#   1. 从多个目录加载文档内容
+#   2. 支持外部目录、共享文档库等
+#   3. 开发模式下监听文件变化
+# ========================================
+
+[params.content]
+
+  # ========================================
+  # 额外文档目录 (Additional Documentation Directories)
+  # ========================================
+  # 除了默认的 content/docs 目录外，还可以从以下目录加载文档。
+  # 路径相对于项目根目录（hugo-teek-theme/）。
+  #
+  # 格式 (Format):
+  #   相对路径：["docs", "external-docs"]
+  #   绝对路径：["/home/user/shared-docs"]
+  #   混合路径：["docs", "/absolute/path"]
+  #
+  # 合并规则：
+  #   - 后加载的目录会覆盖先加载目录的同名文件
+  #   - 构建工具会警告文件冲突
+  #
+  # 注意事项：
+  #   - 所有额外目录的内容会与主 docs 目录合并处理
+  #   - 确保目录存在，否则构建时会报错
+  additionalDocs = ["docs", "hugo-teek-site/content"]  # 项目根目录的 docs 文件夹 和 hugo 站点内容目录
+
+  # 示例配置 (Examples):
+  # additionalDocs = []  # 不使用额外目录
+  # additionalDocs = ["docs", "blog"]  # 多个相对路径
+  # additionalDocs = ["/home/user/shared-docs"]  # 绝对路径
+  # additionalDocs = ["D:/my-docs"]  # Windows 路径
+
+  # ========================================
+  # 开发模式监听目录 (Development Watch Directories)
+  # ========================================
+  # 开发服务器（make dev）运行时监听这些目录的文件变化。
+  # 路径相对于 hugo-teek-site/ 目录。
+  #
+  # 格式 (Format):
+  #   相对路径（相对于 hugo-teek-site/）：["content/docs"]
+  #   父目录路径：["../docs"]
+  #   多目录：["content/docs", "../docs"]
+  #
+  # 注意事项：
+  #   - 文件变化时会自动触发 VitePress 语法转换
+  #   - 防抖延迟默认 500ms（在 teektools.toml 配置）
+  watchDirs = ["content/docs", "../docs"]
+
+  # 示例配置 (Examples):
+  # watchDirs = ["content"]  # 监听整个 content 目录
+  # watchDirs = ["content/docs", "content/posts"]  # 多个子目录
+  # watchDirs = ["../external-docs"]  # 外部目录

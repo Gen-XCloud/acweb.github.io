@@ -1,0 +1,148 @@
+# ========================================
+# Hugo 核心配置文件 (Hugo Core Configuration)
+# ========================================
+# 这个文件包含适用于所有主题的 Hugo 核心配置。
+# 这些设置与主题无关，切换主题时保持不变。
+#
+# 注意：主题专属配置在 config/themes/<theme-name>.toml
+# ========================================
+
+# ========================================
+# 站点基础信息 (Site Information)
+# ========================================
+baseURL = "https://wiki.xxdevops.cn"
+title = "余温Gueen"
+theme = "hugo-simple"
+
+# Hugo 核心设置 (Hugo Core Settings)
+contentDir = "content"
+publishDir = "public"
+languageCode = "zh-CN"
+enableEmoji = true
+enableGitInfo = true
+enableRobotsTXT = true
+
+# ========================================
+# 构建优化 (Build Optimization)
+# ========================================
+# 启用 HTML/CSS/JS/JSON/XML 最小化
+# 边缘反代会自动压缩，但我们先在构建时最小化
+[minify]
+  disableCSS = false
+  disableHTML = false
+  disableJS = false
+  disableJSON = false
+  disableSVG = false
+  disableXML = false
+  minifyOutput = true
+  [minify.tdewolff.html]
+    keepWhitespace = false
+  [minify.tdewolff.css]
+    keepCSS2 = false
+  [minify.tdewolff.js]
+    keepVarNames = false
+
+# ========================================
+# 文件处理 (File Processing)
+# ========================================
+# 忽略以下划线开头的文件和目录，但保留 _index.md
+# Hugo 会递归应用这些规则到所有子目录
+ignoreFiles = [
+  "^_[^i]",                    # 忽略 _X 开头的文件/目录，X 不是 i（如 _test, _draft）
+  "^_i[^n]",                   # 忽略 _iX 开头的文件/目录，X 不是 n
+  "^_in[^d]",                  # 忽略 _inX 开头的文件/目录，X 不是 d
+  "^_ind[^e]",                 # 忽略 _indX 开头的文件/目录，X 不是 e
+  "^_inde[^x]",                # 忽略 _indeX 开头的文件/目录，X 不是 x
+  "^_index[^\\.]",             # 忽略 _indexX 开头的文件/目录，X 不是 .（点）
+  "^_index\\.[^m]",            # 忽略 _index.X 开头的文件，X 不是 m
+  "^_index\\.m[^d]",           # 忽略 _index.mX 开头的文件，X 不是 d
+  "^_index\\.md\\.",           # 忽略 _index.md. 开头的文件（如 _index.md.bak）
+  "(^|/)_[^i]",                # 忽略任何目录下 /_X 开头的文件/目录，X 不是 i
+  "(^|/)_i[^n]",               # 忽略任何目录下 /_iX 开头的文件/目录，X 不是 n
+  "(^|/)_in[^d]",              # 忽略任何目录下 /_inX 开头的文件/目录，X 不是 d
+  "(^|/)_ind[^e]",             # 忽略任何目录下 /_indX 开头的文件/目录，X 不是 e
+  "(^|/)_inde[^x]",            # 忽略任何目录下 /_indeX 开头的文件/目录，X 不是 x
+  "(^|/)_index[^\\.]",         # 忽略任何目录下 /_indexX 开头的文件/目录，X 不是 .
+  "(^|/)_index\\.[^m]",        # 忽略任何目录下 /_index.X 开头的文件，X 不是 m
+  "(^|/)_index\\.m[^d]",       # 忽略任何目录下 /_index.mX 开头的文件，X 不是 d
+  "(^|/)_index\\.md\\."        # 忽略任何目录下 /_index.md. 开头的文件
+]
+
+# Front Matter 配置 - 最后更新时间使用文件修改时间
+[frontmatter]
+  lastmod = [":fileModTime", ":default"]
+
+# ========================================
+# Markdown 渲染配置 (Markdown Rendering)
+# ========================================
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.extensions]
+      attributes = true
+      definitionList = true
+      footnote = true
+      linkify = true
+      strikethrough = true
+      table = true
+      taskList = true
+      typographer = true
+    [markup.goldmark.parser]
+      autoHeadingID = true
+      [markup.goldmark.parser.attribute]
+        block = true
+        title = true
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    lineNumbersInTable = false  # 使用VitePress风格的绝对定位行号，而非table布局
+    noClasses = false
+    style = "monokai"
+    tabWidth = 2.0
+  [markup.tableOfContents]
+    endLevel = 4.0
+    ordered = false
+    startLevel = 1.0  # 从 h1 开始，支持内容区h1标题（如websites页面）
+
+# ========================================
+# 输出格式配置 (Output Formats)
+# ========================================
+[outputFormats]
+  [outputFormats.RSS]
+    baseName = "feed"
+    mediatype = "application/rss+xml"
+
+  # 公众号解锁功能 - 生成完整内容JSON文件
+  [outputFormats.UNLOCKJSON]
+    name = "unlockjson"
+    baseName = "content"
+    mediaType = "application/json"
+    isPlainText = true
+    notAlternative = true
+
+[outputs]
+  home = ["HTML"]  # 暂时禁用 RSS 和 JSON 测试性能
+  page = ["HTML"]
+  section = ["HTML"]  # 暂时禁用 section RSS 测试性能
+
+[pagination]
+  defaultContentLanguage = "zh-cn"
+  pagerSize = 15.0
+  path = "page"
+
+# ========================================
+# 分类法配置 (Taxonomies)
+# ========================================
+# 性能优化：禁用 taxonomy 生成以加速构建（Hugo 构建时间减少约 50%）
+# 使用空配置来完全禁用 taxonomies（如果注释掉，Hugo 会使用默认值）
+# 如需恢复标签/分类功能，使用以下配置：
+# [taxonomies]
+#   category = "categories"
+#   tag = "tags"
+[taxonomies]
+  # 空配置 - 完全禁用所有 taxonomy
+
+[permalinks]
+  posts = "/posts/:slug/"

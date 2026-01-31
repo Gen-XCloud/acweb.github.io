@@ -1,0 +1,298 @@
+// ========================================
+// Pagination Styles
+// ========================================
+.pagination-wrapper {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  .pagination-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: white;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: white;
+    }
+
+    &.disabled {
+      background: #f5f5f5;
+      color: #d9d9d9;
+      border-color: #d9d9d9;
+      cursor: not-allowed;
+
+      &:hover {
+        background: #f5f5f5;
+        border-color: #d9d9d9;
+        color: #d9d9d9;
+      }
+    }
+
+    svg {
+      display: block;
+    }
+  }
+
+  .pagination-numbers {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0 0.25rem;
+
+    .pagination-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 32px;
+      padding: 0 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background: white;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+      }
+
+      &.active {
+        background: #1890ff;
+        border-color: #1890ff;
+        color: white;
+        font-weight: 500;
+      }
+    }
+
+    .pagination-ellipsis {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 32px;
+      padding: 0 0.25rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      user-select: none;
+    }
+  }
+
+  .pagination-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 1rem;
+    padding-left: 1rem;
+    border-left: 1px solid var(--border-color);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+
+    .pagination-goto {
+      color: var(--text-secondary);
+    }
+
+    .pagination-input {
+      width: 50px;
+      height: 28px;
+      padding: 0 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      text-align: center;
+      font-size: 0.875rem;
+      outline: none;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: var(--primary-color);
+      }
+
+      &:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+      }
+
+      /* Remove spinner buttons */
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      -moz-appearance: textfield;
+    }
+
+    .pagination-goto-btn {
+      height: 28px;
+      padding: 0 0.75rem;
+      border: 1px solid var(--primary-color);
+      border-radius: 4px;
+      background: var(--primary-color);
+      color: white;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      font-weight: 400;
+
+      &:hover {
+        background: #40a9ff;
+        border-color: #40a9ff;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 2px rgba(24, 144, 255, 0.2);
+      }
+    }
+
+    .pagination-total {
+      color: var(--text-secondary);
+    }
+  }
+}
+
+// Dark mode
+.dark-mode {
+  .pagination {
+    .pagination-arrow,
+    .pagination-number {
+      background: var(--card-bg);
+
+      &:not(.disabled):hover {
+        background: var(--primary-color);
+      }
+    }
+
+    .pagination-input {
+      background: var(--card-bg);
+      color: var(--text-color);
+    }
+
+    .pagination-goto-btn {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+
+      &:hover {
+        background: #40a9ff;
+        border-color: #40a9ff;
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  // 确保分页栏容器完全居中
+  .pagination-wrapper {
+    width: 100%;
+    margin-top: 2rem; // 减小顶部间距
+    padding: 0 0.75rem; // 减小左右间距
+    box-sizing: border-box;
+    overflow-x: auto; // 防止内容溢出
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; // iOS 平滑滚动
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.5rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    gap: 0.25rem; // 减小间距
+
+    // 缩小箭头和页码按钮尺寸
+    .pagination-arrow {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      font-size: 0.75rem;
+    }
+
+    .pagination-numbers {
+      gap: 0.25rem; // 减小间距
+      margin: 0;
+      position: relative; // 为省略号定位提供参照
+
+      .pagination-number {
+        min-width: 28px;
+        height: 28px;
+        padding: 0 0.4rem;
+        font-size: 0.8rem;
+        position: relative; // 为::after定位
+      }
+
+      // 移动端智能隐藏页码：只保留前3个、最后2个，中间的用CSS隐藏
+      // 如果有很多页码（>6个），隐藏中间的
+      .pagination-number:nth-child(n+4):nth-last-child(n+3) {
+        display: none;
+      }
+
+      // 在第3个页码后添加省略号提示（仅当有隐藏页码时）
+      .pagination-number:nth-child(3):not(:nth-last-child(-n+3))::after {
+        content: '...';
+        position: absolute;
+        right: -12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        pointer-events: none;
+        font-size: 0.75rem;
+      }
+    }
+
+    .pagination-info {
+      width: 100%;
+      margin-left: 0;
+      margin-top: 0.75rem;
+      padding-left: 0;
+      padding-top: 0.75rem;
+      border-left: none;
+      border-top: 1px solid var(--border-color);
+      justify-content: center;
+      font-size: 0.8rem;
+
+      .pagination-input {
+        width: 45px;
+        height: 26px;
+        font-size: 0.8rem;
+      }
+
+      .pagination-goto-btn {
+        height: 26px;
+        padding: 0 0.6rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// Post single

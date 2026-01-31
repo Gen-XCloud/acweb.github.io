@@ -1,0 +1,206 @@
+{{ define "main" }}
+<div class="websites-wrapper">
+  <article class="post-single websites-page">
+    <div class="websites-container">
+
+      <!-- 页面主标题区域 -->
+      <div class="websites-title">
+        <h1>{{ .Title | default "网站导航" }}</h1>
+      </div>
+
+      <!-- Markdown 正文内容渲染（包含 h2 标题 + navCard shortcode） -->
+      <div class="post-content websites-content">
+        {{ .Content }}
+      </div>
+
+      <!-- 打赏组件 -->
+      {{ if .Site.Params.appreciation.enabled }}
+      <div class="websites-appreciation">
+        {{ partial "appreciation.html" . }}
+      </div>
+      {{ end }}
+
+      <!-- 最后更新时间 -->
+      {{ if .Lastmod }}
+      <div class="websites-lastmod">
+        <div class="lastmod-inner">
+          <i class="icon-calendar"></i>
+          <span>最后更新: {{ .Lastmod.Format "2006-01-02 15:04:05" }}</span>
+        </div>
+      </div>
+      {{ end }}
+
+      <!-- 评论区域 -->
+      {{ if .Site.Params.comment.enabled }}
+      <div class="post-comment">
+        {{ partial "comment.html" . }}
+      </div>
+      {{ end }}
+
+    </div>
+  </article>
+
+  <!-- 右侧 TOC 目录（从 MD 文件的 h2 标题生成） -->
+  {{ with .TableOfContents }}
+  <aside class="websites-aside">
+    <div class="websites-aside__container">
+      {{ $toc := . }}
+      {{ $toc = replace $toc "<nav id=\"TableOfContents\">" "" }}
+      {{ $toc = replace $toc "</nav>" "" }}
+      {{ $toc = replace $toc "<ul>" "<ul class=\"vp-outline-list\">" }}
+      {{ $toc = replace $toc "<li>" "<li class=\"vp-outline-item\">" }}
+      {{ $toc = replace $toc "<a href" "<a class=\"vp-outline-link\" href" }}
+      <div class="tk-aside-outline has-outline">
+        <div class="outline-title">章节导航</div>
+        <div class="outline-content">
+          <div class="outline-marker"></div>
+          {{ $toc | safeHTML }}
+        </div>
+      </div>
+    </div>
+  </aside>
+  {{ end }}
+</div>
+
+<script>
+  // 图片加载错误处理
+  (function() {
+    const allImages = document.querySelectorAll('.nav-card-item__img img');
+    allImages.forEach(img => {
+      img.addEventListener('error', function() {
+        console.warn('[Websites] 图片加载失败:', this.src);
+        this.src = 'data:image/svg+xml,' + encodeURIComponent(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">' +
+          '<rect width="100" height="100" fill="#f3f4f6"/>' +
+          '<text x="50" y="50" font-family="Arial" font-size="14" fill="#9ca3af" text-anchor="middle" dominant-baseline="middle">加载失败</text>' +
+          '</svg>'
+        );
+        this.onerror = null;
+        this.classList.add('loaded');
+      });
+    });
+
+    // 更新 marker 位置并自动滚动TOC
+    function updateMarker(link) {
+      const marker = document.querySelector('.outline-marker');
+      if (marker && link) {
+        const linkRect = link.getBoundingClientRect();
+        const contentRect = link.closest('.outline-content').getBoundingClientRect();
+        const top = linkRect.top - contentRect.top;
+        marker.style.top = `${top}px`;
+        marker.style.opacity = '1';
+
+        // 自动滚动TOC容器,让active链接在可视区域内
+        const tocContainer = document.querySelector('.websites-aside__container');
+        if (tocContainer) {
+          const containerRect = tocContainer.getBoundingClientRect();
+          const linkAbsoluteTop = linkRect.top;
+          const containerTop = containerRect.top;
+          const containerBottom = containerRect.bottom;
+
+          // 如果链接在可视区域外,滚动到可视区域中间
+          if (linkAbsoluteTop < containerTop || linkAbsoluteTop > containerBottom - 50) {
+            link.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+      }
+    }
+
+    // TOC 点击平滑滚动
+    document.querySelectorAll('.vp-outline-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').slice(1);
+        const targetElement = document.getElementById(targetId);
+
+        if (targetElement) {
+          const navHeight = document.querySelector('.VPNavBar')?.offsetHeight || 64;
+          const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight - 40;
+
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+
+          document.querySelectorAll('.vp-outline-link').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+          updateMarker(this);
+        }
+      });
+    });
+
+    // TOC 滚动高亮（使用 Hugo 生成的真实 h2 标题）
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          const link = document.querySelector(`.vp-outline-link[href="#${id}"]`);
+          if (link) {
+            document.querySelectorAll('.vp-outline-link').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            updateMarker(link);
+          }
+        }
+      });
+    }, {
+      rootMargin: '-100px 0px -66%',
+      threshold: 0.1
+    });
+
+    // 监听所有 h2 标题
+    document.querySelectorAll('.websites-content h2').forEach(heading => {
+      observer.observe(heading);
+    });
+
+    // 初始化
+    setTimeout(() => {
+      const firstLink = document.querySelector('.vp-outline-link');
+      if (firstLink) {
+        firstLink.classList.add('active');
+        updateMarker(firstLink);
+      }
+    }, 100);
+
+    // 分享功能
+    window.websiteShare = {
+      copyLink: function() {
+        const url = window.location.href;
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(url).then(() => {
+            alert('链接已复制到剪贴板！');
+          }).catch(() => {
+            this.fallbackCopy(url);
+          });
+        } else {
+          this.fallbackCopy(url);
+        }
+      },
+      fallbackCopy: function(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          alert('链接已复制到剪贴板！');
+        } catch (err) {
+          alert('复制失败，请手动复制链接');
+        }
+        document.body.removeChild(textarea);
+      },
+      shareToWeibo: function() {
+        const url = encodeURIComponent(window.location.href);
+        const title = encodeURIComponent(document.title);
+        window.open(`https://service.weibo.com/share/share.php?url=${url}&title=${title}`, '_blank');
+      },
+      shareToTwitter: function() {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent(document.title);
+        window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+      }
+    };
+  })();
+</script>
+{{ end }}

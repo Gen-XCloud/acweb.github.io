@@ -1,0 +1,27 @@
+// ========================================
+// PjaxLite 页面过渡动画（150ms 淡入淡出）
+// ========================================
+
+// #swup 容器过渡动画
+#swup {
+  // 150ms 淡入淡出过渡
+  transition: opacity 150ms ease-in-out;
+  opacity: 1;
+
+  // 让子元素直接参与父级的 flex 布局
+  display: contents;
+}
+
+// 确保固定定位的元素完全不受影响
+.VPSidebar,
+.aside,
+.aside-container,
+header,
+.back-to-top,
+.search-modal,
+.mobile-sidebar-drawer,
+.mobile-toc-drawer {
+  transition: none !important;
+  transform: none !important;
+}
+

@@ -1,0 +1,580 @@
+// ================================================
+// 预览区域样式 - 与编辑区保持视觉一致
+// ================================================
+
+/* ==================== 预览容器 ==================== */
+.vditor-preview {
+  font-family: var(--editor-font-family);
+  font-size: var(--editor-font-size-base);
+  line-height: var(--editor-line-height-base);
+  color: var(--editor-text);
+  background: var(--editor-area-bg);
+}
+
+.vditor-preview__content {
+  padding: var(--editor-spacing-lg) var(--editor-spacing-xl);
+  min-height: 400px;
+
+  // 选中文本效果
+  ::selection {
+    background: var(--editor-selection);
+  }
+}
+
+/* ==================== 标题样式 ==================== */
+.vditor-preview__content {
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: var(--editor-line-height-tight);
+    margin: 1.5em 0 0.5em 0;
+    color: var(--editor-text);
+  }
+
+  h1 {
+    font-size: 2em;
+    font-weight: 700;
+    margin-top: 0;
+  }
+
+  h2 {
+    font-size: 1.5em;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid var(--editor-toolbar-border);
+  }
+
+  h3 {
+    font-size: 1.25em;
+  }
+
+  h4 {
+    font-size: 1.125em;
+  }
+
+  h5, h6 {
+    font-size: 1em;
+    color: var(--editor-text-secondary);
+  }
+}
+
+/* ==================== 段落与文本 ==================== */
+.vditor-preview__content {
+  p {
+    margin: 0.8em 0;
+    line-height: inherit;
+  }
+
+  strong, b {
+    font-weight: 600;
+    color: var(--editor-text);
+  }
+
+  em, i {
+    font-style: italic;
+    color: var(--editor-text-secondary);
+  }
+
+  del, s {
+    text-decoration: line-through;
+    color: var(--editor-text-tertiary);
+  }
+
+  mark {
+    background: #fff3cd;
+    color: var(--editor-text);
+    padding: 2px 4px;
+    border-radius: 2px;
+  }
+}
+
+/* ==================== 行内代码 ==================== */
+.vditor-preview__content {
+  code:not(.hljs) {
+    background: var(--editor-inline-code-bg);
+    color: var(--editor-inline-code-text);
+    padding: 2px 6px;
+    border-radius: var(--editor-radius-sm);
+    font-family: var(--editor-font-mono);
+    font-size: 0.9em;
+    font-weight: 500;
+    border: 1px solid var(--editor-code-border);
+  }
+}
+
+/* ==================== 代码块 ==================== */
+.vditor-preview__content {
+  pre {
+    margin: 1em 0;
+    padding: var(--editor-spacing-md);
+    background: var(--editor-code-bg);
+    border: 1px solid var(--editor-code-border);
+    border-radius: var(--editor-radius-md);
+    overflow-x: auto;
+    font-family: var(--editor-font-mono);
+    font-size: 14px;
+    line-height: 1.6;
+    position: relative;
+
+    code {
+      background: transparent;
+      border: none;
+      padding: 0;
+      color: var(--editor-code-text);
+      font-size: inherit;
+      font-weight: normal;
+    }
+  }
+
+  // 代码块滚动条美化
+  pre::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  pre::-webkit-scrollbar-thumb {
+    background: var(--editor-toolbar-border);
+    border-radius: 4px;
+  }
+
+  pre::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  // 代码块复制按钮优化
+  .vditor-copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--editor-toolbar-btn-bg);
+    border: 1px solid var(--editor-toolbar-border);
+    border-radius: var(--editor-radius-sm);
+    padding: 4px 8px;
+    font-size: 12px;
+    color: var(--editor-toolbar-icon);
+    cursor: pointer;
+    transition: all var(--editor-transition-fast);
+    opacity: 0;
+
+    &:hover {
+      background: var(--editor-toolbar-btn-hover);
+      color: var(--editor-toolbar-icon-hover);
+      opacity: 1;
+    }
+  }
+
+  pre:hover .vditor-copy {
+    opacity: 1;
+  }
+}
+
+/* ==================== 列表样式 ==================== */
+.vditor-preview__content {
+  ul, ol {
+    margin: 0.8em 0;
+    padding-left: 2em;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  li {
+    margin: 0.4em 0;
+    line-height: inherit;
+    color: var(--editor-text);
+
+    // 嵌套列表间距
+    > ul, > ol {
+      margin: 0.3em 0;
+    }
+
+    // 列表内段落
+    > p {
+      margin: 0.3em 0;
+    }
+  }
+
+  // 任务列表美化
+  input[type="checkbox"] {
+    margin-right: 0.5em;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--vp-tip-border);
+  }
+
+  .vditor-task {
+    list-style: none;
+    margin-left: -2em;
+    padding-left: 2em;
+
+    input[type="checkbox"] {
+      margin-right: 0.5em;
+    }
+
+    &:has(input:checked) {
+      color: var(--editor-text-tertiary);
+      text-decoration: line-through;
+    }
+  }
+}
+
+/* ==================== 引用块 ==================== */
+.vditor-preview__content {
+  blockquote {
+    margin: 1em 0;
+    padding: var(--editor-spacing-sm) var(--editor-spacing-md);
+    background: var(--editor-blockquote-bg);
+    border-left: 4px solid var(--editor-blockquote-border);
+    border-radius: var(--editor-radius-sm);
+    color: var(--editor-blockquote-text);
+    font-style: italic;
+
+    p {
+      margin: 0.5em 0;
+    }
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+
+    // 嵌套引用
+    blockquote {
+      margin: 0.5em 0;
+      border-left-color: var(--editor-text-tertiary);
+    }
+  }
+}
+
+/* ==================== 分隔线 ==================== */
+.vditor-preview__content {
+  hr {
+    margin: 2em 0;
+    border: none;
+    border-top: 2px solid var(--editor-toolbar-border);
+    opacity: 0.5;
+  }
+}
+
+/* ==================== 链接样式 ==================== */
+.vditor-preview__content {
+  a {
+    color: var(--editor-link);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all var(--editor-transition-fast);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--editor-link-hover);
+      border-bottom-color: var(--editor-link-hover);
+    }
+
+    // 外部链接图标
+    &[href^="http"]::after {
+      content: ' ↗';
+      font-size: 0.85em;
+      opacity: 0.6;
+    }
+  }
+}
+
+/* ==================== 表格样式 ==================== */
+.vditor-preview__content {
+  table {
+    width: 100%;
+    margin: 1em 0;
+    border-collapse: collapse;
+    border: 1px solid var(--editor-table-border);
+    border-radius: var(--editor-radius-md);
+    overflow: hidden;
+    display: block;
+    overflow-x: auto;
+  }
+
+  thead {
+    background: var(--editor-table-header-bg);
+  }
+
+  th {
+    padding: var(--editor-spacing-sm) var(--editor-spacing-md);
+    text-align: left;
+    font-weight: 600;
+    color: var(--editor-text);
+    border-bottom: 2px solid var(--editor-table-border);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--editor-spacing-sm) var(--editor-spacing-md);
+    border-bottom: 1px solid var(--editor-table-border);
+    color: var(--editor-text);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: var(--editor-table-row-hover);
+  }
+
+  // 表格内的代码
+  td code, th code {
+    font-size: 0.85em;
+  }
+
+  // 表格滚动条美化
+  table::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  table::-webkit-scrollbar-thumb {
+    background: var(--editor-toolbar-border);
+    border-radius: 4px;
+  }
+
+  table::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/* ==================== 图片样式 ==================== */
+.vditor-preview__content {
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--editor-radius-md);
+    margin: 1em auto;
+    display: block;
+    box-shadow: var(--editor-shadow-sm);
+    cursor: zoom-in;
+    transition: all var(--editor-transition-base);
+
+    &:hover {
+      box-shadow: var(--editor-shadow-md);
+      transform: translateY(-2px);
+    }
+  }
+
+  // 图片标题
+  img + em {
+    display: block;
+    text-align: center;
+    font-size: 0.9em;
+    color: var(--editor-text-tertiary);
+    margin-top: -0.5em;
+    margin-bottom: 1em;
+  }
+}
+
+/* ==================== 脚注样式 ==================== */
+.vditor-preview__content {
+  .footnotes {
+    margin-top: 3em;
+    padding-top: 1em;
+    border-top: 1px solid var(--editor-toolbar-border);
+    font-size: 0.9em;
+    color: var(--editor-text-secondary);
+
+    ol {
+      padding-left: 1.5em;
+    }
+
+    li {
+      margin: 0.5em 0;
+    }
+
+    // 返回链接
+    .footnote-backref {
+      margin-left: 0.3em;
+      text-decoration: none;
+      color: var(--editor-link);
+
+      &:hover {
+        color: var(--editor-link-hover);
+      }
+    }
+  }
+
+  // 脚注引用
+  .footnote-ref {
+    text-decoration: none;
+    color: var(--editor-link);
+    font-weight: 600;
+
+    &:hover {
+      color: var(--editor-link-hover);
+    }
+  }
+}
+
+/* ==================== 目录样式 ==================== */
+.vditor-outline {
+  background: var(--editor-bg);
+  border-left: 1px solid var(--editor-toolbar-border);
+  padding: var(--editor-spacing-md);
+  font-size: 14px;
+
+  &__title {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: var(--editor-spacing-md);
+    color: var(--editor-text);
+  }
+
+  &__item {
+    padding: 4px 8px;
+    margin: 2px 0;
+    border-radius: var(--editor-radius-sm);
+    cursor: pointer;
+    transition: all var(--editor-transition-fast);
+    color: var(--editor-text-secondary);
+
+    &:hover {
+      background: var(--editor-toolbar-btn-hover);
+      color: var(--editor-text);
+    }
+
+    &--current {
+      background: var(--editor-toolbar-btn-active);
+      color: var(--editor-link);
+      font-weight: 500;
+    }
+  }
+}
+
+/* ==================== 数学公式样式 ==================== */
+.vditor-preview__content {
+  .katex {
+    font-size: 1.1em;
+  }
+
+  .katex-display {
+    margin: 1em 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: var(--editor-spacing-sm) 0;
+
+    // 滚动条美化
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--editor-toolbar-border);
+      border-radius: 3px;
+    }
+  }
+}
+
+/* ==================== 图表样式 ==================== */
+.vditor-preview__content {
+  .vditor-echarts,
+  .vditor-mermaid,
+  .vditor-flowchart,
+  .vditor-plantuml {
+    margin: 1em 0;
+    padding: var(--editor-spacing-md);
+    background: var(--editor-bg);
+    border: 1px solid var(--editor-toolbar-border);
+    border-radius: var(--editor-radius-md);
+    overflow: auto;
+  }
+}
+
+/* ==================== 音视频样式 ==================== */
+.vditor-preview__content {
+  audio,
+  video {
+    max-width: 100%;
+    margin: 1em 0;
+    border-radius: var(--editor-radius-md);
+    box-shadow: var(--editor-shadow-sm);
+  }
+}
+
+/* ==================== Emoji样式 ==================== */
+.vditor-preview__content {
+  .emoji {
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: -0.2em;
+  }
+}
+
+/* ==================== 键盘按键样式 ==================== */
+.vditor-preview__content {
+  kbd {
+    display: inline-block;
+    padding: 2px 6px;
+    font-family: var(--editor-font-mono);
+    font-size: 0.85em;
+    color: var(--editor-text);
+    background: var(--editor-code-bg);
+    border: 1px solid var(--editor-code-border);
+    border-radius: var(--editor-radius-sm);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* ==================== 缩写提示 ==================== */
+.vditor-preview__content {
+  abbr {
+    text-decoration: underline dotted;
+    cursor: help;
+    border-bottom: 1px dotted var(--editor-text-tertiary);
+  }
+}
+
+/* ==================== 详情折叠 ==================== */
+.vditor-preview__content {
+  details {
+    margin: 1em 0;
+    padding: var(--editor-spacing-sm) var(--editor-spacing-md);
+    background: var(--vp-details-bg);
+    border: 1px solid var(--vp-details-border);
+    border-radius: var(--editor-radius-md);
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--editor-text);
+      user-select: none;
+      padding: var(--editor-spacing-xs) 0;
+      outline: none;
+      transition: color var(--editor-transition-fast);
+
+      &:hover {
+        color: var(--editor-link);
+      }
+
+      &::marker {
+        color: var(--editor-text-secondary);
+      }
+    }
+
+    &[open] summary {
+      margin-bottom: var(--editor-spacing-sm);
+      padding-bottom: var(--editor-spacing-sm);
+      border-bottom: 1px solid var(--vp-details-border);
+    }
+  }
+}
+
+/* ==================== 预览模式下的内容间距优化 ==================== */
+.vditor-preview__content {
+  > *:first-child {
+    margin-top: 0;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}

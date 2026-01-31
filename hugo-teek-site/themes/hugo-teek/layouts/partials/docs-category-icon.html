@@ -1,0 +1,32 @@
+{{/* 根据分类名称返回对应的图标 */}}
+{{ $title := . }}
+{{ $icon := "📁" }}
+
+{{/* 数字前缀分类图标映射 */}}
+{{ if or (in $title "11.运维") (in $title "运维") }}
+  {{ $icon = "⚙️" }}
+{{ else if or (in $title "20.前端") (in $title "前端") }}
+  {{ $icon = "🎨" }}
+{{ else if or (in $title "30.编程") (in $title "编程") }}
+  {{ $icon = "💻" }}
+{{ else if or (in $title "35.黑客") (in $title "黑客") }}
+  {{ $icon = "🔐" }}
+{{ else if or (in $title "40.专题") (in $title "专题") }}
+  {{ $icon = "📚" }}
+{{ else if or (in $title "50.工具") (in $title "工具") }}
+  {{ $icon = "🔧" }}
+{{ else if or (in $title "60.生活") (in $title "生活") }}
+  {{ $icon = "🌈" }}
+{{ else if or (in $title "70.精神小屋") (in $title "精神小屋") }}
+  {{ $icon = "💕" }}
+{{ else if or (in $title "80.娱乐") (in $title "娱乐") }}
+  {{ $icon = "🎮" }}
+{{ else if or (in $title "85.兴趣") (in $title "兴趣") }}
+  {{ $icon = "🎯" }}
+{{ else if or (in $title "90.关于") (in $title "关于") }}
+  {{ $icon = "👤" }}
+{{ else if or (in $title "100.Teek") (in $title "Teek") }}
+  {{ $icon = "🎉" }}
+{{ end }}
+
+{{ return $icon }}

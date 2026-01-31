@@ -1,0 +1,37 @@
+// ================================================
+// Hugo Teek Markdown Editor - 样式统一入口
+// ================================================
+// 说明：
+// - 所有样式包裹在 .markdown-editor 命名空间下
+// - 确保与配置中心样式完全隔离
+// - 适合未来单独开源
+// ================================================
+
+.markdown-editor {
+  // 变量定义（最高优先级）
+  @import './variables.scss';
+
+  // 工具栏样式
+  @import './toolbar.scss';
+
+  // 编辑区域样式
+  @import './editor-area.scss';
+
+  // 预览区域样式
+  @import './preview-area.scss';
+
+  // VitePress 容器样式
+  @import './vitepress-containers.scss';
+
+  // 微信解锁预览样式
+  @import './wechat-unlock.scss';
+
+  // 代码高亮样式
+  @import './code-highlight.scss';
+
+  // 动画效果
+  @import './animations.scss';
+
+  // 移动端适配（最后加载，覆盖PC样式）
+  @import './mobile.scss';
+}

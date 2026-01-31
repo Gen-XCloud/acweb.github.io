@@ -1,0 +1,131 @@
+{{ define "main" }}
+<div class="error-404">
+  <div class="error-content">
+    <div class="error-icon">🔍</div>
+    <h1 class="error-title">404</h1>
+    <h2 class="error-subtitle">页面未找到</h2>
+    <p class="error-message">
+      抱歉,您访问的页面不存在或已被移除。
+    </p>
+    <div class="error-actions">
+      <a href="/" class="btn-primary">返回首页</a>
+      <button onclick="history.back()" class="btn-secondary">返回上页</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.error-404 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  text-align: center;
+}
+
+.error-content {
+  max-width: 600px;
+  padding: 2rem;
+}
+
+.error-icon {
+  font-size: 6rem;
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.error-title {
+  font-size: 8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.error-subtitle {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.error-message {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s;
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.btn-primary:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.btn-secondary {
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 2px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .error-title {
+    font-size: 5rem;
+  }
+
+  .error-subtitle {
+    font-size: 1.5rem;
+  }
+
+  .error-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}
+</style>
+{{ end }}

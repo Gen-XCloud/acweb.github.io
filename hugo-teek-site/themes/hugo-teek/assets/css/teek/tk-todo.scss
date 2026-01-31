@@ -1,0 +1,38 @@
+.todo {
+  list-style: none;
+  margin: 8px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  .todo-checkbox {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--vp-c-brand-1);
+    border-radius: 4px;
+    position: relative;
+    margin-top: 2px;
+    cursor: pointer;
+
+    &:checked {
+      background-color: var(--vp-c-brand-1);
+      border-color: var(--vp-c-brand-1);
+    }
+
+    &:checked::after {
+      content: "✓";
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ffffff;
+      font-size: 12px;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+  }
+}

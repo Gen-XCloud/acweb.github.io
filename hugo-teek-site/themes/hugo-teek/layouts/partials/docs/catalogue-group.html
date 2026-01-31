@@ -1,0 +1,54 @@
+{{- $section := .section -}}
+{{- $index := .index -}}
+{{- $title := $section.Title | replaceRE "^[0-9]+\\." "" | trim " " -}}
+{{- $childSections := sort $section.Sections "File.Dir" -}}
+{{- $childPages := sort $section.RegularPages "File.Dir" -}}
+
+{{/* 过滤掉没有可见内容的子section */}}
+{{- $visibleChildSections := slice -}}
+{{- range $childSections -}}
+  {{- if or (gt (len .RegularPages) 0) (gt (len .Sections) 0) -}}
+    {{- $visibleChildSections = $visibleChildSections | append . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $hasChildren := gt (add (len $visibleChildSections) (len $childPages)) 0 -}}
+{{- $anchorID := printf "catalogue-%s" (urlize (printf "%s-%s" $index $title)) -}}
+{{- if $hasChildren -}}
+<li class="tk-sub-catalogue">
+  <div id="{{ $anchorID }}" class="tk-sub-catalogue__title" role="group" aria-labelledby="{{ $anchorID }}-label">
+    <a class="anchor" href="#{{ $anchorID }}" aria-label="{{ $title }}">#</a>
+    <span id="{{ $anchorID }}-label">{{ printf "%s. %s" $index $title }}</span>
+  </div>
+  <ul class="tk-sub-catalogue__inline flx-wrap-between">
+    {{- $subCounter := newScratch -}}
+    {{- $subCounter.Set "value" 0 -}}
+    {{- range $visibleChildSections -}}
+      {{- $subCounter.Add "value" 1 -}}
+      {{- partial "docs/catalogue-group.html" (dict "section" . "index" (printf "%s.%d" $index ($subCounter.Get "value"))) -}}
+    {{- end -}}
+    {{- range $childPages -}}
+      {{- $subCounter.Add "value" 1 -}}
+      {{- $pageIndex := printf "%s.%d" $index ($subCounter.Get "value") -}}
+      {{- $pageTitle := .Title | replaceRE "^[0-9]+\\." "" | trim " " -}}
+      <li class="tk-catalogue-item">
+        <a href="{{ .RelPermalink }}" aria-label='{{ printf "%s. %s" $pageIndex $pageTitle }}'>
+          {{ printf "%s. " $pageIndex }}<span class="tk-catalogue-item__title">{{ $pageTitle }}</span>
+        </a>
+        {{- if and .Params.description (ne .Params.description "") -}}
+        <p class="tk-catalogue-item__desc">{{ .Params.description }}</p>
+        {{- end -}}
+      </li>
+    {{- end -}}
+  </ul>
+</li>
+{{- else -}}
+<li class="tk-catalogue-item">
+  <a href="{{ $section.RelPermalink }}" aria-label='{{ printf "%s. %s" $index $title }}'>
+    {{ printf "%s. " $index }}<span class="tk-catalogue-item__title">{{ $title }}</span>
+  </a>
+  {{- if and $section.Params.description (ne $section.Params.description "") -}}
+  <p class="tk-catalogue-item__desc">{{ $section.Params.description }}</p>
+  {{- end -}}
+</li>
+{{- end -}}

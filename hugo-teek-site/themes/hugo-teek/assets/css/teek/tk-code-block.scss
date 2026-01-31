@@ -1,0 +1,62 @@
+.code-wrapper {
+  position: relative;
+  background: var(--vp-c-bg-alt);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 16px 0;
+  /* 隔离代码块的布局变化 */
+  contain: layout;
+}
+
+.code-wrapper pre {
+  margin: 0;
+  padding: 20px;
+  overflow: auto;
+  /* 使用 transform 替代高度变化，更平滑 */
+  transform-origin: top;
+}
+
+.copy-code-btn {
+  right: 12px;
+}
+
+.expand-code-btn {
+  right: 88px;
+}
+
+.copy-code-btn:hover,
+.expand-code-btn:hover {
+  background: var(--vp-c-brand-1);
+  color: #fff;
+}
+
+.code-wrapper pre {
+  /* 平滑的高度过渡动画 */
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.code-collapsed {
+  max-height: 400px !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 折叠状态的渐变遮罩 */
+.code-collapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--vp-c-bg-alt, #282c34));
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* 展开时淡出遮罩 */
+.code-wrapper pre:not(.code-collapsed)::after {
+  opacity: 0;
+}

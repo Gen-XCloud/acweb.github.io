@@ -1,0 +1,66 @@
+<footer class="site-footer">
+  <div class="container">
+    <!-- 可爱动物装饰 -->
+    <div class="footer-animals">
+      <img src="https://img.xxdevops.cn/blog/footer/animals.avif"
+           alt="Cute Animals"
+           class="animals-image"
+           width="750"
+           height="80"
+           loading="lazy"
+           decoding="async">
+    </div>
+
+    <div class="footer-content">
+      <!-- 服务徽章 -->
+      {{ if and .Site.Params.footer.show_services .Site.Data.footerServices.services }}
+      <div class="footer-services">
+        {{ range .Site.Data.footerServices.services }}
+        <a href="{{ .url }}" target="_blank" rel="noopener noreferrer" class="service-badge" title="{{ .title }}">
+          <img src="{{ .badge }}" alt="{{ .title }}" loading="lazy">
+        </a>
+        {{ end }}
+      </div>
+      {{ end }}
+
+      <!-- 底部信息 (单行紧凑版) -->
+      <div class="footer-info">
+        {{ $startYear := .Site.Params.footer.copyright_year_start | default 2024 }}
+        {{ $currentYear := now.Year }}
+        <div class="footer-info-compact">
+          <span class="theme-by">Based on <a href="https://vitepress.dev/" target="_blank" rel="noopener noreferrer">vitepress</a> theme of <a href="https://vp.teek.top/" target="_blank" rel="noopener noreferrer">Teek</a> theme transformation </span>
+          <span class="copyright">Copyright {{ $startYear }}{{ if ne $startYear $currentYear }}-{{ $currentYear }}{{ end }} {{ .Site.Params.footer.copyright_suffix | default .Site.Title }}</span>
+          {{ if .Site.Params.footer.icp.enabled }}
+          <span class="icp-record">
+            <a href="{{ .Site.Params.footer.icp.url }}" target="_blank" rel="noopener noreferrer">
+              {{ .Site.Params.footer.icp.number }}
+            </a>
+          </span>
+          {{ end }}
+          {{ if .Site.Params.analytics.busuanzi.enabled }}
+          <span class="busuanzi-stats">
+            <span class="busuanzi-item">今日访客数 <span id="busuanzi_today_uv"></span></span>
+            <span class="separator">|</span>
+            <span class="busuanzi-item">今日访问量 <span id="busuanzi_today_pv"></span></span>
+            <span class="separator">|</span>
+            <span class="busuanzi-item">昨日访客数 <span id="busuanzi_yesterday_uv"></span></span>
+            <span class="separator">|</span>
+            <span class="busuanzi-item">昨日访问量 <span id="busuanzi_yesterday_pv"></span></span>
+            <span class="separator">|</span>
+            <span class="busuanzi-item">本月访客数 <span id="busuanzi_month_uv"></span></span>
+            <span class="separator">|</span>
+            <span class="busuanzi-item">本月访问量 <span id="busuanzi_month_pv"></span></span>
+          </span>
+          {{ end }}
+        </div>
+      </div>
+
+      <!-- 箴言/座右铭 -->
+      {{ if .Site.Params.footer.custom_message }}
+      <div class="footer-motto">
+        <p>{{ .Site.Params.footer.custom_message }}</p>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</footer>

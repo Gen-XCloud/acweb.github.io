@@ -1,0 +1,449 @@
+// ================================================
+// 代码高亮样式 - GitHub 风格优化
+// ================================================
+// 基于 highlight.js GitHub 主题，添加现代化改进
+// ================================================
+
+/* ==================== 代码块基础样式 ==================== */
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0;
+  background: transparent;
+  color: var(--editor-code-text);
+  font-family: var(--editor-font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  tab-size: 4;
+}
+
+/* ==================== 代码块行号 ==================== */
+.vditor-ir pre,
+.vditor-preview__content pre {
+  position: relative;
+  counter-reset: line;
+
+  code {
+    display: block;
+
+    // 行号样式
+    &.hljs {
+      .hljs-ln {
+        border-collapse: collapse;
+        width: 100%;
+
+        tr {
+          border: none;
+        }
+
+        td {
+          padding: 0;
+          border: none;
+          vertical-align: top;
+        }
+
+        // 行号列
+        .hljs-ln-numbers {
+          user-select: none;
+          text-align: right;
+          color: var(--editor-text-tertiary);
+          padding-right: var(--editor-spacing-md);
+          padding-left: var(--editor-spacing-xs);
+          width: 40px;
+          font-variant-numeric: tabular-nums;
+          border-right: 1px solid var(--editor-code-border);
+        }
+
+        // 代码列
+        .hljs-ln-code {
+          padding-left: var(--editor-spacing-md);
+          padding-right: var(--editor-spacing-xs);
+        }
+      }
+    }
+  }
+}
+
+/* ==================== 语法高亮颜色 ==================== */
+
+// 注释
+.hljs-comment,
+.hljs-quote {
+  color: var(--editor-code-comment);
+  font-style: italic;
+}
+
+// 关键字
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: var(--editor-code-keyword);
+  font-weight: 600;
+}
+
+// 数字
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #005cc5;
+}
+
+// 字符串
+.hljs-string,
+.hljs-doctag {
+  color: var(--editor-code-string);
+}
+
+// 标题、章节
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #6f42c1;
+  font-weight: 600;
+}
+
+// 函数名
+.hljs-function .hljs-title,
+.hljs-title.function_,
+.hljs-class .hljs-title {
+  color: #6f42c1;
+  font-weight: 600;
+}
+
+// 类型
+.hljs-type,
+.hljs-class .hljs-title {
+  color: #d73a49;
+}
+
+// 属性
+.hljs-attr,
+.hljs-attribute,
+.hljs-property {
+  color: #005cc5;
+}
+
+// 符号
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link {
+  color: #22863a;
+}
+
+// 内置函数
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #e36209;
+}
+
+// 元信息
+.hljs-meta {
+  color: #6f42c1;
+}
+
+.hljs-meta .hljs-string {
+  color: var(--editor-code-string);
+}
+
+// 删除
+.hljs-deletion {
+  background: #ffeef0;
+  color: #d73a49;
+}
+
+// 添加
+.hljs-addition {
+  background: #e6ffed;
+  color: #22863a;
+}
+
+// 标签
+.hljs-tag {
+  color: #22863a;
+
+  .hljs-name {
+    color: #22863a;
+    font-weight: 600;
+  }
+
+  .hljs-attr {
+    color: #6f42c1;
+  }
+
+  .hljs-string {
+    color: var(--editor-code-string);
+  }
+}
+
+// 正则表达式
+.hljs-regexp {
+  color: #032f62;
+  background: rgba(3, 47, 98, 0.05);
+}
+
+// 模板语法
+.hljs-template-tag,
+.hljs-template-variable {
+  color: #d73a49;
+}
+
+// 高亮行
+.hljs-ln-line[data-highlighted] {
+  background: rgba(255, 235, 59, 0.15);
+  border-left: 3px solid #ffc107;
+  padding-left: calc(var(--editor-spacing-md) - 3px) !important;
+}
+
+/* ==================== 特定语言优化 ==================== */
+
+// JavaScript/TypeScript
+.language-javascript,
+.language-typescript,
+.language-js,
+.language-ts {
+  .hljs-keyword {
+    color: #d73a49;
+  }
+
+  .hljs-function {
+    color: #6f42c1;
+  }
+}
+
+// Python
+.language-python,
+.language-py {
+  .hljs-keyword {
+    color: #d73a49;
+    font-weight: 600;
+  }
+
+  .hljs-built_in {
+    color: #005cc5;
+  }
+
+  .hljs-function .hljs-title {
+    color: #6f42c1;
+  }
+}
+
+// CSS/SCSS
+.language-css,
+.language-scss,
+.language-less {
+  .hljs-selector-tag,
+  .hljs-selector-id,
+  .hljs-selector-class {
+    color: #6f42c1;
+  }
+
+  .hljs-attribute {
+    color: #005cc5;
+  }
+
+  .hljs-number {
+    color: #e36209;
+  }
+}
+
+// HTML/XML
+.language-html,
+.language-xml {
+  .hljs-tag {
+    color: #22863a;
+  }
+
+  .hljs-name {
+    color: #22863a;
+    font-weight: 600;
+  }
+
+  .hljs-attr {
+    color: #6f42c1;
+  }
+}
+
+// Shell/Bash
+.language-bash,
+.language-shell,
+.language-sh {
+  .hljs-built_in {
+    color: #005cc5;
+    font-weight: 600;
+  }
+
+  .hljs-variable {
+    color: #d73a49;
+  }
+}
+
+// JSON
+.language-json {
+  .hljs-attr {
+    color: #005cc5;
+  }
+
+  .hljs-string {
+    color: #032f62;
+  }
+
+  .hljs-literal {
+    color: #005cc5;
+    font-weight: 600;
+  }
+}
+
+// Markdown
+.language-markdown,
+.language-md {
+  .hljs-section {
+    color: #005cc5;
+    font-weight: 700;
+  }
+
+  .hljs-bullet {
+    color: #d73a49;
+  }
+
+  .hljs-emphasis {
+    font-style: italic;
+    color: #24292e;
+  }
+
+  .hljs-strong {
+    font-weight: 700;
+    color: #24292e;
+  }
+
+  .hljs-link,
+  .hljs-quote {
+    color: #6f42c1;
+  }
+}
+
+// SQL
+.language-sql {
+  .hljs-keyword {
+    color: #d73a49;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .hljs-built_in {
+    color: #005cc5;
+  }
+}
+
+// Go
+.language-go {
+  .hljs-function .hljs-title {
+    color: #6f42c1;
+  }
+
+  .hljs-type {
+    color: #005cc5;
+  }
+}
+
+// Rust
+.language-rust {
+  .hljs-keyword {
+    color: #d73a49;
+  }
+
+  .hljs-type {
+    color: #005cc5;
+  }
+
+  .hljs-title.function_ {
+    color: #6f42c1;
+  }
+}
+
+/* ==================== 差异代码块 ==================== */
+.language-diff {
+  .hljs-addition {
+    background: #e6ffed;
+    color: #22863a;
+    display: block;
+
+    &::before {
+      content: '+';
+      color: #22863a;
+      font-weight: 600;
+      margin-right: 0.5em;
+    }
+  }
+
+  .hljs-deletion {
+    background: #ffeef0;
+    color: #d73a49;
+    display: block;
+
+    &::before {
+      content: '-';
+      color: #d73a49;
+      font-weight: 600;
+      margin-right: 0.5em;
+    }
+  }
+}
+
+/* ==================== 代码块头部标题 ==================== */
+pre[data-lang]::before {
+  content: attr(data-lang);
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 2px 10px;
+  background: var(--editor-toolbar-btn-active);
+  color: var(--editor-text-secondary);
+  font-size: 12px;
+  font-family: var(--editor-font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom-left-radius: var(--editor-radius-sm);
+  opacity: 0.7;
+  font-weight: 600;
+}
+
+/* ==================== 行高亮选择器 ==================== */
+pre code[data-line-numbers] .hljs-ln-line {
+  &:hover {
+    background: rgba(0, 0, 0, 0.02);
+  }
+}
+
+/* ==================== 无障碍优化 ==================== */
+.hljs-ln-numbers {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* ==================== 打印优化 ==================== */
+@media print {
+  .hljs {
+    background: white !important;
+    color: black !important;
+  }
+
+  .hljs-ln-numbers {
+    border-right: 1px solid #ddd !important;
+    color: #666 !important;
+  }
+
+  pre code {
+    page-break-inside: avoid;
+  }
+
+  // 移除语言标签（打印时不需要）
+  pre[data-lang]::before {
+    display: none;
+  }
+}

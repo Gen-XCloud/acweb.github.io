@@ -1,0 +1,130 @@
+{{ define "main" }}
+{{/* 移动端工具栏 */}}
+{{ partial "mobile-toolbar.html" . }}
+
+{{/* 从 docAnalysis.json 获取字数统计 */}}
+{{- $wordCount := 0 -}}
+{{- $readingTime := 0 -}}
+{{- $docAnalysis := .Site.Data.docAnalysis -}}
+{{- if $docAnalysis -}}
+  {{/* 处理路径：去掉 content/docs/ 或 docs/ 或 posts/ 前缀 */}}
+  {{- $relativePath := .File.Path -}}
+  {{- $relativePath = strings.TrimPrefix "content/docs/" $relativePath -}}
+  {{- $relativePath = strings.TrimPrefix "content/posts/" $relativePath -}}
+  {{- $relativePath = strings.TrimPrefix "docs/" $relativePath -}}
+  {{- $relativePath = strings.TrimPrefix "posts/" $relativePath -}}
+  {{- $relativePath = strings.TrimPrefix "content/" $relativePath -}}
+
+  {{- range $docAnalysis.eachFileWords -}}
+    {{- if eq .fileInfo.relativePath $relativePath -}}
+      {{- $wordCount = .wordCount -}}
+      {{- $readingTime = .readingTime -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* 如果 docAnalysis 中没有数据，回退到 Hugo 内置统计 */}}
+{{- if eq $wordCount 0 -}}
+  {{- $wordCount = .WordCount -}}
+  {{- $readingTime = .ReadingTime -}}
+{{- else -}}
+  {{/* 将 readingTime 从 "5m" 转换为数字 5 */}}
+  {{- $readingTime = int (trim $readingTime "m") -}}
+{{- end -}}
+
+<article class="post-single">
+  <header class="post-header">
+    {{ if .Params.coverImg }}
+    <div class="post-cover">
+      <img src="{{ .Params.coverImg }}" alt="{{ .Title }}" loading="lazy">
+    </div>
+    {{ end }}
+
+    <h1 class="post-title">{{ .Title }}</h1>
+
+    <div class="post-meta">
+      <span class="post-date">
+        <i class="icon-calendar"></i>
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+      </span>
+
+      {{ if .Params.author }}
+      <span class="post-author">
+        <i class="icon-user"></i>
+        {{ .Params.author }}
+      </span>
+      {{ end }}
+
+      {{ with .Params.categories }}
+      <span class="post-categories">
+        <i class="icon-folder"></i>
+        {{ range . }}
+        <a href="{{ "/categories/" | relLangURL }}{{ . | urlize }}/">{{ . }}</a>
+        {{ end }}
+      </span>
+      {{ end }}
+
+      <span class="post-wordcount">
+        <i class="icon-book"></i>
+        {{ $wordCount }} 字
+      </span>
+
+      <span class="post-readtime">
+        <i class="icon-clock"></i>
+        {{ $readingTime }} 分钟
+      </span>
+    </div>
+
+    {{ with .Params.tags }}
+    <div class="post-tags">
+      {{ range . }}
+      <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>
+      {{ end }}
+    </div>
+    {{ end }}
+  </header>
+
+  {{ if .TableOfContents }}
+  <aside class="post-toc" aria-label="页面目录">
+    {{ partial "docs-toc.html" (dict "page" . "title" "目录" "variant" "post") }}
+  </aside>
+  {{ end }}
+
+  <div class="post-content">
+    {{ .Content }}
+  </div>
+
+  {{ partial "doc-copyright.html" . }}
+
+  {{ partial "appreciation.html" . }}
+
+  <footer class="post-footer">
+    {{ if or .PrevInSection .NextInSection }}
+    <nav class="post-nav">
+      {{ if .PrevInSection }}
+      <a class="prev" href="{{ .PrevInSection.RelPermalink }}">
+        <span class="nav-arrow">←</span>
+        <span class="nav-title">{{ .PrevInSection.Title }}</span>
+      </a>
+      {{ end }}
+
+      {{ if .NextInSection }}
+      <a class="next" href="{{ .NextInSection.RelPermalink }}">
+        <span class="nav-title">{{ .NextInSection.Title }}</span>
+        <span class="nav-arrow">→</span>
+      </a>
+      {{ end }}
+    </nav>
+    {{ end }}
+
+    {{ if .Site.Params.comment.enabled }}
+    <div class="post-comment">
+      {{ partial "comment.html" . }}
+    </div>
+    {{ end }}
+  </footer>
+</article>
+
+{{/* 移动端TOC抽屉 */}}
+{{ partial "mobile-toc-drawer.html" . }}
+{{ end }}

@@ -1,0 +1,14 @@
+.custom-block {
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  position: relative;
+}
+
+.custom-block::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  pointer-events: none;
+}

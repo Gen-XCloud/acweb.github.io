@@ -1,0 +1,29 @@
+.vp-doc blockquote {
+  position: relative;
+  border-left: 4px solid transparent;
+  border-image: linear-gradient(180deg, #bd34fe, #e43498, #47caff) 1;
+  border-radius: 0 10px 10px 0;
+  padding: 12px 18px;
+  margin: 16px 0;
+  background-color: var(--vp-c-bg-soft);
+  font-style: italic;
+  color: var(--vp-c-text-2);
+  box-shadow: var(--vp-shadow-1);
+}
+
+.vp-doc blockquote p {
+  margin: 8px 0;
+}
+
+.vp-doc blockquote p:first-child {
+  margin-top: 0;
+}
+
+.vp-doc blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.vp-doc blockquote strong {
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}

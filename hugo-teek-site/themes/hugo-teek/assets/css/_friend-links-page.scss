@@ -1,0 +1,767 @@
+// ========================================
+// 友链页面完整样式
+// 从 VitePress Teek 主题迁移
+// ========================================
+
+/* 主容器样式 */
+.my-links-container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 40px 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+/* 标题区域样式 */
+.my-links-title {
+  margin-bottom: 50px;
+  padding: 0 10px;
+}
+
+/* 主标题样式 */
+.my-links-title h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  background: -webkit-linear-gradient(10deg, #bd34fe 5%, #e43498 15%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.2;
+  display: inline-block;
+}
+
+/* ========================================
+   Banner区域样式
+   ======================================== */
+.flink-banner {
+  border: 1px solid var(--border-color, #e5e7eb);
+  background-color: var(--card-bg, #ffffff);
+  border-radius: 12px;
+  padding: 50px 20px 30px;
+  margin-bottom: 60px;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+/* 左上角图标 */
+.icon-heartbeat1::before {
+  margin-right: 8px;
+}
+
+/* 左上角smallTitle */
+.banners-small-title {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text-color, #2c3e50);
+  z-index: 2;
+}
+
+/* 右上角按钮组 */
+.banner-button-group {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 12px;
+  z-index: 2;
+}
+
+.banner-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  text-decoration: none;
+}
+
+.banner-button.secondary {
+  background: var(--bg-soft, #f3f4f6);
+  color: var(--text-color, #2c3e50);
+  border: 1px solid var(--border-color, #e5e7eb);
+}
+
+.banner-button.primary {
+  background: var(--primary-color, #0891b2);
+  color: #ffffff;
+}
+
+.banner-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ========================================
+   头像滚动区域样式
+   ======================================== */
+.tags-group-all {
+  width: 100%;
+  overflow: hidden;
+  padding: 40px 0 10px;
+  position: relative;
+  height: 300px;
+}
+
+/* 滚动包装器 */
+.tags-group-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  height: 100%;
+}
+
+/* 每一行 */
+.tags-group-row {
+  display: flex;
+  width: max-content;
+  flex-wrap: nowrap;
+  animation-timing-function: linear !important;
+  animation-iteration-count: infinite !important;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  paint-order: stroke fill markers;
+  image-rendering: optimizeSpeed;
+}
+
+/* 第一行头像滚动动画 */
+.tags-group-row:nth-child(1) {
+  animation-name: infiniteScrollLeft;
+  animation-duration: 50s;
+}
+
+/* 第二行头像滚动动画 */
+.tags-group-row:nth-child(2) {
+  animation-name: infiniteScrollLeft;
+  animation-duration: 60s;
+}
+
+/* 鼠标悬停头像滚动容器时暂停所有滚动动画 */
+.tags-group-all:hover .tags-group-row {
+  animation-play-state: paused;
+}
+
+/* 内容组 */
+.tags-group-content {
+  display: flex;
+  gap: 20px;
+  padding: 0 10px;
+  flex-wrap: nowrap;
+}
+
+/* 上下行错位排列 */
+.offset-start {
+  margin-left: 60px;
+}
+
+/* 头像容器样式 */
+.tags-group-icon {
+  flex: 0 0 110px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--bg-soft, #f3f4f6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* 头像图片样式 */
+.tags-group-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 不规则形状头像样式 */
+.tags-group-icon img.irregular {
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+/* 头像悬停效果 */
+.tags-group-icon:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+/* 头像覆盖层 */
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20px 16px;
+  background: rgba(255, 255, 255, 0.308);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  z-index: 2;
+  border-radius: inherit;
+  transform-origin: center;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-sizing: border-box;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* 只在鼠标悬停时显示头像覆盖层 */
+.tags-group-icon:hover .avatar-overlay {
+  opacity: 1;
+  transform: scale(1.3);
+}
+
+/* 头像文字样式 */
+.avatar-text {
+  color: rgb(25, 0, 255);
+  font-size: 12px;
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow: visible;
+  text-overflow: clip;
+  line-height: 1.3;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 100;
+}
+
+/* 只有当覆盖层显示时 */
+.tags-group-icon:hover .avatar-text {
+  opacity: 1;
+  transform: scale(1);
+  animation: textTwinkle 3s ease-in-out infinite;
+}
+
+/* 文字闪烁动画 */
+@keyframes textTwinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    text-shadow: 0 0 4px rgba(0, 47, 255, 0.671);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+    text-shadow: 0 0 4px rgba(0, 47, 255, 0.671);
+  }
+}
+
+/* 优化头像的无限滚动动画 */
+@keyframes infiniteScrollLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ========================================
+   星星容器样式
+   ======================================== */
+.global-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 星星项样式 */
+.star-item {
+  position: absolute;
+  pointer-events: none;
+  width: 24px;
+  height: 24px;
+  fill: var(--star, #fff);
+  filter: drop-shadow(0 0 4px var(--glow, rgba(255, 255, 255, 0.8)));
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  transition: all 0.5s ease;
+}
+
+/* 六色与辉光 */
+.global-stars svg.gstar-1 {
+  --star: #ff5f5f;
+  --glow: #ff5f5f88;
+}
+.global-stars svg.gstar-2 {
+  --star: #ff3e88;
+  --glow: #ff443e88;
+}
+.global-stars svg.gstar-3 {
+  --star: #00ffff;
+  --glow: #3bd8ff88;
+}
+.global-stars svg.gstar-4 {
+  --star: #3183ff;
+  --glow: #d852ab88;
+}
+.global-stars svg.gstar-5 {
+  --star: #fa3be0;
+  --glow: #fa3bd188;
+}
+.global-stars svg.gstar-6 {
+  --star: #bd34fe;
+  --glow: #bd34fe88;
+}
+
+/* 显示星星的样式 */
+.global-stars.show .star-item {
+  animation: starBurst 0.6s ease-out forwards,
+    starTwinkle 2s infinite alternate ease-in-out 0.6s;
+}
+
+/* 星爆动画 */
+@keyframes starBurst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.8;
+    transform: translate(
+        calc(-50% + var(--offset-x, 0px)),
+        calc(-50% + var(--offset-y, 0px))
+      )
+      scale(1);
+  }
+}
+
+/* 星星闪烁动画 */
+@keyframes starTwinkle {
+  0% {
+    opacity: 0.4;
+    filter: drop-shadow(0 0 4px var(--glow, rgba(255, 255, 255, 0.4)));
+    transform: translate(
+        calc(-50% + var(--offset-x, 0px)),
+        calc(-50% + var(--offset-y, 0px))
+      )
+      scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px var(--glow, rgba(255, 255, 255, 0.8)));
+    transform: translate(
+        calc(-50% + var(--offset-x, 0px)),
+        calc(-50% + var(--offset-y, 0px))
+      )
+      scale(1.1);
+  }
+}
+
+/* flink-banner 和 link-item-card 的半透明覆盖式背景 */
+.flink-banner,
+.link-item-card {
+  background-color: rgba(255, 255, 255, 0.384) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* 悬停效果 */
+.flink-banner:hover,
+.link-item-card:hover {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 4px 16px rgba(0, 68, 255, 0.315) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ========================================
+   友链分组列表样式
+   ======================================== */
+.my-links-group {
+  margin-bottom: 40px;
+}
+
+/* 分组标题装饰线样式 */
+.title-wrapper {
+  position: relative;
+  margin: 40px 0;
+  height: 1px;
+  background: #ddd;
+  transition: 0.3s;
+}
+
+/* 分组标题文字样式 */
+.title-wrapper h3 {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--card-bg, #ffffff);
+  padding: 0 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-color, #2c3e50);
+  z-index: 1;
+}
+
+/* 分组描述文字样式 */
+.group-desc {
+  text-align: center;
+  color: var(--text-secondary, #64748b);
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+  padding: 0 10px;
+}
+
+/* 友链网格布局 - 核心响应式实现 */
+.links-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 60px;
+  padding: 0 8px;
+}
+
+/* 每个友链项的样式，设置基础宽度 */
+.links-grid__item {
+  flex: 0 0 calc(100% - 24px); /* 移动设备：每行1个 */
+  break-inside: avoid;
+}
+
+/* 平板设备：每行2个 */
+@media (min-width: 768px) {
+  .links-grid__item {
+    flex: 0 0 calc(50% - 24px);
+  }
+}
+
+/* 桌面设备：每行最多4个 */
+@media (min-width: 1024px) {
+  .links-grid__item {
+    flex: 0 0 calc(25% - 24px);
+  }
+}
+
+/* ========================================
+   单个友链卡片样式
+   ======================================== */
+.link-tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: 8px;
+  background-color: var(--primary-color, #0891b2);
+  color: #ffffff;
+  letter-spacing: 0.2px;
+}
+
+.link-item-card {
+  position: relative;
+  height: 100px;
+  border-radius: 12px;
+  background: var(--card-bg, #ffffff);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border-color, #e5e7eb);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.link-item-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.link-item-card a {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.link-avatar {
+  flex: 0 0 100px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.link-avatar img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.link-avatar img.irregular {
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.link-item-card:hover .link-avatar img {
+  transform: scale(1.2);
+}
+
+.link-content {
+  flex: 1;
+  padding: 0 16px 0 0;
+  position: relative;
+  z-index: 1;
+}
+
+.link-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color, #2c3e50);
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+.link-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #64748b);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+/* 光圈样式 */
+.light {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  transition: width 0.1s, height 0.1s, opacity 0.1s;
+}
+
+/* ========================================
+   留言区样式
+   ======================================== */
+.my-message-section {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* 留言卡片样式 */
+.message-card {
+  width: 100%;
+  max-width: 1500px;
+  margin: 30px auto;
+  padding: 32px;
+  border-radius: 12px;
+  background: var(--card-bg, #ffffff);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color, #e5e7eb);
+  text-align: left;
+  position: relative;
+}
+
+/* 复制按钮容器 */
+.copy-button-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+}
+
+/* 复制按钮样式 */
+.copy-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background: var(--bg-soft, #f3f4f6);
+  color: var(--text-color, #2c3e50);
+  text-decoration: none;
+}
+
+.copy-button:hover {
+  background: var(--primary-color, #0891b2);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.copy-button:active {
+  transform: translateY(0);
+}
+
+/* 示例格式代码块样式 */
+.message-card pre {
+  background: var(--bg-soft, #f3f4f6);
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  overflow-x: auto;
+  margin: 20px 0;
+  border: 1px solid var(--border-color, #e5e7eb);
+  line-height: 1.5;
+  position: relative;
+}
+
+/* ========================================
+   暗色模式适配
+   ======================================== */
+.dark-mode {
+  .flink-banner,
+  .link-item-card {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .flink-banner:hover,
+  .link-item-card:hover {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .avatar-overlay {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .avatar-text {
+    color: rgb(255, 255, 255);
+  }
+}
+
+/* ========================================
+   移动端适配
+   ======================================== */
+@media (max-width: 768px) {
+  .message-card {
+    padding: 24px;
+    margin: 24px auto;
+  }
+
+  .copy-button-container {
+    position: static;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .copy-button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .tags-group-icon {
+    flex: 0 0 80px;
+    width: 80px;
+    height: 80px;
+  }
+
+  .tags-group-content {
+    gap: 15px;
+  }
+
+  .offset-start {
+    margin-left: 40px;
+  }
+
+  .flink-banner {
+    padding: 30px 15px 20px;
+  }
+
+  .banner-button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .banner-button-group {
+    display: none;
+  }
+
+  /* 移动端滚动速度调整 */
+  .tags-group-row {
+    animation-duration: 40s !important;
+  }
+}
+
+/* 减少动画对性能的影响 */
+@media (prefers-reduced-motion: reduce) {
+  .tags-group-row {
+    animation: none;
+  }
+}
+
+/* ========================================
+   友链页面评论区域样式
+   ======================================== */
+.friend-links-page {
+  .post-comment {
+    max-width: 1500px;
+    margin: 40px auto 60px;
+    padding: 0 10px;
+  }
+
+  #tcomment {
+    width: 100%;
+    padding: 32px;
+    background: var(--card-bg, #ffffff);
+    border-radius: 12px;
+    border: 1px solid var(--border-color, #e5e7eb);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+  }
+}
+
+/* 移动端适配评论区域 */
+@media (max-width: 768px) {
+  .friend-links-page {
+    #tcomment {
+      padding: 24px;
+    }
+  }
+}

@@ -1,0 +1,29 @@
+.tk-demo {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  background: var(--vp-c-bg);
+  box-shadow: var(--vp-shadow-1);
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.tk-demo__preview {
+  padding: 20px;
+  background: var(--vp-c-bg-alt);
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tk-demo__placeholder {
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+  text-align: center;
+}
+
+.tk-demo__code {
+  padding: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background: var(--vp-c-bg);
+}

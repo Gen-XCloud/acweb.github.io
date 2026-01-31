@@ -1,0 +1,83 @@
+{{ if .Site.Params.comment.enabled }}
+<div class="tk-doc-comment">
+  <div id="tcomment"></div>
+</div>
+{{/* Twikoo library loaded via scripts.html, init triggered by 'twikoo-loaded' event */}}
+<script>
+  (function() {
+    let twikooInstance = null; // 保存 Twikoo 实例，防止重复初始化
+
+    function initTwikoo() {
+      // 检查容器是否存在
+      const container = document.getElementById('tcomment');
+      if (!container) {
+        console.warn('[Twikoo] 容器 #tcomment 不存在');
+        return;
+      }
+
+      // 检查 Twikoo 库是否加载
+      if (typeof twikoo === 'undefined') {
+        console.warn('[Twikoo] 库未加载，等待 twikoo-loaded 事件');
+        return;
+      }
+
+      // 如果已经有实例，先销毁
+      if (twikooInstance) {
+        console.log('[Twikoo] 销毁旧实例');
+        try {
+          // 清空容器
+          container.innerHTML = '';
+        } catch (e) {
+          console.warn('[Twikoo] 销毁旧实例失败:', e);
+        }
+      }
+
+      // 初始化新实例
+      console.log('[Twikoo] 初始化评论系统:', window.location.pathname);
+      twikoo.init({
+        envId: '{{ .Site.Params.comment.envId }}',
+        el: '#tcomment',
+        lang: 'zh-CN',
+        path: window.location.pathname,
+        onCommentLoaded: function() {
+          console.log('[Twikoo] 评论加载完成');
+        }
+      }).then(() => {
+        twikooInstance = true;
+        console.log('[Twikoo] 初始化成功');
+      }).catch((err) => {
+        console.error('[Twikoo] 初始化失败:', err);
+        twikooInstance = null;
+      });
+    }
+
+    // 导出到全局，供 Swup 调用
+    window.initTwikoo = initTwikoo;
+
+    // 监听 twikoo-loaded 事件（由 scripts.html 触发）
+    window.addEventListener('twikoo-loaded', function() {
+      console.log('[Twikoo] 收到库加载完成事件，开始初始化');
+      initTwikoo();
+    });
+
+    // 如果 Twikoo 库已经加载（缓存命中或页面切换），直接初始化
+    if (typeof twikoo !== 'undefined') {
+      console.log('[Twikoo] 库已存在，直接初始化');
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTwikoo);
+      } else {
+        setTimeout(initTwikoo, 50);
+      }
+    }
+  })();
+</script>
+
+{{ if .Site.Params.comment.hideAdmin }}
+<style>
+  /* 隐藏 Twikoo 管理设置按钮（齿轮图标） */
+  .tk-admin {
+    display: none !important;
+  }
+</style>
+{{ end }}
+{{ end }}

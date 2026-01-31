@@ -1,0 +1,644 @@
+// ========================================
+// 网站导航页面完整样式
+// 从 VitePress Teek 主题 navCard 插件迁移
+// ========================================
+
+/* ========================================
+   页面布局容器
+   ======================================== */
+.websites-wrapper {
+  display: flex;
+  max-width: 1440px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.websites-page {
+  flex: 1;
+  min-width: 0; // 防止flex子元素溢出
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* 暗色模式下的页面背景 */
+.dark-mode .websites-page {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* VPBadge 徽章基础样式 */
+.VPBadge {
+  display: inline-block;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 2px 8px;
+  line-height: 1.5;
+  font-size: 12px;
+  font-weight: 500;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* VPBadge 不同类型的样式 */
+.VPBadge.info {
+  background-color: var(--primary-color, #0891b2);
+  color: #ffffff;
+  border-color: var(--primary-color, #0891b2);
+}
+
+.VPBadge.tip {
+  background-color: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+.VPBadge.warning {
+  background-color: #f59e0b;
+  color: #ffffff;
+  border-color: #f59e0b;
+}
+
+.VPBadge.danger {
+  background-color: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+}
+
+.VPBadge.success {
+  background-color: #22c55e;
+  color: #ffffff;
+  border-color: #22c55e;
+}
+
+/* 主容器样式 */
+.websites-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+/* 标题区域样式 */
+.websites-title {
+  margin-bottom: 50px;
+  padding: 0 10px;
+}
+
+/* 主标题样式 */
+.websites-title h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  background: -webkit-linear-gradient(10deg, #bd34fe 5%, #e43498 15%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.2;
+  display: inline-block;
+}
+
+/* ========================================
+   网站分组列表样式
+   ======================================== */
+.websites-group {
+  margin-bottom: 40px;
+  scroll-margin-top: 100px; // 为锚点跳转留出空间
+}
+
+/* 分组标题装饰线样式 */
+.title-wrapper {
+  position: relative;
+  margin: 40px 0;
+  height: 1px;
+  background: var(--border-color, #ddd);
+  transition: 0.3s;
+}
+
+/* 分组标题文字样式 */
+.title-wrapper h2 {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--card-bg, #ffffff);
+  padding: 0 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-color, #2c3e50);
+  z-index: 1;
+  margin: 0;
+}
+
+/* 暗色模式下的标题背景 */
+.dark-mode .title-wrapper h2 {
+  background: var(--card-bg, #1b1b1f);
+}
+
+/* ========================================
+   导航卡片网格布局 - 核心响应式实现
+   ======================================== */
+.nav-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+  padding: 0 8px;
+}
+
+/* 每个导航卡片项的样式 */
+.nav-card-grid__item {
+  break-inside: avoid;
+}
+
+/* 平板设备：每行2-3个 */
+@media (min-width: 768px) {
+  .nav-card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+/* 桌面设备：每行最多4-5个 */
+@media (min-width: 1024px) {
+  .nav-card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+/* ========================================
+   单个导航卡片样式
+   ======================================== */
+.nav-card-item {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 6px;
+  display: block;
+  overflow: hidden;
+  color: var(--text-color, #2c3e50);
+  padding: 10px;
+  transition: all 0.3s;
+  text-decoration: none;
+  cursor: pointer;
+  min-height: 100px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+.nav-card-item:hover {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 8px 24px rgba(0, 68, 255, 0.315) !important;
+  border-color: var(--primary-color, #0891b2);
+  color: var(--text-color, #2c3e50);
+  transform: translateY(-4px);
+}
+
+/* 徽章标签样式 */
+.nav-card-item .badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 12px;
+  z-index: 10;
+}
+
+/* 网站信息区域（图标 + 名称） */
+.nav-card-item__info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+/* 网站图标样式 */
+.nav-card-item__img {
+  min-width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  margin-right: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.nav-card-item__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.nav-card-item:hover .nav-card-item__img img {
+  transform: scale(1.1);
+}
+
+/* 网站名称样式 */
+.nav-card-item__info .name {
+  overflow: hidden;
+  flex: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color, #2c3e50);
+}
+
+/* 网站描述样式 */
+.nav-card-item .desc {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 12px;
+  color: var(--text-secondary, #64748b);
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+/* 骨架屏加载效果 */
+.skeleton-image:has(:not(.loaded)) {
+  animation: skeleton-loading 1.4s ease infinite;
+  background-image: linear-gradient(
+    90deg,
+    var(--fill-color-dark, #ebedf0) 25%,
+    var(--bg-color, #fff) 37%,
+    var(--fill-color-dark, #ebedf0) 63%
+  );
+  background-size: 400% 100%;
+}
+
+.skeleton-image:has(:not(.loaded)) > img {
+  background-color: var(--bg-color, #fff);
+  filter: blur(10px);
+  opacity: 0;
+  transition: filter 0.3s, opacity 0.3s;
+}
+
+.skeleton-image > img.loaded {
+  filter: blur(0);
+  opacity: 1;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+/* ========================================
+   暗色模式适配
+   ======================================== */
+.dark-mode {
+  .nav-card-item {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-card-item:hover {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 0 4px 16px rgba(0, 68, 255, 0.315) !important;
+  }
+
+  .skeleton-image:has(:not(.loaded)) {
+    background-image: linear-gradient(
+      90deg,
+      #2c2f35 25%,
+      #1b1b1f 37%,
+      #2c2f35 63%
+    );
+  }
+}
+
+/* ========================================
+   右侧 TOC 侧边栏样式
+   ======================================== */
+.websites-aside {
+  display: none;
+  flex-shrink: 0;
+  width: 256px;
+  padding-left: 32px;
+  position: relative;
+}
+
+@media (min-width: 1280px) {
+  .websites-aside {
+    display: block;
+  }
+}
+
+.websites-aside__container {
+  // position: sticky;
+  // top: calc(var(--vp-nav-height, 64px) + 32px);
+  max-height: calc(100vh - var(--vp-nav-height, 64px) - 64px);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.websites-aside__container::-webkit-scrollbar {
+  display: none;
+}
+
+/* TOC 链接样式 */
+.vp-outline-item {
+  position: relative;
+  z-index: 1;
+  padding: 2px 0;
+}
+
+.vp-outline-link {
+  display: block;
+  padding: 4px 0;
+  color: var(--text-secondary, #64748b);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.vp-outline-link:hover {
+  color: var(--text-color, #2c3e50);
+}
+
+.vp-outline-link.active {
+  color: var(--primary-color, #0891b2);
+  font-weight: 600;
+}
+
+/* ========================================
+   移动端适配
+   ======================================== */
+@media (max-width: 768px) {
+  .websites-container {
+    padding: 30px 10px;
+  }
+
+  .websites-title {
+    margin-bottom: 30px;
+  }
+
+  .websites-title h1 {
+    font-size: 1.75rem;
+  }
+
+  .title-wrapper h2 {
+    font-size: 1.1rem;
+  }
+
+  .nav-card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    gap: 15px;
+  }
+
+  .websites-aside {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   Markdown 正文内容样式
+   ======================================== */
+.websites-content {
+  max-width: 100%;
+  margin: 0 0 40px 0;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 12px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  line-height: 1.8;
+  color: var(--text-color, #2c3e50);
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 1.5rem 0 1rem;
+    color: var(--text-color, #2c3e50);
+    border-bottom: 2px solid var(--primary-color, #0891b2);
+    padding-bottom: 0.5rem;
+  }
+
+  p {
+    margin: 1rem 0;
+    font-size: 1rem;
+  }
+
+  ul, ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+  }
+
+  li {
+    margin: 0.5rem 0;
+  }
+
+  strong {
+    font-weight: 600;
+    color: var(--primary-color, #0891b2);
+  }
+
+  hr {
+    margin: 2rem 0;
+    border: none;
+    border-top: 1px solid var(--border-color, #e5e7eb);
+  }
+}
+
+.dark-mode .websites-content {
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text-color, #e5e7eb);
+
+  h2 {
+    color: var(--text-color, #e5e7eb);
+  }
+}
+
+/* ========================================
+   打赏组件样式
+   ======================================== */
+.websites-appreciation {
+  max-width: 100%;
+  margin: 60px 0 40px 0;
+  padding: 0 8px;
+
+  .appreciation-section {
+    margin: 0;
+  }
+}
+
+/* ========================================
+   最后更新时间样式
+   ======================================== */
+.websites-lastmod {
+  max-width: 100%;
+  margin: 40px 0 0 0;
+  padding: 0 8px;
+
+  .lastmod-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 8px;
+    border: 1px solid var(--border-color, #e5e7eb);
+    font-size: 0.9rem;
+    color: var(--text-secondary, #64748b);
+    transition: all 0.3s;
+
+    i {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
+  }
+}
+
+.dark-mode .websites-lastmod {
+  .lastmod-inner {
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text-secondary, #94a3b8);
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+/* ========================================
+   右侧分享按钮样式
+   ======================================== */
+.websites-share-section {
+  margin-bottom: 24px;
+
+  .tk-aside-outline {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 12px;
+    border: 1px solid var(--border-color, #e5e7eb);
+    padding: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .outline-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color, #2c3e50);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+  }
+
+  .share-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .share-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text-color, #2c3e50);
+    cursor: pointer;
+    transition: all 0.3s;
+
+    i {
+      font-size: 16px;
+      color: var(--primary-color, #0891b2);
+    }
+
+    span {
+      flex: 1;
+      text-align: left;
+    }
+
+    &:hover {
+      background: var(--primary-color, #0891b2);
+      border-color: var(--primary-color, #0891b2);
+      color: #ffffff;
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
+
+      i {
+        color: #ffffff;
+      }
+    }
+
+    &:active {
+      transform: translateX(2px);
+    }
+  }
+}
+
+.dark-mode .websites-share-section {
+  .tk-aside-outline {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .outline-title {
+    color: var(--text-color, #e5e7eb);
+  }
+
+  .share-btn {
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-color, #e5e7eb);
+
+    &:hover {
+      background: var(--primary-color, #0891b2);
+      color: #ffffff;
+    }
+  }
+}
+
+/* ========================================
+   移动端适配
+   ======================================== */
+@media (max-width: 768px) {
+  .websites-content {
+    padding: 16px;
+    margin-bottom: 30px;
+
+    h2 {
+      font-size: 1.3rem;
+    }
+  }
+
+  .websites-appreciation {
+    margin: 40px 0 30px 0;
+  }
+
+  .websites-lastmod {
+    margin: 30px 0 0 0;
+
+    .lastmod-inner {
+      font-size: 0.85rem;
+    }
+  }
+}

@@ -1,0 +1,80 @@
+[params.teekTools]
+  version = "1.0"
+
+  # 配置中心后端服务配置
+  [params.teekTools.server]
+    port = 8888
+    host = "0.0.0.0"
+
+  # 配置中心前端配置
+  [params.teekTools.frontend]
+    # API 基础路径，用于前端连接后端
+    apiBase = "http://localhost:8888/api/v1"
+    fetchTimeout = 5000
+
+  # 路径配置
+  [params.teekTools.paths]
+    # 额外的文档目录（相对于项目根目录）
+    contentDocsAdditional = [] 
+  # Permalink 生成配置
+  [params.teekTools.permalink]
+    enabled = true
+    idLength = 5
+    defaultPrefix = "/docs"
+    namespace = "1b671a64-40d5-491e-99b0-da01ff1f3341"
+
+  # 文档分析配置
+  [params.teekTools.analysis]
+    enabled = true
+    outputFile = "hugo-teek-site/data/docAnalysis.json"
+    chineseWordsPerMin = 300
+    englishWordsPerMin = 160
+    excludeDirs = [".git", ".hg", ".svn", ".DS_Store", "node_modules", "dist", "public", "resources"]
+
+  # 索引页生成配置
+  [params.teekTools.index]
+    enabled = true
+    autoGenerate = true
+    minimalMode = true
+    overwriteExisting = true
+
+  # Front Matter 修复配置
+  [params.teekTools.frontmatter]
+    enabled = true
+    coverImages = "hugo-teek-site/data/coverImages.json"
+
+  # 侧边栏配置
+  [params.teekTools.sidebar]
+    enabled = true
+    outputFile = "hugo-teek-site/data/sidebarOrder.json"
+    defaultWeight = 50
+    extractFromPrefix = true
+    splitOutput = true  # 启用拆分输出，显著提升 Hugo 构建性能（推荐）
+    splitByCategory = true  # 按大类拆分 tree.json，减少首屏加载体积 85-90%
+
+  # VitePress 语法转换配置
+  [params.teekTools.convert]
+    enabled = true
+    outputDir = "hugo-teek-site/.content-vp-converted"
+    smartMode = true
+
+  # 微信公众号解锁内容分离配置
+  [params.teekTools.wechatUnlock]
+    enabled = true
+    # content.json 输出文件名（与Markdown同目录）
+    outputFilename = "content.json"
+    # 是否完全移除锁定内容（true）还是保留注释标记（false）
+    removeLockedContent = true
+
+  # 构建流程配置
+  [params.teekTools.build]
+    steps = ["frontmatter", "permalink", "sidebar", "index", "wechat", "convert", "analysis"]
+    parallel = false
+    continueOnError = false
+
+  # 日志配置
+  [params.teekTools.logging]
+    level = "info"
+    format = "text"
+    color = true
+    showTimestamp = false

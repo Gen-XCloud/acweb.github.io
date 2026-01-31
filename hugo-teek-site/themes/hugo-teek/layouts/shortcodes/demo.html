@@ -1,0 +1,19 @@
+{{- $file := .Get "file" | default "" -}}
+{{- $lang := .Get "lang" | default "vue" -}}
+{{- $effect := .Get "effect" | default "" -}}
+{{- $resourcePath := cond (ne $file "") (printf "demo/%s" $file) "" -}}
+{{- $resource := cond (ne $resourcePath "") (resources.Get $resourcePath) nil -}}
+{{- $source := cond $resource $resource.Content (.Inner | plainify) -}}
+
+<div class="tk-demo">
+  <div class="tk-demo__preview" data-effect="{{ $effect }}">
+    {{- if $effect -}}
+      <div class="tk-demo__placeholder">{{ i18n "demo_effect_placeholder" | default "Demo will be rendered via JS." }}</div>
+    {{- else -}}
+      <div class="tk-demo__placeholder">{{ i18n "demo_placeholder" | default "Preview area" }}</div>
+    {{- end -}}
+  </div>
+  <div class="tk-demo__code">
+    <pre><code class="language-{{ $lang }}">{{ $source | htmlEscape }}</code></pre>
+  </div>
+</div>

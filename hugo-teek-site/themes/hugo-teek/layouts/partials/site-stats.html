@@ -1,0 +1,96 @@
+{{ $postsCount := len (where .Site.RegularPages "Type" "posts") }}
+{{ $categoriesCount := len .Site.Taxonomies.categories }}
+{{ $tagsCount := len .Site.Taxonomies.tags }}
+{{ $totalWords := 0 }}
+{{ range .Site.RegularPages }}
+  {{ $totalWords = add $totalWords .WordCount }}
+{{ end }}
+
+<div class="site-stats-card">
+  <h4 class="stats-title">
+    <span class="stats-icon">📊</span>
+    站点统计
+  </h4>
+
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-icon-wrapper stat-articles">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ $postsCount }}</span>
+        <span class="stat-label">文章</span>
+      </div>
+    </div>
+
+    <div class="stat-item">
+      <div class="stat-icon-wrapper stat-categories">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ $categoriesCount }}</span>
+        <span class="stat-label">分类</span>
+      </div>
+    </div>
+
+    <div class="stat-item">
+      <div class="stat-icon-wrapper stat-tags">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M7 7h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ $tagsCount }}</span>
+        <span class="stat-label">标签</span>
+      </div>
+    </div>
+
+    <div class="stat-item">
+      <div class="stat-icon-wrapper stat-words">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ div $totalWords 1000 }}k</span>
+        <span class="stat-label">总字数</span>
+      </div>
+    </div>
+  </div>
+
+  {{ if .Site.Params.siteStartDate }}
+  <div class="stats-runtime">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+      <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span>本站运行 <span id="site-runtime">0</span> 天</span>
+  </div>
+  {{ end }}
+</div>
+
+{{ if .Site.Params.siteStartDate }}
+<script>
+  (function() {
+    const startDate = new Date('{{ .Site.Params.siteStartDate }}').getTime();
+    const runtimeElement = document.getElementById('site-runtime');
+
+    function updateRuntime() {
+      const now = new Date().getTime();
+      const days = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+      if (runtimeElement) {
+        runtimeElement.textContent = days;
+      }
+    }
+
+    updateRuntime();
+    setInterval(updateRuntime, 86400000); // Update once per day
+  })();
+</script>
+{{ end }}

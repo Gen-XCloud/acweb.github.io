@@ -1,0 +1,22 @@
+:root {
+  --tk-scrollbar-color: rgba(142, 150, 170, 0.6);
+  --tk-scrollbar-bg: transparent;
+}
+
+:root.dark {
+  --tk-scrollbar-color: rgba(142, 150, 170, 0.4);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--tk-scrollbar-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--tk-scrollbar-color);
+  border-radius: 10px;
+}

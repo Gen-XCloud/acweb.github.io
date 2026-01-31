@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配置中心</title>
+
+    <!-- External Resources (Local) -->
+    <!-- EasyMDE Editor -->
+    <link rel="stylesheet" href='{{ "lib/easymde/easymde.min.css" | relURL }}'>
+    <script src='{{ "lib/easymde/easymde.min.js" | relURL }}'></script>
+
+    <!-- Local Components -->
+    <script src='{{ "settings/components/data-table.js" | relURL }}'></script>
+    <script src='{{ "settings/components/table-configs.js" | relURL }}'></script>
+    <script src='{{ "settings/components/config-maps.js" | relURL }}'></script>
+    <script src='{{ "settings/components/config-renderer.js" | relURL }}'></script>
+
+    <!-- Admin Styles -->
+    <link rel="stylesheet" href='{{ "settings/css/style.css" | relURL }}'>
+</head>
+<body>
+    <div class="cms-container">
+        <!-- Sidebar -->
+        <div class="cms-sidebar" id="cms-sidebar">
+            <div class="cms-logo">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 20px;">⚙️</span>
+                    <span class="cms-logo-text">配置中心</span>
+                </div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()" title="折叠/展开侧边栏">
+                    ◀
+                </button>
+            </div>
+            <nav class="cms-nav">
+                <div class="cms-menu-item" data-view="dashboard">
+                    <span class="cms-menu-item-icon">📊</span>
+                    <span class="cms-menu-item-text">仪表盘</span>
+                </div>
+                
+                <div class="cms-menu-group">
+                    <div class="cms-menu-group-title">📝 内容管理</div>
+                    <div class="cms-menu-item" data-view="content/articles">
+                        <span class="cms-menu-item-icon">📄</span>
+                        <span class="cms-menu-item-text">文章</span>
+                    </div>
+                    <div class="cms-menu-item" data-view="content/pages">
+                        <span class="cms-menu-item-icon">📃</span>
+                        <span class="cms-menu-item-text">页面</span>
+                    </div>
+                    <div class="cms-menu-item" data-view="content/comments">
+                        <span class="cms-menu-item-icon">💬</span>
+                        <span class="cms-menu-item-text">评论</span>
+                    </div>
+                    <div class="cms-menu-item" data-view="content/attachments">
+                        <span class="cms-menu-item-icon">📎</span>
+                        <span class="cms-menu-item-text">附件</span>
+                    </div>
+                    <div class="cms-menu-item" data-view="content/gallery">
+                        <span class="cms-menu-item-icon">🖼️</span>
+                        <span class="cms-menu-item-text">图库</span>
+                    </div>
+                    <div class="cms-menu-item" data-view="content/friends">
+                        <span class="cms-menu-item-icon">🤝</span>
+                        <span class="cms-menu-item-text">友链</span>
+                    </div>
+                    <div class="cms-menu-item" data-view="content/thanks">
+                        <span class="cms-menu-item-icon">🙏</span>
+                        <span class="cms-menu-item-text">致谢清单</span>
+                    </div>
+                </div>
+                
+                <div class="cms-menu-group">
+                    <div class="cms-menu-group-title">🎨 外观</div>
+                    <div class="cms-menu-item" data-view="appearance/theme">
+                        <span class="cms-menu-item-icon">🎭</span>
+                        <span class="cms-menu-item-text">主题</span>
+                    </div>
+                    <div class="cms-menu-item" data-view="appearance/menu">
+                        <span class="cms-menu-item-icon">🧭</span>
+                        <span class="cms-menu-item-text">菜单</span>
+                    </div>
+                </div>
+                
+                <div class="cms-menu-group">
+                    <div class="cms-menu-group-title">⚙️ 系统</div>
+                    <div class="cms-menu-item" data-view="system/site-settings">
+                        <span class="cms-menu-item-icon">🔧</span>
+                        <span class="cms-menu-item-text">站点设置</span>
+                    </div>
+                    <div class="cms-menu-item" data-view="system/appearance">
+                        <span class="cms-menu-item-icon">🎨</span>
+                        <span class="cms-menu-item-text">外观配置</span>
+                    </div>
+                    <div class="cms-menu-item" data-view="system/plugins">
+                        <span class="cms-menu-item-icon">🔌</span>
+                        <span class="cms-menu-item-text">外部插件</span>
+                    </div>
+                    <div class="cms-menu-item" data-view="system/hugo-core">
+                        <span class="cms-menu-item-icon">⚙️</span>
+                        <span class="cms-menu-item-text">Hugo 核心</span>
+                    </div>
+                    <div class="cms-menu-item" data-view="system/social-links">
+                        <span class="cms-menu-item-icon">🔗</span>
+                        <span class="cms-menu-item-text">社交链接</span>
+                    </div>
+                    <div class="cms-menu-item" data-view="system/import-export">
+                        <span class="cms-menu-item-icon">📦</span>
+                        <span class="cms-menu-item-text">导入导出</span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="cms-main">
+            <div class="cms-header">
+                <h1 id="page-title">仪表盘</h1>
+                <button class="btn btn-primary" onclick="window.location.href='/'">返回首页</button>
+            </div>
+            
+            <div class="cms-content" id="cms-content">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 动态读取配置中的 API 地址，默认值为 http://localhost:8888/api/v1
+        // 这个变量会被 main.js 使用
+        window.API_BASE = '{{ .Site.Params.teekTools.frontend.apiBase | default "http://localhost:8888/api/v1" }}';
+    </script>
+    
+    <!-- Admin Logic -->
+    <script src='{{ "settings/js/main.js" | relURL }}'></script>
+</body>
+</html>

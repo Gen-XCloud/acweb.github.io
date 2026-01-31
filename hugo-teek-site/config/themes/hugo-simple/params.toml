@@ -1,0 +1,25 @@
+# ========================================
+# hugo-simple 主题参数配置
+# ========================================
+
+[params]
+  # 作者信息
+  author = "admin"
+  description = "余温Gueen - 技术博客"
+  
+
+
+  # Hero 区域配置
+  heroTitle = "wiki.xxdevops.cn | 余温Gueen"
+  heroSubtitle = "纵然世间晦暗，仍有一点星光。"
+
+  # Hero 区域背景图
+  heroImage = "/images/banner/slide6.jpg"
+
+  # 头像配置
+  avatarImage = "https://img.xxdevops.cn/blog/avatar/yuwen_avatar.avif"
+  avatarLink = "/about/"
+
+  # 搜索功能配置（使用前端搜索，不依赖 FlexSearch）
+  [params.search]
+    enabled = false

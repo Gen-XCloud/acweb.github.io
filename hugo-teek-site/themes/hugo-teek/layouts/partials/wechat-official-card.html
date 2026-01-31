@@ -1,0 +1,44 @@
+{{ if .Site.Params.wechatOfficial.enabled }}
+{{ with .Site.Params.wechatOfficial }}
+<div class="tk-page-card wechat-official-card-wrapper">
+  <div class="tk-page-card-header">
+    <span class="card-title">
+      <span class="title-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-5.523 3.024-6.736C10.982 8.205 8.691 2.188 8.691 2.188zm-2.488 5.93a.74.74 0 1 1 0-1.48.74.74 0 0 1 0 1.48zm4.976 0a.74.74 0 1 1 0-1.48.74.74 0 0 1 0 1.48zM15.32 9.794c-.276 0-.543.027-.811.05.857 2.578-.157 5.523-3.024 6.736 2.154 1.879 4.445 7.896 4.445 7.896 4.8 0 8.691-3.288 8.691-7.342 0-2.212-1.17-4.203-3.002-5.55a.59.59 0 0 0-.213-.665l.39-1.48c.019-.07.048-.141.048-.213 0-.163-.13-.295-.29-.295a.326.326 0 0 1-.167.054l-1.903 1.114a.864.864 0 0 0-.717.098 10.16 10.16 0 0 1-2.837.403c-.276 0-.543-.027-.81-.05.856 2.578-.158 5.523-3.025 6.736z"/>
+        </svg>
+      </span>
+      <span class="title-text">关注公众号</span>
+    </span>
+  </div>
+
+  <div class="wechat-official-card-content">
+    <!-- 二维码图片 -->
+    <div class="wechat-qrcode-wrapper">
+      <img src="{{ .qrcodeImage }}" alt="{{ .name }}二维码" class="wechat-qrcode-image">
+    </div>
+
+    <!-- 公众号名称 -->
+    <h3 class="wechat-official-name">{{ .name }}</h3>
+
+    <!-- 公众号描述 -->
+    {{ if .description }}
+    <p class="wechat-official-description">{{ .description }}</p>
+    {{ end }}
+
+    <!-- 扫码关注按钮 -->
+    <div class="wechat-official-footer">
+      <a class="wechat-scan-button" href="{{ .qrcodeUrl }}" target="_blank" rel="noopener">
+        <svg class="scan-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>扫码关注</span>
+      </a>
+    </div>
+  </div>
+</div>
+{{ end }}
+{{ end }}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>测试解锁</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .info { background: #e3f2fd; padding: 10px; margin: 10px 0; }
+        .content-area { background: #f5f5f5; padding: 15px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>微信解锁功能测试</h1>
+    
+    <div class="test-section">
+        <h2>测试 1: 直接访问 content.json</h2>
+        <button onclick="testFetch()">加载 content.json</button>
+        <div id="fetch-result" class="info"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>测试 2: 模拟解锁过程</h2>
+        <button onclick="testUnlock()">模拟解锁</button>
+        <div id="unlock-result" class="content-area"></div>
+        <div class="wechat-unlock-gate" id="test-gate"></div>
+        <div id="unlock-target"></div>
+    </div>
+    
+    <script>
+        async function testFetch() {
+            const result = document.getElementById('fetch-result');
+            try {
+                const response = await fetch('/docs/40.专题/博客搭建/content.json');
+                const data = await response.json();
+                result.innerHTML = `
+                    <strong>✅ 加载成功</strong><br>
+                    内容长度: ${data.content.length} 字符<br>
+                    预览: ${data.content.substring(0, 100)}...
+                `;
+            } catch (e) {
+                result.innerHTML = `<strong>❌ 加载失败:</strong> ${e.message}`;
+            }
+        }
+        
+        async function testUnlock() {
+            const gateElement = document.getElementById('test-gate');
+            const result = document.getElementById('unlock-result');
+            
+            try {
+                // 加载 content.json
+                const response = await fetch('/docs/40.专题/博客搭建/content.json');
+                const data = await response.json();
+                
+                // 创建临时容器解析HTML
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = data.content;
+                
+                // 插入到页面
+                const fragment = document.createDocumentFragment();
+                while (tempDiv.firstChild) {
+                    fragment.appendChild(tempDiv.firstChild);
+                }
+                gateElement.parentNode.insertBefore(fragment, gateElement.nextSibling);
+                
+                result.innerHTML = '<strong>✅ 解锁成功！内容已插入到下方 ↓</strong>';
+            } catch (e) {
+                result.innerHTML = `<strong>❌ 解锁失败:</strong> ${e.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

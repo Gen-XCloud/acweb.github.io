@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+    <meta name="description" content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+
+    <!-- SEO Keywords -->
+    {{ with .Site.Params.keywords }}
+    <meta name="keywords" content="{{ delimit . ", " }}">
+    {{ end }}
+
+    <!-- Content Security Policy - 防止 XSS 攻击 -->
+    <!-- 注意: frame-ancestors 等指令需要通过 HTTP 响应头设置，详见 SECURITY.md -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' https://img.xxdevops.cn data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+
+    <!-- 安全相关 meta 标签 -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- 预连接到图片 CDN，加速资源加载 -->
+    <link rel="preconnect" href="https://img.xxdevops.cn" crossorigin>
+    <link rel="dns-prefetch" href="https://img.xxdevops.cn">
+
+    <!-- 预加载首页 Hero 背景图 -->
+    {{ if .IsHome }}
+    {{ with .Site.Params.heroBgImage }}
+    <link rel="preload" as="image" href="{{ . }}">
+    {{ end }}
+    {{ end }}
+
+    {{ $style := resources.Get "css/style.scss" }}
+    {{ if $style }}
+      {{ $style = $style | css.Sass | resources.Minify }}
+      <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+    {{ end }}
+
+    <!-- 暗黑模式防闪烁脚本 - 必须在 head 中执行 -->
+    <script>
+    (function() {
+        const theme = localStorage.getItem('theme');
+        if (theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+    })();
+    </script>
+
+    <!-- 统一设置防闪烁脚本 - 必须在 head 中执行 -->
+    <script>
+    (function() {
+        // 尝试新的统一格式
+        let settings = localStorage.getItem('unifiedSettings');
+        if (settings) {
+            try {
+                settings = JSON.parse(settings);
+                const root = document.documentElement;
+
+                // 应用配色方案
+                if (settings.colorScheme) {
+                    root.setAttribute('data-color-scheme', settings.colorScheme);
+                }
+
+                // 应用全局字体大小缩放
+                if (settings.fontSizeScale) {
+                    const scale = settings.fontSizeScale / 100;
+                    root.style.setProperty('--font-size-scale', scale);
+                }
+
+                // 应用字体类型
+                if (settings.fontFamily) {
+                    root.style.setProperty('--font-family-base', settings.fontFamily);
+                }
+
+                return;
+            } catch (e) {}
+        }
+
+        // 回退：兼容旧格式（仅配色方案）
+        const colorScheme = localStorage.getItem('colorScheme');
+        if (colorScheme) {
+            document.documentElement.setAttribute('data-color-scheme', colorScheme);
+        }
+    })();
+    </script>
+</head>
+<body>
+    {{ partial "header.html" . }}
+
+    <main id="main-content">
+        {{ block "main" . }}{{ end }}
+    </main>
+
+    {{ partial "footer.html" . }}
+
+    <!-- Main JavaScript -->
+    {{ $main := resources.Get "js/main.js" }}
+    {{ if $main }}
+      {{ $main = $main | resources.Minify }}
+      <script src="{{ $main.RelPermalink }}"></script>
+    {{ end }}
+
+    <!-- 导航栏自定义器（API） -->
+    {{ $navbarCustomizerJs := resources.Get "js/navbar-customizer.js" }}
+    {{ if $navbarCustomizerJs }}
+      {{ $navbarCustomizerJs = $navbarCustomizerJs | resources.Minify }}
+      <script src="{{ $navbarCustomizerJs.RelPermalink }}"></script>
+    {{ end }}
+
+    <!-- 统一设置面板（新） -->
+    {{ $unifiedSettingsJs := resources.Get "js/unified-settings-panel.js" }}
+    {{ if $unifiedSettingsJs }}
+      {{ $unifiedSettingsJs = $unifiedSettingsJs | resources.Minify }}
+      <script src="{{ $unifiedSettingsJs.RelPermalink }}"></script>
+    {{ end }}
+
+    <!-- 弃用：color-scheme-selector.js, navbar-settings-panel.js -->
+
+    <!-- 图片懒加载 - 使用 Intersection Observer API -->
+    <script>
+        // 图片懒加载 - 使用 Intersection Observer API
+        (function() {
+            'use strict';
+
+            // 防止多次初始化
+            if (window.__lazyLoadInitialized) {
+                return;
+            }
+            window.__lazyLoadInitialized = true;
+
+            function initLazyLoad() {
+                try {
+                    // 检查浏览器是否支持 Intersection Observer
+                    if ('IntersectionObserver' in window) {
+                        var lazyBgObserver = new IntersectionObserver(function(entries) {
+                            entries.forEach(function(entry) {
+                                if (entry.isIntersecting) {
+                                    var lazyBg = entry.target;
+                                    var bgUrl = lazyBg.getAttribute('data-bg');
+                                    if (bgUrl) {
+                                        // 预加载图片以避免闪烁
+                                        var img = new Image();
+                                        img.onload = function() {
+                                            lazyBg.style.backgroundImage = "url('" + bgUrl + "')";
+                                            lazyBg.classList.remove('lazy-bg');
+                                        };
+                                        img.onerror = function() {
+                                            console.warn('Failed to load background image:', bgUrl);
+                                            lazyBg.classList.remove('lazy-bg');
+                                        };
+                                        img.src = bgUrl;
+                                        lazyBgObserver.unobserve(lazyBg);
+                                    }
+                                }
+                            });
+                        }, {
+                            rootMargin: '50px 0px',
+                            threshold: 0.01
+                        });
+
+                        // 观察所有带有 lazy-bg 类的元素
+                        var lazyElements = document.querySelectorAll('.lazy-bg');
+                        lazyElements.forEach(function(lazyBg) {
+                            lazyBgObserver.observe(lazyBg);
+                        });
+                    } else {
+                        // 降级方案：不支持 Intersection Observer 则直接加载所有图片
+                        var lazyElements = document.querySelectorAll('.lazy-bg');
+                        lazyElements.forEach(function(lazyBg) {
+                            var bgUrl = lazyBg.getAttribute('data-bg');
+                            if (bgUrl) {
+                                lazyBg.style.backgroundImage = "url('" + bgUrl + "')";
+                                lazyBg.classList.remove('lazy-bg');
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error initializing lazy load:', error);
+                }
+            }
+
+            // 使用 DOMContentLoaded 确保 DOM 准备就绪
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initLazyLoad);
+            } else {
+                initLazyLoad();
+            }
+        })();
+    </script>
+</body>
+</html>

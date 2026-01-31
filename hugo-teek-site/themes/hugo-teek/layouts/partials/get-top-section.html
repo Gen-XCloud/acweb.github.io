@@ -1,0 +1,23 @@
+{{/*
+  缓存辅助函数：获取顶级 section
+  缓存键：当前页面的 RelPermalink
+*/}}
+{{- $current := .current -}}
+{{- $root := .root -}}
+{{- $rootPathWithSlash := .rootPathWithSlash -}}
+
+{{- $topSection := $current -}}
+{{- if $current.IsDescendant $root -}}
+  {{- $temp := $current -}}
+  {{- range seq 10 -}}
+    {{- if $temp.Parent -}}
+      {{- if eq $temp.Parent.RelPermalink $rootPathWithSlash -}}
+        {{- $topSection = $temp -}}
+        {{- break -}}
+      {{- end -}}
+      {{- $temp = $temp.Parent -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $topSection -}}

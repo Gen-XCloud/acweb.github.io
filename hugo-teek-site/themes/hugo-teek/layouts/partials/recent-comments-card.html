@@ -1,0 +1,43 @@
+{{ if .Site.Params.comment.enabled }}
+<div class="tk-page-card recent-comments-card">
+  <div class="tk-page-card-header">
+    <span class="card-title">
+      <span class="title-icon">💬</span>
+      <span class="title-text">最新评论</span>
+    </span>
+
+    <!-- 翻页控制（右上角，参考友链卡片样式） -->
+    <div id="recent-comments-pagination" class="tk-carousel-controls" style="display: none;">
+      <button class="tk-carousel-btn tk-carousel-prev" id="comments-prev-btn" aria-label="上一页" title="上一页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="tk-carousel-btn tk-carousel-next" id="comments-next-btn" aria-label="下一页" title="下一页">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="recent-comments-body">
+    <div id="recent-comments-list" class="comments-list" style="--items-per-page: {{ .Site.Params.homeSidebar.recentComments.pageSize | default 5 }};">
+      <!-- 加载中状态 -->
+      <div class="comments-loading">
+        <div class="loading-spinner"></div>
+        <span>加载中...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 传递环境配置给 JavaScript -->
+<script id="recent-comments-config" type="application/json">
+{
+  "envId": "{{ .Site.Params.comment.envId }}",
+  "pageSize": {{ .Site.Params.homeSidebar.recentComments.pageSize | default 5 }},
+  "totalSize": {{ .Site.Params.homeSidebar.recentComments.totalSize | default 50 }}
+}
+</script>
+{{ end }}

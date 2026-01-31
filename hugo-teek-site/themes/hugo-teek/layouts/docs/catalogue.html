@@ -1,0 +1,55 @@
+{{ define "main" }}
+<div class="tk-catalogue">
+  <div class="tk-catalogue__header" role="group" aria-labelledby="catalogue-header-title">
+    <h1 id="catalogue-header-title">{{ .Title }}</h1>
+    {{ $desc := or .Params.desc .Params.description }}
+    {{ if and $desc (ne $desc "") }}
+    <p class="description">{{ $desc }}</p>
+    {{ end }}
+  </div>
+
+  <div class="tk-catalogue__wrapper" aria-labelledby="catalogue-list-title">
+    <div id="catalogue-list-title" class="title">
+      {{ default "目录" .Params.pageTitle }}
+    </div>
+    {{ $sections := sort .Sections "File.Dir" }}
+    {{ $pages := sort .RegularPages "File.Dir" }}
+
+    {{/* 过滤掉没有可见内容的section */}}
+    {{ $visibleSections := slice }}
+    {{ range $sections }}
+      {{ if or (gt (len .RegularPages) 0) (gt (len .Sections) 0) }}
+        {{ $visibleSections = $visibleSections | append . }}
+      {{ end }}
+    {{ end }}
+
+    {{ $counter := newScratch }}
+    {{ $counter.Set "value" 0 }}
+    <ul class="flx-wrap-between">
+      {{ range $visibleSections }}
+        {{ $counter.Add "value" 1 }}
+        {{ partial "docs/catalogue-group.html" (dict "section" . "index" (printf "%d" ($counter.Get "value"))) }}
+      {{ end }}
+      {{ range $pages }}
+        {{ $counter.Add "value" 1 }}
+        {{ $pageIndex := printf "%d" ($counter.Get "value") }}
+        {{ $title := .Title | replaceRE "^[0-9]+\\." "" }}
+        <li class="tk-catalogue-item">
+          <a href="{{ .RelPermalink }}" aria-label="{{ printf "%s. %s" $pageIndex $title }}">
+            {{ printf "%s. " $pageIndex }}<span class="tk-catalogue-item__title">{{ $title }}</span>
+          </a>
+          {{ if and .Params.description (ne .Params.description "") }}
+          <p class="tk-catalogue-item__desc">{{ .Params.description }}</p>
+          {{ end }}
+        </li>
+      {{ end }}
+    </ul>
+  </div>
+
+  {{ with .Content }}
+  <div class="vp-doc">
+    {{ . }}
+  </div>
+  {{ end }}
+</div>
+{{ end }}

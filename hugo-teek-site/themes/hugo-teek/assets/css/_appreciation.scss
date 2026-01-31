@@ -1,0 +1,182 @@
+// 赞赏码组件样式
+.appreciation-section {
+  margin: 2rem 0;
+  text-align: center;
+  position: relative;
+  z-index: 100;  // 提升层级，确保不被其他元素遮挡
+
+  // 赞赏按钮
+  .appreciation-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    position: relative;
+    z-index: 101;  // 确保按钮可点击，层级高于容器
+
+    .appreciation-icon {
+      font-size: 1.2rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+      background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  // 赞赏内容区（默认隐藏）
+  .appreciation-content {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 0;
+    position: relative;
+    z-index: 100;  // 确保内容区在正确的层级
+    pointer-events: none;  // 收起时不拦截点击事件，避免遮挡下方元素（如评论输入框）
+
+    &.show {
+      max-height: 600px;
+      opacity: 1;
+      margin-top: 1.5rem;
+      overflow: visible;  // 展开时允许内容完全显示，不被裁剪
+      pointer-events: auto;  // 展开时恢复点击事件交互
+
+      // 展开时显示二维码容器
+      .appreciation-qrcodes {
+        display: flex;
+      }
+    }
+
+    // 二维码容器
+    .appreciation-qrcodes {
+      display: none;  // 默认完全隐藏，不占据空间，避免遮挡下方元素
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+
+      .qrcode-item {
+        padding: 1.5rem;
+        border-radius: 12px;
+        min-width: 220px;
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: translateY(-5px);
+        }
+
+        .qrcode-title {
+          font-size: 1rem;
+          font-weight: 600;
+          margin-bottom: 1rem;
+          color: white;
+        }
+
+        .qrcode-image {
+          background: white;
+          padding: 1rem;
+          border-radius: 8px;
+          margin-bottom: 0.75rem;
+
+          img {
+            width: 180px !important;
+            height: 180px !important;
+            max-width: 180px !important;
+            max-height: 180px !important;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+          }
+        }
+
+        .qrcode-label {
+          font-size: 0.9rem;
+          color: white;
+          font-weight: 500;
+        }
+
+        // 微信支付样式
+        &.qrcode-wechat {
+          background: linear-gradient(135deg, #09bb07 0%, #00c800 100%);
+          box-shadow: 0 8px 24px rgba(9, 187, 7, 0.3);
+        }
+
+        // 支付宝样式
+        &.qrcode-alipay {
+          background: linear-gradient(135deg, #1677ff 0%, #00a0e9 100%);
+          box-shadow: 0 8px 24px rgba(22, 119, 255, 0.3);
+        }
+      }
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .appreciation-section {
+    .appreciation-toggle {
+      padding: 0.65rem 1.2rem;
+      font-size: 0.95rem;
+    }
+
+    .appreciation-content {
+      .appreciation-qrcodes {
+        gap: 1.5rem;
+
+        .qrcode-item {
+          min-width: 200px;
+          padding: 1.2rem;
+
+          .qrcode-image img {
+            width: 160px !important;
+            height: 160px !important;
+            max-width: 160px !important;
+            max-height: 160px !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .appreciation-section {
+    .appreciation-content {
+      .appreciation-qrcodes {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+
+        .qrcode-item {
+          width: 100%;
+          max-width: 280px;
+        }
+      }
+    }
+  }
+}
+
+// 动画
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}

@@ -1,0 +1,15 @@
+{{/*
+  性能优化的 docAnalysis 数据加载（全站缓存）
+
+  优化说明：
+  - 将 docAnalysis.json 数据加载缓存
+  - 使用 "global" 缓存键，所有页面共享
+  - 返回完整的 docAnalysis 数据供调用方查询
+
+  性能影响：
+  - 减少数据加载开销
+  - 预期构建性能提升：5-10%
+
+  注意：阶段 2 将优化数据结构，从 O(n) 线性搜索改为 O(1) Map 查询
+*/}}
+{{- return .Site.Data.docAnalysis -}}

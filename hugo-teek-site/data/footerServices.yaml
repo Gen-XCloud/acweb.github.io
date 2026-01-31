@@ -1,0 +1,36 @@
+# Footer 服务徽章配置
+services:
+  - name: "Hugo"
+    badge: "https://img.xxdevops.cn/blog/badge/Frame-Hugo.svg"
+    url: "https://gohugo.io/"
+    title: "原主题基于 Hugo 框架"
+    
+  - name: "Copyright"
+    badge: "https://img.xxdevops.cn/blog/badge/Copyright.svg"
+    url: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    title: "内容采用 CC BY-NC-SA 4.0 国际许可协议进行许可"
+    
+  - name: "Twikoo"
+    badge: "https://img.xxdevops.cn/blog/badge/Comments-Twikoo.svg"
+    url: "https://twikoo.js.org/"
+    title: "本站评论系统使用 Twikoo"
+    
+  - name: "Flexsearch"
+    badge: "https://img.xxdevops.cn/blog/badge/Search-Flexsearch.svg"
+    url: "https://github.com/nextapps-de/flexsearch"
+    title: "本站搜索服务使用 Flexsearch"
+    
+  - name: "Tencent Cloud"
+    badge: "https://img.xxdevops.cn/blog/badge/Server-Cloud.svg"
+    url: "https://cloud.tencent.com/"
+    title: "本站部署服务使用 腾讯云"
+    
+  - name: "EdgeOne"
+    badge: "https://img.xxdevops.cn/blog/badge/CDN-EdgeOne.svg"
+    url: "https://edgeone.ai/zh"
+    title: "本站部署服务使用 EdgeOne"
+    
+  - name: "Nginx"
+    badge: "https://img.xxdevops.cn/blog/badge/Proxy-Nginx.svg"
+    url: "https://nginx.org/"
+    title: "本站Nginx反向代理服务 Nginx"

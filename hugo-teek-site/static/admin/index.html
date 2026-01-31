@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hugo Teek 配置中心</title>
+    <!-- 引入 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 引入 Phosphor Icons (图标库) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Vditor 编辑器样式 -->
+    <link rel="stylesheet" href="lib/vditor/dist/css/index.css">
+
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 移动端汉堡菜单按钮 -->
+        <button id="mobile-menu-btn" class="btn btn-icon mobile-menu-btn">
+            <i class="ph ph-list"></i>
+        </button>
+
+        <!-- 移动端侧边栏遮罩 -->
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="ph-fill ph-hexagon"></i>
+                    <span>Teek Config</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <!-- 仪表盘 -->
+                <a href="#dashboard" class="nav-item active" data-page="dashboard">
+                    <i class="ph ph-squares-four"></i>
+                    <span>仪表盘</span>
+                </a>
+
+                <div class="nav-group-label">内容管理</div>
+                <a href="#posts" class="nav-item" data-page="posts">
+                    <i class="ph ph-article"></i>
+                    <span>文章管理</span>
+                </a>
+                <a href="#media" class="nav-item" data-page="media">
+                    <i class="ph ph-image"></i>
+                    <span>图片库</span>
+                </a>
+                <a href="#comments" class="nav-item" data-page="comments">
+                    <i class="ph ph-chat-circle-text"></i>
+                    <span>评论管理</span>
+                </a>
+
+                <div class="nav-group-label">站点设置</div>
+                <a href="#theme" class="nav-item" data-page="theme">
+                    <i class="ph ph-palette"></i>
+                    <span>主题定制</span>
+                </a>
+                <a href="#menu" class="nav-item" data-page="menu">
+                    <i class="ph ph-list"></i>
+                    <span>菜单管理</span>
+                </a>
+                <a href="#settings" class="nav-item" data-page="settings">
+                    <i class="ph ph-gear"></i>
+                    <span>通用设置</span>
+                </a>
+
+                <div class="nav-group-label">运维中心</div>
+                <a href="#backup" class="nav-item" data-page="backup">
+                    <i class="ph ph-database"></i>
+                    <span>备份还原</span>
+                </a>
+                <a href="#build" class="nav-item" data-page="build">
+                    <i class="ph ph-rocket-launch"></i>
+                    <span>构建发布</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="/" target="_blank" class="nav-item">
+                    <i class="ph ph-arrow-square-out"></i>
+                    <span>访问博客</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部导航栏 -->
+            <header class="top-bar">
+                <div class="breadcrumb">
+                    <span class="breadcrumb-item">首页</span>
+                    <i class="ph ph-caret-right"></i>
+                    <span class="breadcrumb-item active" id="page-title">仪表盘</span>
+                </div>
+                <div class="top-bar-actions">
+                    <button class="btn btn-icon" title="切换深色模式">
+                        <i class="ph ph-moon"></i>
+                    </button>
+                    <button class="btn btn-primary" id="save-config-btn">
+                        <i class="ph ph-floppy-disk"></i>
+                        保存配置
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容显示区 -->
+            <div id="page-content" class="page-container">
+                <!-- 动态加载的内容将显示在这里 -->
+            </div>
+        </main>
+    </div>
+
+    <!-- 全局提示框 -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- YAML/TOML 解析库 -->
+    <script src="lib/js-yaml/js-yaml.min.js"></script>
+    <script src="lib/toml/toml-simple.js"></script>
+
+    <!-- Sortable.js (拖拽排序) -->
+    <script src="lib/sortable/Sortable.min.js"></script>
+
+    <!-- Vditor 编辑器 -->
+    <script src="lib/vditor/dist/js/index.min.js"></script>
+
+    <!-- 自定义编辑器模块 -->
+    <script src="js/frontmatter-editor.js"></script>
+    <script src="js/editor.js"></script>
+
+    <!-- 引入主逻辑 -->
+    <script src="js/app.js"></script>
+</body>
+</html>

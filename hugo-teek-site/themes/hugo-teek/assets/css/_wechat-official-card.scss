@@ -1,0 +1,207 @@
+// ========================================
+// 微信公众号卡片
+// WeChat Official Account Card
+// ========================================
+// 注意：本文件已重构，wrapper使用统一侧边栏样式
+// 详见：_sidebar-cards-unified.scss
+// ========================================
+
+.wechat-official-card-wrapper {
+  // 继承统一侧边栏卡片基础样式
+  @include sidebar-card-base;
+  @include sidebar-card-hover-light;
+  @include sidebar-card-mobile;
+
+  // 特有样式：移除默认的 padding（内容自己控制）
+  padding: 0;
+  overflow: hidden;
+
+  .wechat-official-card-content {
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    position: relative;
+
+    // 二维码容器
+    .wechat-qrcode-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.25rem;
+
+      .wechat-qrcode-image {
+        width: 200px;
+        height: 200px;
+        border-radius: 12px;
+        padding: 10px;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        object-fit: contain;
+
+        &:hover {
+          transform: scale(1.05);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        &:active {
+          transform: scale(0.98);
+        }
+      }
+    }
+
+    // 公众号名称
+    .wechat-official-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin: 0 0 0.75rem 0;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    // 公众号描述
+    .wechat-official-description {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin: 0 0 1.25rem 0;
+      text-align: center;
+      padding: 0 0.5rem;
+    }
+
+    // 底部按钮区域
+    .wechat-official-footer {
+      text-align: center;
+      margin-top: 1rem;
+
+      .wechat-scan-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1.5rem;
+        background: linear-gradient(135deg, #07c160 0%, #00ae4d 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 12px rgba(7, 193, 96, 0.3);
+        position: relative;
+        overflow: hidden;
+
+        // 悬浮渐变动画背景
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+          transition: left 0.5s;
+        }
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(7, 193, 96, 0.4);
+          background: linear-gradient(135deg, #00ae4d 0%, #07c160 100%);
+
+          &::before {
+            left: 100%;
+          }
+        }
+
+        &:active {
+          transform: translateY(0) scale(0.98);
+          box-shadow: 0 3px 10px rgba(7, 193, 96, 0.3);
+        }
+
+        .scan-icon {
+          flex-shrink: 0;
+          width: 16px;
+          height: 16px;
+          stroke-width: 2.5;
+        }
+
+        span {
+          position: relative;
+          z-index: 1;
+        }
+      }
+    }
+  }
+}
+
+// 暗色模式适配
+.dark-mode {
+  .wechat-official-card-wrapper {
+    .wechat-official-card-content {
+      .wechat-qrcode-wrapper {
+        .wechat-qrcode-image {
+          background: rgba(255, 255, 255, 0.95);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+          &:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+          }
+        }
+      }
+
+      .wechat-official-name {
+        color: var(--vp-c-text-1, #e6edf3);
+      }
+
+      .wechat-official-description {
+        color: var(--vp-c-text-2, #9ca3af);
+      }
+    }
+  }
+}
+
+// 响应式适配
+@media (max-width: 768px) {
+  .wechat-official-card-wrapper {
+    .wechat-official-card-content {
+      padding: 1.25rem 1rem;
+
+      .wechat-qrcode-wrapper {
+        .wechat-qrcode-image {
+          width: 180px;
+          height: 180px;
+        }
+      }
+
+      .wechat-official-name {
+        font-size: 1rem;
+      }
+
+      .wechat-official-description {
+        font-size: 0.85rem;
+        padding: 0 0.25rem;
+      }
+
+      .wechat-official-footer {
+        .wechat-scan-button {
+          padding: 0.6rem 1.25rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .wechat-official-card-wrapper {
+    .wechat-official-card-content {
+      .wechat-qrcode-wrapper {
+        .wechat-qrcode-image {
+          width: 160px;
+          height: 160px;
+        }
+      }
+    }
+  }
+}

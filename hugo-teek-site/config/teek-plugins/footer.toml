@@ -1,0 +1,41 @@
+# ========================================
+# 页脚通用配置 (Footer Common Configuration)
+# ========================================
+# 本文件包含页脚的通用信息配置。
+# 仅包含内容层的信息（如版权、备案号等），UI样式配置保留在主题中。
+#
+# 配置范围 (Scope):
+#   - 版权年份和后缀文本
+#   - 自定义消息
+#   - ICP 备案信息
+#
+# UI配置（保留在主题中）:
+#   - show_services (是否显示服务信息)
+#   - show_theme_info (是否显示主题信息)
+#   - footer.analytics (统计组件配置)
+#
+# 注意事项:
+#   - 修改后需运行 'make dev' 或 'make build' 自动合并
+#   - ICP 备案号等法律信息建议在此统一管理
+# ========================================
+
+[params.footer]
+  # 版权起始年份
+  copyright_year_start = 2024.11
+
+  # 版权后缀文本（显示在年份之后）
+  copyright_suffix = "余温Gueen的博客"
+
+  # 自定义消息（显示在页脚中间或底部）
+  custom_message = "初闻不知曲中意，再听已是曲中人"
+
+  # ICP 备案信息
+  [params.footer.icp]
+    # 是否启用 ICP 备案显示
+    enabled = true
+
+    # ICP 备案号
+    number = "苏ICP备2024144209号"
+
+    # ICP 备案查询链接
+    url = "http://beian.miit.gov.cn/"

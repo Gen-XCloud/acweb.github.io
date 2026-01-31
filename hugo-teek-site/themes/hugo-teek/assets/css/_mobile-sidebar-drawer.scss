@@ -1,0 +1,195 @@
+// ========================================
+// Mobile Sidebar Drawer
+// 移动端文档导航抽屉 - 从左侧滑出
+// ========================================
+
+.mobile-sidebar-drawer {
+  // 仅在移动端显示
+  display: none;
+
+  @media (max-width: 960px) {
+    display: block;
+    position: fixed;
+    top: calc(var(--vp-nav-height, 64px) + 48px); // 导航栏 + 工具栏下方
+    left: 0;
+    bottom: 0;
+    width: 85%; // 侧边栏宽度
+    max-width: 320px; // 最大宽度
+    z-index: 951;
+    pointer-events: none;
+  }
+}
+
+.mobile-sidebar-drawer__container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: var(--vp-c-bg, var(--card-bg, #fff));
+  border-radius: 0;
+  transform: translate3d(-100%, 0, 0); // 使用translate3d更好的性能
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); // 使用Material Design缓动函数
+  pointer-events: all;
+  display: flex;
+  flex-direction: column;
+  // 关键性能优化
+  will-change: transform;  // 提前通知浏览器优化
+  backface-visibility: hidden;  // 防止闪烁
+  contain: layout style paint;  // 隔离渲染，防止影响其他元素
+  // 添加硬件加速优化
+  -webkit-transform: translate3d(-100%, 0, 0);
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  // 动画期间移除阴影，动画完成后再添加（性能关键优化）
+  box-shadow: none;
+
+  .mobile-sidebar-drawer.open & {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    // 动画完成后添加阴影
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.15);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0s 0.25s; // 延迟添加阴影
+  }
+}
+
+// 标题栏
+.mobile-sidebar-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--vp-c-divider, rgba(60, 60, 67, 0.18));
+  flex-shrink: 0; // 防止被压缩
+
+  .drawer-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--vp-c-text-1, var(--text-color));
+    margin: 0;
+  }
+
+  .drawer-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--vp-c-text-2, var(--text-secondary));
+    transition: all 0.2s ease;
+
+    &:hover,
+    &:active {
+      background: var(--vp-c-bg-soft, rgba(0, 0, 0, 0.05));
+      color: var(--vp-c-text-1, var(--text-color));
+    }
+
+    svg {
+      pointer-events: none;
+    }
+  }
+}
+
+// 内容区
+.mobile-sidebar-drawer__content {
+  flex: 1;
+  min-height: 0;  // 关键：允许 flex 项目收缩，触发滚动
+  overflow-y: auto;  // 垂直滚动
+  overflow-x: hidden;  // 禁用水平滚动
+  padding: 16px 20px 24px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;  // 防止滚动穿透，替代 JS 方案（性能优化）
+  touch-action: pan-y;  // 只允许垂直滚动，提升性能
+
+  // 自定义滚动条
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--vp-c-divider, rgba(60, 60, 67, 0.29));
+    border-radius: 2px;
+  }
+
+  // 移动端simple-sidebar优化
+  .simple-sidebar {
+    padding: 0;  // 移动端无需额外padding
+  }
+
+  .simple-sidebar__header {
+    display: none;  // 移动端隐藏折叠按钮
+  }
+
+  .simple-sidebar__resize-handle {
+    display: none;  // 移动端隐藏拖拽手柄
+  }
+
+  // 增加触摸目标大小（适合移动端）
+  .simple-sidebar__item-inner {
+    padding: 10px 12px;  // 比PC端稍大，适合触摸
+    min-height: 44px;    // iOS推荐的最小触摸目标
+  }
+
+  // 字体大小微调
+  .simple-sidebar__title,
+  .simple-sidebar__link {
+    font-size: 15px;  // 比PC端稍大
+  }
+
+  // 箭头大小微调（移动端稍大）
+  .simple-sidebar__chevron {
+    width: 22px;
+    height: 22px;
+
+    &::before {
+      width: 7px;
+      height: 7px;
+    }
+  }
+}
+
+// 暗色模式
+.dark-mode {
+  .mobile-sidebar-drawer__container {
+    background: var(--vp-c-bg, #1b1b1f);
+    // 关闭时无阴影
+    box-shadow: none;
+  }
+
+  // 打开时才添加阴影
+  .mobile-sidebar-drawer.open .mobile-sidebar-drawer__container {
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.4);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0s 0.25s;
+  }
+}
+
+// 超小屏优化
+@media (max-width: 640px) {
+  .mobile-sidebar-drawer {
+    width: 90%; // 小屏幕占更多宽度
+    max-width: 280px;
+    top: calc(var(--vp-nav-height, 64px) + 44px); // 适配小屏幕工具栏高度
+  }
+
+  .mobile-sidebar-drawer__header {
+    padding: 12px 16px;
+
+    .drawer-title {
+      font-size: 15px;
+    }
+  }
+
+  .mobile-sidebar-drawer__content {
+    padding: 12px 16px 20px;
+  }
+}

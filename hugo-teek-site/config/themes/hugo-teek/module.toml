@@ -1,0 +1,45 @@
+# ========================================
+# 模块配置文件 (Module Configuration)
+# ========================================
+# VitePress 语法转换 + 多目录支持
+# 工作原理：
+# 1. convert 工具将 content/ 和 docs/ 转换后输出到 .content-vp-converted/
+# 2. 通过 mounts 将转换后的目录挂载到 content，覆盖原始内容
+# 3. Hugo 读取 content 时实际读取的是转换后的内容
+# ========================================
+
+# 挂载转换后的内容目录，覆盖原始 content
+[[mounts]]
+  source = ".content-vp-converted"
+  target = "content"
+
+# 挂载 content.json 文件到 static（微信公众号解锁功能）
+# 允许 .content-vp-converted 目录中的 content.json 被复制到 public 目录
+[[mounts]]
+  source = ".content-vp-converted"
+  target = "static"
+  includeFiles = ["**/content.json"]
+
+[[mounts]]
+  source = "static"
+  target = "static"
+
+[[mounts]]
+  source = "layouts"
+  target = "layouts"
+
+[[mounts]]
+  source = "data"
+  target = "data"
+
+[[mounts]]
+  source = "assets"
+  target = "assets"
+
+[[mounts]]
+  source = "i18n"
+  target = "i18n"
+
+[[mounts]]
+  source = "archetypes"
+  target = "archetypes"

@@ -1,0 +1,57 @@
+{{- $ctx := . -}}
+{{- $page := $ctx -}}
+{{- $title := "本页导航" -}}
+{{- $variant := "" -}}
+
+{{- if and (reflect.IsMap $ctx) (isset $ctx "page") }}
+  {{- $page = index $ctx "page" -}}
+{{- end }}
+
+{{- if and (reflect.IsMap $ctx) (isset $ctx "title") }}
+  {{- $title = index $ctx "title" -}}
+{{- end }}
+
+{{- /* 如果没有通过参数传入 title，则自动判断使用 Front Matter title 或文件名 */ -}}
+{{- if not (and (reflect.IsMap $ctx) (isset $ctx "title")) }}
+  {{- if $page.Params.title }}
+    {{- $title = $page.Params.title -}}
+  {{- else if $page.File }}
+    {{- $title = $page.File.BaseFileName -}}
+  {{- end }}
+{{- end }}
+
+{{- if and (reflect.IsMap $ctx) (isset $ctx "variant") }}
+  {{- $variant = index $ctx "variant" -}}
+{{- end }}
+
+{{- with $page.TableOfContents }}
+  {{- $toc := . -}}
+
+  {{- /* 如果文档有 Front Matter title，并且内容从 h2 开始，移除 TOC 中可能的 h1 */ -}}
+  {{- if and $page.Params.title (not (in (strings.TrimSpace $page.RawContent) "# ")) }}
+    {{- /* 文档有 title 且内容中没有 h1，说明结构正常（h2 起），无需处理 */ -}}
+  {{- else if and $page.Params.title (in $page.RawContent "# ") }}
+    {{- /* 文档有 title 但内容有 h1，需要判断是否要保留 */ -}}
+    {{- /* 这种情况比较少见，保留原样 */ -}}
+  {{- end }}
+
+  {{- $toc = replace $toc "<nav id=\"TableOfContents\">" "" -}}
+  {{- $toc = replace $toc "</nav>" "" -}}
+  {{- $toc = replace $toc "<ul>" "<ul class=\"vp-outline-list\">" -}}
+  {{- $toc = replace $toc "<li>" "<li class=\"vp-outline-item\">" -}}
+  {{- $toc = replace $toc "<a href" "<a class=\"outline-link\" href" -}}
+  {{- if in $toc "<li" }}
+    {{- $classes := slice "VPDocAsideOutline" "tk-aside-outline" "has-outline" -}}
+    {{- if $variant }}
+      {{- $classes = $classes | append (printf "tk-aside-outline--%s" $variant) -}}
+    {{- end }}
+    {{ partial "docs-share-card.html" $page }}
+    <nav class="{{ delimit $classes " " }}" aria-labelledby="doc-outline-aria-label" role="navigation">
+      <div class="outline-content" data-outline-scroll>
+        <div class="outline-marker" aria-hidden="true"></div>
+        <div class="outline-title" id="doc-outline-aria-label" role="heading" aria-level="2">{{ $title }}</div>
+        {{- $toc | safeHTML }}
+      </div>
+    </nav>
+  {{- end }}
+{{- end }}

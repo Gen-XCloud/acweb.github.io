@@ -1,0 +1,343 @@
+// ========================================
+// Mobile TOC Drawer
+// 移动端本页大纲抽屉 - 从右侧滑出
+// ========================================
+
+.mobile-toc-drawer {
+  // 仅在移动端显示
+  display: none;
+
+  @media (max-width: 960px) {
+    display: block;
+    position: fixed;
+    top: calc(var(--vp-nav-height, 64px) + 48px); // 导航栏 + 工具栏下方
+    right: 0;
+    bottom: 0;
+    width: 85%; // TOC抽屉宽度
+    max-width: 320px; // 最大宽度
+    z-index: 951;
+    pointer-events: none;
+  }
+}
+
+.mobile-toc-drawer__container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  background: var(--vp-c-bg, var(--card-bg, #fff));
+  border-radius: 0;
+  transform: translate3d(100%, 0, 0); // 使用translate3d更好的性能
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); // 使用更流畅的缓动函数
+  pointer-events: all;
+  display: flex;
+  flex-direction: column;
+  // 关键性能优化
+  will-change: transform;  // 提前通知浏览器优化
+  backface-visibility: hidden;  // 防止闪烁
+  contain: layout style paint;  // 隔离渲染，防止影响其他元素
+  // 添加硬件加速优化
+  -webkit-transform: translate3d(100%, 0, 0);
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  // 动画期间移除阴影，动画完成后再添加（性能关键优化）
+  box-shadow: none;
+
+  .mobile-toc-drawer.open & {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    // 动画完成后添加阴影，同时增强阴影效果
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12),
+                -2px 0 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0s 0.3s; // 延迟添加阴影
+  }
+}
+
+// 标题栏
+.mobile-toc-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--vp-c-divider, rgba(60, 60, 67, 0.18));
+  flex-shrink: 0; // 防止被压缩
+
+  .drawer-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--vp-c-text-1, var(--text-color));
+    margin: 0;
+  }
+
+  .drawer-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--vp-c-text-2, var(--text-secondary));
+    transition: all 0.2s ease;
+
+    &:hover,
+    &:active {
+      background: var(--vp-c-bg-soft, rgba(0, 0, 0, 0.05));
+      color: var(--vp-c-text-1, var(--text-color));
+    }
+
+    svg {
+      pointer-events: none;
+    }
+  }
+}
+
+// 内容区
+.mobile-toc-drawer__content {
+  flex: 1;
+  min-height: 0;  // 关键：允许 flex 项目收缩，触发滚动
+  overflow-y: auto;  // 垂直滚动
+  overflow-x: hidden;  // 禁用水平滚动
+  padding: 16px 20px 24px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;  // 防止滚动穿透，替代 JS 方案（性能优化）
+  touch-action: pan-y;  // 只允许垂直滚动，提升性能
+
+  // 自定义滚动条
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--vp-c-divider, rgba(60, 60, 67, 0.29));
+    border-radius: 2px;
+  }
+}
+
+// TOC 列表样式
+.mobile-toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-toc-item {
+  margin: 4px 0;
+}
+
+.mobile-toc-link {
+  display: block;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--vp-c-text-2, var(--text-secondary));
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+
+  &:hover {
+    background: var(--vp-c-bg-soft, rgba(0, 0, 0, 0.05));
+    color: var(--vp-c-text-1, var(--text-color));
+    transform: translateX(-2px);
+  }
+
+  &:active {
+    background: var(--vp-c-brand-soft, rgba(8, 145, 178, 0.15));
+    color: var(--vp-c-brand-1, var(--primary-color));
+    transform: scale(0.98);
+  }
+
+  &.active {
+    background: var(--vp-c-brand-soft, rgba(8, 145, 178, 0.12));
+    color: var(--vp-c-brand-1, var(--primary-color));
+    font-weight: 600;
+
+    // 添加左侧活动指示器
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 60%;
+      background: var(--vp-c-brand-1, var(--primary-color));
+      border-radius: 0 2px 2px 0;
+      animation: slideInLeft 0.2s ease;
+    }
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateY(-50%) translateX(-6px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(-50%) translateX(0);
+    opacity: 1;
+  }
+}
+
+// 嵌套层级缩进
+.mobile-toc-list .mobile-toc-list {
+  margin-top: 6px;
+  margin-left: 18px;
+  padding-left: 14px;
+  border-left: 2px solid var(--vp-c-divider, rgba(60, 60, 67, 0.18));
+  position: relative;
+
+  // 添加渐变效果，让层级关系更明显
+  &::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      var(--vp-c-brand-soft, rgba(8, 145, 178, 0.2)),
+      transparent
+    );
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+
+  .mobile-toc-link {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  .mobile-toc-list {
+    margin-left: 14px;
+    padding-left: 10px;
+
+    .mobile-toc-link {
+      font-size: 12px;
+      padding: 6px 10px;
+    }
+  }
+}
+
+// 暗色模式
+.dark-mode {
+  .mobile-toc-drawer__container {
+    background: var(--vp-c-bg, #1b1b1f);
+    // 关闭时无阴影
+    box-shadow: none;
+  }
+
+  // 打开时才添加阴影
+  .mobile-toc-drawer.open .mobile-toc-drawer__container {
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.5),
+                -2px 0 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0s 0.3s;
+  }
+
+  .mobile-toc-link {
+    &:hover {
+      background: var(--vp-c-bg-soft, rgba(255, 255, 255, 0.05));
+    }
+
+    &:active,
+    &.active {
+      background: var(--vp-c-brand-soft, rgba(6, 182, 212, 0.2));
+    }
+  }
+}
+
+// 超小屏优化
+@media (max-width: 640px) {
+  .mobile-toc-drawer {
+    width: 90%; // 小屏幕占更多宽度
+    max-width: 280px;
+    top: calc(var(--vp-nav-height, 64px) + 44px); // 适配小屏幕工具栏高度
+  }
+
+  .mobile-toc-drawer__header {
+    padding: 12px 16px;
+
+    .drawer-title {
+      font-size: 15px;
+    }
+  }
+
+  .mobile-toc-drawer__content {
+    padding: 12px 16px 20px;
+  }
+
+  .mobile-toc-link {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .mobile-toc-list .mobile-toc-list {
+    margin-left: 12px;
+    padding-left: 8px;
+
+    .mobile-toc-link {
+      font-size: 12px;
+    }
+  }
+}
+// ========================================
+// 空状态样式
+// ========================================
+
+.mobile-toc-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+  min-height: 300px;
+}
+
+.mobile-toc-empty__icon {
+  margin-bottom: 20px;
+  color: var(--vp-c-text-3, rgba(0, 0, 0, 0.3));
+  opacity: 0.5;
+}
+
+.mobile-toc-empty__text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--vp-c-text-2, var(--text-secondary));
+  margin: 0 0 8px 0;
+}
+
+.mobile-toc-empty__hint {
+  font-size: 14px;
+  color: var(--vp-c-text-3, rgba(0, 0, 0, 0.5));
+  margin: 0;
+  line-height: 1.6;
+}
+
+// 暗色模式
+.dark-mode .mobile-toc-empty__icon {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.dark-mode .mobile-toc-empty__text {
+  color: var(--vp-c-text-2, rgba(255, 255, 255, 0.7));
+}
+
+.dark-mode .mobile-toc-empty__hint {
+  color: var(--vp-c-text-3, rgba(255, 255, 255, 0.5));
+}

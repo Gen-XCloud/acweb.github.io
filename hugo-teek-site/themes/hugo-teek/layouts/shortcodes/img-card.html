@@ -1,0 +1,41 @@
+{{- $cols := .Get "cols" | default "auto" -}}
+{{- $gap := .Get "gap" | default "20" -}}
+{{- $imgHeight := .Get "imgHeight" | default "auto" -}}
+{{- $lineClamp := .Get "lineClamp" | default "2" -}}
+{{- $items := .Get "items" | default "" -}}
+{{- $data := $items | transform.Unmarshal | default slice -}}
+
+{{- $colCount := int (default 0 (replace $cols "auto" "0")) -}}
+{{- $columnMin := "240px" -}}
+{{- if gt $colCount 0 -}}
+  {{- $columnMin = printf "calc(100%% / %d - %dpx)" $colCount (mul (sub $colCount 1) (int $gap)) -}}
+{{- end -}}
+
+<div class="tk-img-card-container">
+  <div class="tk-img-card index-{{ $cols }}" style="--row-gap: {{ $gap }}px; --column-gap: {{ $gap }}px; --column-min-width: {{ $columnMin }};">
+    {{- range $data }}
+      {{- $link := .link | default "" -}}
+      {{- $tag := cond (ne $link "") "a" "div" -}}
+      <{{ $tag }}
+        class="tk-img-card__item"
+        {{- if ne $link "" }} href="{{ $link }}" target="{{ $.Get "target" | default "_blank" }}"{{ end }}
+      >
+        {{- with .img }}
+        <div class="tk-img-card__item__img">
+          <img src="{{ . }}" alt="{{ $.name | default "图片" }}" loading="lazy" style="height: {{ $imgHeight }};">
+        </div>
+        {{- end }}
+        <div class="tk-img-card__item__info">
+          {{- with .name }}<h3 class="name">{{ . }}</h3>{{ end }}
+          {{- with .desc }}<p class="desc" style="--line-clamp: {{ $lineClamp }};">{{ . }}</p>{{ end }}
+          {{- if or .avatar .author }}
+          <div class="tk-img-card__item__footer">
+            {{- with .avatar }}<img src="{{ . }}" alt="avatar" loading="lazy">{{ end }}
+            {{- with .author }}<span class="author">{{ . }}</span>{{ end }}
+          </div>
+          {{- end }}
+        </div>
+      </{{ $tag }}>
+    {{- end }}
+  </div>
+</div>

@@ -1,0 +1,10 @@
+{{- $updateTime := .Lastmod -}}
+{{- if not $updateTime -}}
+  {{- $updateTime = .Date -}}
+{{- end -}}
+
+<div class="article-last-updated">
+  <div class="last-updated-text">
+    最后更新于: <time datetime="{{ $updateTime.Format "2006-01-02T15:04:05Z07:00" }}">{{ $updateTime.Format "2006-01-02 15:04:05" }}</time>
+  </div>
+</div>

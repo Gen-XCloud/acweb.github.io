@@ -1,0 +1,37 @@
+{{- $currentPath := .Page.RelPermalink -}}
+{{- $categorySlug := "" -}}
+
+{{- /* 1. 读取categories.json，确定当前页面所属分类 */ -}}
+{{- $categoriesData := .Site.Data.sidebar.categories -}}
+
+{{- range $path, $slug := $categoriesData.mapping -}}
+  {{- if hasPrefix $currentPath $path -}}
+    {{- $categorySlug = $slug -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* 2. 读取分类数据 */ -}}
+{{- if $categorySlug -}}
+  {{- $sidebarData := index .Site.Data.sidebar $categorySlug -}}
+
+  {{- if and $sidebarData $sidebarData.tree -}}
+    {{- /* 3. 渲染sidebar容器 */ -}}
+    <div class="simple-sidebar" data-current-path="{{ $currentPath }}">
+      <nav class="simple-sidebar__nav">
+        <ul class="simple-sidebar__tree">
+          {{- range $sidebarData.tree -}}
+            {{- partial "sidebar-node.html" (dict "node" . "currentPath" $currentPath) -}}
+          {{- end -}}
+        </ul>
+      </nav>
+    </div>
+  {{- else -}}
+    <div class="simple-sidebar simple-sidebar--empty">
+      <p class="simple-sidebar__empty-message">此分类暂无内容</p>
+    </div>
+  {{- end -}}
+{{- else -}}
+  <div class="simple-sidebar simple-sidebar--empty">
+    <p class="simple-sidebar__empty-message">未找到分类</p>
+  </div>
+{{- end -}}

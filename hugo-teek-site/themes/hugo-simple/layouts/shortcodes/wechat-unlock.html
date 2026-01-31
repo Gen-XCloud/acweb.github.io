@@ -1,0 +1,48 @@
+{{- /*
+  公众号解锁 Shortcode
+  用法: {{< wechat-unlock keyword="关键字001" code="1234" >}}
+
+  参数:
+    keyword: 用户在公众号输入的关键字（可选，默认使用配置中的defaultKeyword）
+    qrcode:  二维码图片URL（可选，默认使用配置中的defaultQRCode）
+    code:    手动指定解锁码（可选，如果不指定则自动生成）
+*/ -}}
+
+{{- $keyword := .Get "keyword" | default $.Site.Params.wechatUnlock.defaultKeyword -}}
+{{- $qrcode := .Get "qrcode" | default $.Site.Params.wechatUnlock.defaultQRCode -}}
+{{- $code := .Get "code" -}}
+{{- $permalink := .Page.Permalink -}}
+
+{{- /* 如果指定了解锁码，对其进行SHA-256哈希加密（取前6位），防止明文暴露 */ -}}
+{{- $codeHash := "" -}}
+{{- if $code -}}
+  {{- $salt := $.Site.Params.wechatUnlock.salt | default "default-salt-2025" -}}
+  {{- $hashInput := printf "%s%s" $code $salt -}}
+  {{- $codeHash = crypto.SHA256 $hashInput | upper | truncate 6 "" -}}
+{{- end -}}
+
+{{- /* 使用permalink的哈希作为JSON文件名（避免中文路径问题） */ -}}
+{{- $permalinkHash := crypto.MD5 .Page.RelPermalink -}}
+{{- $contentUrl := printf "/unlocked/%s.json" $permalinkHash -}}
+
+<div class="wechat-unlock-gate"
+     data-permalink="{{ $permalink }}"
+     data-content-url="{{ $contentUrl }}"
+     data-keyword="{{ $keyword }}"
+     data-qrcode="{{ $qrcode }}"
+     {{- if $codeHash }}
+     data-code-hash="{{ $codeHash }}"
+     {{- end }}>
+
+  <div class="unlock-card-simple">
+    <button class="unlock-button-simple" type="button">
+      <svg class="button-icon-lock" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+        <rect x="5" y="11" width="14" height="10" rx="2" ry="2"></rect>
+        <path d="M12 17v-2"></path>
+        <circle cx="12" cy="16" r="1"></circle>
+        <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+      </svg>
+      <span class="button-text">阅读更多</span>
+    </button>
+  </div>
+</div>

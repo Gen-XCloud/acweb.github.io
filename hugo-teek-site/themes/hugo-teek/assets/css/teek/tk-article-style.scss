@@ -1,0 +1,181 @@
+.tk-article-style-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 16px;
+  border-radius: 999px;
+  background: var(--vp-c-bg-alt);
+  border: 1px solid var(--vp-c-divider, rgba(60, 60, 67, 0.12));
+  box-shadow: var(--vp-shadow-1);
+}
+
+.tk-article-style-toggle__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--vp-c-text-2);
+  font-size: 14px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.tk-article-style-toggle__btn:hover {
+  color: var(--vp-c-text-1);
+}
+
+.tk-article-style-toggle__btn:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 2px;
+}
+
+.tk-article-style-toggle__btn.is-active {
+  background: rgba(56, 189, 248, 0.16);
+  color: var(--vp-c-brand-1);
+  box-shadow: var(--vp-shadow-1);
+}
+
+.dark-mode .tk-article-style-toggle__btn.is-active {
+  background: rgba(34, 211, 238, 0.18);
+  color: var(--vp-c-brand-1);
+}
+
+.tk-article-style-toggle__icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+}
+
+.tk-article-style-toggle__icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.tk-article-style-toggle__label {
+  white-space: nowrap;
+}
+
+// ========================================
+// 文章模式切换丝滑过渡动画
+// ========================================
+// 简化过渡效果，与全局主题切换保持一致
+body {
+  // 移除 opacity 和 transform 过渡，避免闪烁
+  will-change: auto;
+}
+
+// 切换过程中的状态
+body.tk-style-transitioning {
+  pointer-events: none; // 禁止点击，避免重复触发
+  user-select: none; // 禁止选中
+}
+
+// 主内容区域的过渡 - 使用更快的过渡时间
+.VPContent,
+.main-content,
+#VPContent {
+  transition:
+    opacity 0.15s ease-out,
+    transform 0.15s ease-out;
+}
+
+// 卡片模式和分段模式的切换动画 - 统一过渡时间
+.tk-card,
+.tk-segment {
+  .VPDoc,
+  .VPContent,
+  .content-container {
+    transition:
+      opacity 0.15s ease-out,
+      transform 0.15s ease-out,
+      padding 0.2s ease-out,
+      margin 0.2s ease-out,
+      max-width 0.2s ease-out;
+  }
+}
+
+// 优化性能：减少重绘
+.tk-style-transitioning * {
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+// 移动端使用相同的动画速度，保持一致性
+@media (max-width: 768px) {
+  body {
+    will-change: auto;
+  }
+
+  .VPContent,
+  .main-content,
+  #VPContent {
+    transition-duration: 0.15s;
+  }
+}
+
+// 🎨 文章内容区域链接样式（排除）
+.VPDoc .content-container a:not(.VPToc a, .aside a, .table-of-contents a, .toc a, .VPDocOutline a, .VPSidebar a, .VPDocAsideOutline a, .tk-aside-outline a, .outline-link, .mobile-toc-link, .inline-toc-link, .tk-toc-wrapper a, .tk-article-update a, .tk-article-update__content a, .hover-color, .tk-doc-pagination__item, .tk-doc-pagination__item a, .post-nav a) {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none; /* ◀️ 默认不显示下划线 */
+  transition: all 0.3s ease;
+}
+
+// 🎨 链接下划线伪元素
+.VPDoc .content-container a:not(.VPToc a, .aside a, .table-of-contents a, .toc a, .VPDocOutline a, .VPSidebar a, .VPDocAsideOutline a, .tk-aside-outline a, .outline-link, .mobile-toc-link, .inline-toc-link, .tk-toc-wrapper a, .tk-article-update a, .tk-article-update__content a, .hover-color, .tk-doc-pagination__item, .tk-doc-pagination__item a, .post-nav a)::after {
+  content: '';
+  position: absolute;
+  bottom: 0; /* ◀️ 紧贴文本底部 */
+  left: 50%; /* ◀️ 初始位置在中间 */
+  right: 50%; /* ◀️ 初始位置在中间 */
+  width: 0; /* ◀️ 初始宽度为0 */
+  height: 2px; /* ◀️ 下划线厚度 */
+  background: var(--vp-c-brand-1); /* ◀️ 实体颜色 */
+  border-radius: 1px; /* ◀️ 圆角效果 */
+  transition: left 0.3s ease, right 0.3s ease, width 0.3s ease; /* ◀️ 过渡效果包含左右位置和宽度 */
+}
+
+// // 🎨 SVG图标样式（排除）
+// .VPDoc .content-container a:not(.VPToc a, .aside a, .table-of-contents a, .toc a, .VPDocOutline a, .VPSidebar a, .VPDocAsideOutline a, .tk-aside-outline a, .outline-link, .mobile-toc-link, .inline-toc-link, .tk-toc-wrapper a, .tk-article-update a, .tk-article-update__content a, .hover-color, .tk-doc-pagination__item, .tk-doc-pagination__item a, .post-nav a)::before {
+//   content: "";
+//   display: inline-flex;
+//   width: 16px;
+//   height: 16px;
+//   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M52.64 4H11.36A7.36 7.36 0 0 0 4 11.36v36.36A12.28 12.28 0 0 0 16.27 60h36.37A7.36 7.36 0 0 0 60 52.64V11.36A7.36 7.36 0 0 0 52.64 4zM30 49.1a6.9 6.9 0 0 1-6.9 6.9h-6.47A8.63 8.63 0 0 1 8 47.37V40.9a6.9 6.9 0 0 1 6.9-6.9h8.2a6.9 6.9 0 0 1 6.9 6.9zm5.41-17.68a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 2.83zm16.84-18.54-1.56 6.73a.42.42 0 0 1-.71.2l-1-1a.73.73 0 0 0-1 0l-6.56 6.56a2 2 0 0 1-2.83-2.83L45.15 16a.73.73 0 0 0 0-1l-1-1a.42.42 0 0 1 .2-.71l6.73-1.56a1 1 0 0 1 1.17 1.15z" style="fill:%230072ff" data-name="Layer 2"/></svg>');
+//   background-size: contain;
+//   background-repeat: no-repeat;
+//   background-position: center;
+//   transform: rotate(90deg); // ◀️ 默认旋转90度
+//   transition: transform 0.3s ease;
+// }
+
+// 🎨 悬停效果（排除）
+.VPDoc .content-container a:not(.VPToc a, .aside a, .table-of-contents a, .toc a, .VPDocOutline a, .VPSidebar a, .VPDocAsideOutline a, .tk-aside-outline a, .outline-link, .mobile-toc-link, .inline-toc-link, .tk-toc-wrapper a, .tk-article-update a, .tk-article-update__content a, .hover-color, .tk-doc-pagination__item, .tk-doc-pagination__item a, .post-nav a):hover::after {
+  left: 0; /* ◀️ hover时向左展开 */
+  right: 0; /* ◀️ hover时向右展开 */
+  width: 100%; /* ◀️ hover时宽度为100% */
+}
+
+.VPDoc .content-container a:not(.VPToc a, .aside a, .table-of-contents a, .toc a, .VPDocOutline a, .VPSidebar a, .VPDocAsideOutline a, .tk-aside-outline a, .outline-link, .mobile-toc-link, .inline-toc-link, .tk-toc-wrapper a, .tk-article-update a, .tk-article-update__content a, .hover-color, .tk-doc-pagination__item, .tk-doc-pagination__item a, .post-nav a):hover::before {
+  transform: rotate(0deg); // ◀️ 悬停时恢复0度
+}
+
+// 🌆 暗色模式适配（排除）
+.dark-mode .VPDoc .content-container a:not(.VPToc a, .aside a, .table-of-contents a, .toc a, .VPDocOutline a, .VPSidebar a, .VPDocAsideOutline a, .tk-aside-outline a, .outline-link, .mobile-toc-link, .inline-toc-link, .tk-toc-wrapper a, .tk-article-update a, .tk-article-update__content a, .hover-color, .tk-doc-pagination__item, .tk-doc-pagination__item a, .post-nav a)::after {
+  background: var(--vp-c-brand-2); /* ◀️ 暗色模式下的实体颜色 */
+}
+
+.dark-mode .VPDoc .content-container a:not(.VPToc a, .aside a, .table-of-contents a, .toc a, .VPDocOutline a, .VPSidebar a, .VPDocAsideOutline a, .tk-aside-outline a, .outline-link, .mobile-toc-link, .inline-toc-link, .tk-toc-wrapper a, .tk-article-update a, .tk-article-update__content a, .hover-color, .tk-doc-pagination__item, .tk-doc-pagination__item a, .post-nav a):hover::after {
+  background: var(--vp-c-brand-1); /* ◀️ 暗色模式hover时改变下划线颜色 */
+}

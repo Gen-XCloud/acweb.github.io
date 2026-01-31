@@ -1,0 +1,12 @@
+name = "Hugo Teek"
+license = "MIT"
+licenselink = "https://github.com/yourname/hugo-teek/blob/main/LICENSE"
+description = "A feature-rich Hugo theme migrated from VitePress Teek theme"
+homepage = "https://github.com/yourname/hugo-teek"
+tags = ["blog", "responsive", "dark-mode", "algolia", "comment"]
+features = ["responsive", "dark mode", "code highlighting", "algolia search", "twikoo comment"]
+min_version = "0.120.0"
+
+[author]
+  name = "余温Gueen"
+  homepage = "https://xxdevops.cn"

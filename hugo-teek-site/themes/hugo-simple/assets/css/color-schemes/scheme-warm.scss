@@ -1,0 +1,21 @@
+@import 'variables';
+
+// ========================================
+// 方案2: 暖色调（米色/深棕）
+// ========================================
+
+:root[data-color-scheme="scheme2"]:not([data-theme="dark"]) {
+  --bg-primary: #{$scheme-warm-light-bg};
+  --bg-secondary: #{$scheme-warm-light-bg-secondary};
+  --text-primary: #{$scheme-warm-light-text};
+  --text-secondary: #{$scheme-warm-light-text-secondary};
+  --border-color: #{$scheme-warm-light-border};
+}
+
+:root[data-color-scheme="scheme2"][data-theme="dark"] {
+  --bg-primary: #{$scheme-warm-dark-bg};
+  --bg-secondary: #{$scheme-warm-dark-bg-secondary};
+  --text-primary: #{$scheme-warm-dark-text};
+  --text-secondary: #{$scheme-warm-dark-text-secondary};
+  --border-color: #{$scheme-warm-dark-border};
+}

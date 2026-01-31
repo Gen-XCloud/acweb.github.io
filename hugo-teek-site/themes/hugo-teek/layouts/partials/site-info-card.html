@@ -1,0 +1,259 @@
+{{/* 使用 docAnalysis.json 中的数据 */}}
+{{ $docAnalysis := .Site.Data.docAnalysis }}
+{{/* 空值检查：如果 docAnalysis 不存在，使用默认值 */}}
+{{ $postsCount := 0 }}
+{{ $totalWords := 0 }}
+{{ $eachFileWords := dict }}
+{{ if $docAnalysis }}
+  {{ $postsCount = len $docAnalysis.fileList }}
+  {{ $totalWords = $docAnalysis.totalFileWords | default 0 }}
+  {{ $eachFileWords = $docAnalysis.eachFileWords }}
+{{ end }}
+
+{{/* 从 docAnalysis.json 中计算近一周和近一月新增 */}}
+{{ $now := now }}
+{{ $weekAgo := $now.AddDate 0 0 -7 }}
+{{ $monthAgo := $now.AddDate 0 0 -30 }}
+{{ $weekCount := 0 }}
+{{ $monthCount := 0 }}
+
+{{/* 调试信息 */}}
+<!--
+统计调试信息：
+当前时间: {{ $now.Format "2006-01-02 15:04:05" }}
+一周前: {{ $weekAgo.Format "2006-01-02 15:04:05" }}
+一月前: {{ $monthAgo.Format "2006-01-02 15:04:05" }}
+-->
+
+{{ range $eachFileWords }}
+  {{ if .frontmatter.date }}
+    {{ $postDate := time .frontmatter.date }}
+    {{ if $postDate.After $weekAgo }}
+      {{ $weekCount = add $weekCount 1 }}
+      <!-- 近一周: {{ .frontmatter.title }} - {{ $postDate.Format "2006-01-02" }} -->
+    {{ end }}
+    {{ if $postDate.After $monthAgo }}
+      {{ $monthCount = add $monthCount 1 }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+<!-- 统计结果: 近一周 {{ $weekCount }} 篇, 近一月 {{ $monthCount }} 篇 -->
+
+{{/* 使用 lastCommitTime 作为最后活动时间 */}}
+{{ $lastCommitTime := "" }}
+{{ if $docAnalysis }}
+  {{ $lastCommitTime = $docAnalysis.lastCommitTime | default "" }}
+{{ end }}
+{{ $latestDate := $now.AddDate -100 0 0 }}
+{{ if $lastCommitTime }}
+  {{ $latestDate = time $lastCommitTime }}
+{{ end }}
+
+{{/* 获取所有文章用于计算时间统计 */}}
+{{ $allPosts := where .Site.RegularPages "Kind" "page" }}
+{{ $allPosts = where $allPosts "Draft" false }}
+{{ $latestPost := index (sort $allPosts "Date" "desc") 0 }}
+
+<div class="tk-widget-card tk-site-info-card">
+  <div class="tk-widget-header">
+    <h3 class="tk-widget-title">
+      🐱 站点信息
+    </h3>
+  </div>
+
+  <div class="tk-site-info-body">
+    <div class="info-list">
+      <div class="info-item">
+        <span class="info-label">文章数目</span>
+        <span class="info-value">{{ $postsCount }} 篇</span>
+      </div>
+
+      <div class="info-item">
+        <span class="info-label">近一周新增</span>
+        <span class="info-value" id="posts-week">{{ $weekCount }} 篇</span>
+      </div>
+
+      <div class="info-item">
+        <span class="info-label">近一月新增</span>
+        <span class="info-value" id="posts-month">{{ $monthCount }} 篇</span>
+      </div>
+
+      <div class="info-item">
+        <span class="info-label">已运行时间</span>
+        <span class="info-value" id="site-runtime-days">
+          {{- if .Site.Params.siteStartDate -}}
+            {{- $startDate := time .Site.Params.siteStartDate -}}
+            {{- $now := now -}}
+            {{- $diffDays := div (sub $now.Unix $startDate.Unix) 86400 -}}
+            {{- $years := div $diffDays 365 -}}
+            {{- $remainingDays := mod $diffDays 365 -}}
+            {{- if gt $years 0 -}}
+              {{ $years }} 年 {{ $remainingDays }} 天
+            {{- else -}}
+              {{ $diffDays }} 天
+            {{- end -}}
+          {{- else -}}
+            未配置
+          {{- end -}}
+        </span>
+      </div>
+
+      <div class="info-item">
+        <span class="info-label">本站总字数</span>
+        <span class="info-value">
+          {{- if ge $totalWords 10000 -}}
+            {{ printf "%.1fw" (div (float $totalWords) 10000.0) }} 字
+          {{- else -}}
+            {{ $totalWords }} 字
+          {{- end -}}
+        </span>
+      </div>
+
+      <div class="info-item">
+        <span class="info-label">最后活动时间</span>
+        <span class="info-value" id="last-activity" data-last-commit="{{ $lastCommitTime }}">
+          加载中...
+        </span>
+      </div>
+
+{{ if .Site.Params.analytics.busuanzi.enabled }}
+      {{ if .Site.Params.analytics.busuanzi.site_pv }}
+      <div class="info-item">
+        <span class="info-label">本站访问</span>
+        <span class="info-value"><span id="busuanzi_site_pv"></span> 次</span>
+      </div>
+      {{ end }}
+
+      {{ if .Site.Params.analytics.busuanzi.site_uv }}
+      <div class="info-item">
+        <span class="info-label">本站访客</span>
+        <span class="info-value"><span id="busuanzi_site_uv"></span> 人</span>
+      </div>
+      {{ end }}
+
+      {{ if .Site.Params.analytics.busuanzi.page_pv }}
+      <div class="info-item">
+        <span class="info-label">本页访问量</span>
+        <span class="info-value"><span id="busuanzi_page_pv"></span> 次</span>
+      </div>
+      {{ end }}
+
+      <div class="info-item">
+        <span class="info-label">本页访客数</span>
+        <span class="info-value"><span id="busuanzi_page_uv"></span> 人</span>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+
+<!-- Site Info Card JavaScript -->
+<script>
+  (function() {
+    // 近一周和近一月的数据已在服务器端计算，无需 JavaScript
+
+    // 计算运行天数（实时更新）
+    {{ if .Site.Params.siteStartDate }}
+    function calculateRuntime() {
+      const startDate = new Date('{{ .Site.Params.siteStartDate }}');
+      const now = new Date();
+      const diffTime = Math.abs(now - startDate);
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+      // 计算年和剩余天数
+      const years = Math.floor(diffDays / 365);
+      const remainingDays = diffDays % 365;
+
+      let timeText = '';
+      if (years > 0) {
+        timeText = years + ' 年 ' + remainingDays + ' 天';
+      } else {
+        timeText = diffDays + ' 天';
+      }
+
+      const elem = document.getElementById('site-runtime-days');
+      if (elem) {
+        elem.textContent = timeText;
+      }
+    }
+
+    // 初始化运行天数
+    calculateRuntime();
+    // 每天更新一次运行天数
+    setInterval(calculateRuntime, 86400000);
+    {{ end }}
+
+  })();
+
+    // 计算最后活动时间（动态更新）
+    (function updateLastActivity() {
+      const elem = document.getElementById('last-activity');
+      if (!elem) return;
+
+      const lastCommitTime = elem.getAttribute('data-last-commit');
+      if (!lastCommitTime) {
+        elem.textContent = '未知';
+        return;
+      }
+
+      function formatTimeAgo() {
+        const now = Date.now();
+        const past = new Date(lastCommitTime).getTime();
+        const diff = now - past;
+
+        const minute = 60 * 1000;
+        const hour = 60 * minute;
+        const day = 24 * hour;
+
+        if (diff <= minute) {
+          return '刚刚';
+        } else if (diff < hour) {
+          return Math.floor(diff / minute) + ' 分钟前';
+        } else if (diff < day) {
+          return Math.floor(diff / hour) + ' 小时前';
+        } else {
+          return Math.floor(diff / day) + ' 天前';
+        }
+      }
+
+      // 初始化显示
+      elem.textContent = formatTimeAgo();
+
+      // 每分钟更新一次
+      setInterval(function() {
+        elem.textContent = formatTimeAgo();
+      }, 60000);
+    })();
+
+    // 兜底：直接请求 Busuanzi API 并填充（仅 classic 模式使用）
+    // EO 模式下，busuanzi.eo.js 已经通过 POST 自动处理统计和显示，无需兜底
+    (function populateBusuanziFallback() {
+      try {
+        var type = '{{ .Site.Params.analytics.busuanzi.type | default "classic" }}';
+
+        // EO 版本：完全由 busuanzi.eo.js 自动处理，跳过兜底逻辑
+        if (type === 'eo') {
+          console.log('[Busuanzi EO] 跳过兜底逻辑，由 busuanzi.eo.js 处理');
+          return;
+        }
+
+        // classic 版本才执行兜底逻辑
+        var api = '{{ .Site.Params.analytics.busuanzi.api | default "https://busuanzi.xxdevops.cn/api" }}';
+        var prefix = '{{ .Site.Params.analytics.busuanzi.prefix | default "busuanzi" }}';
+        if (!api) return;
+
+        fetch(api, { method: 'GET' }).then(function(r){ return r.json(); }).then(function(json){
+          var data = json && (json.data || json) || {};
+          var keys = ['site_pv','site_uv','page_pv','page_uv','today_pv','today_uv','yesterday_pv','yesterday_uv','month_pv','month_uv'];
+          keys.forEach(function(k){
+            var el = document.getElementById(prefix + '_' + k) || document.getElementById('busuanzi_' + k) || document.getElementById('busuanzi_value_' + k);
+            var v = data[k];
+            if (el && (v !== undefined && v !== null && v !== '')) {
+              el.textContent = v;
+            }
+          });
+        }).catch(function(){ /* ignore */ });
+      } catch (e) { /* ignore */ }
+    })();
+</script>

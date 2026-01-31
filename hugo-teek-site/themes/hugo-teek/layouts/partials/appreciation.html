@@ -1,0 +1,30 @@
+{{ if .Site.Params.appreciation.enabled }}
+<div class="appreciation-section">
+  <button class="appreciation-toggle" id="appreciationToggle">
+    <span class="appreciation-icon">☕</span>
+    <span class="appreciation-text">打赏支持</span>
+  </button>
+
+  <div class="appreciation-content" id="appreciationContent">
+    <div class="appreciation-qrcodes">
+      <div class="qrcode-item qrcode-wechat">
+        <div class="qrcode-title">推荐使用微信支付</div>
+        <div class="qrcode-image">
+          {{ if .Site.Params.appreciation.wechatQR }}
+          <img src="{{ .Site.Params.appreciation.wechatQR }}" alt="微信支付二维码" />
+          {{ end }}
+        </div>
+      </div>
+
+      <div class="qrcode-item qrcode-alipay">
+        <div class="qrcode-title">推荐使用支付宝</div>
+        <div class="qrcode-image">
+          {{ if .Site.Params.appreciation.alipayQR }}
+          <img src="{{ .Site.Params.appreciation.alipayQR }}" alt="支付宝二维码" />
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

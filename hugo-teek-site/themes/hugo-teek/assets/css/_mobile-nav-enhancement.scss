@@ -1,0 +1,314 @@
+// ========================================
+// 移动端导航增强
+// Mobile Navigation Enhancement
+// ========================================
+
+@media (max-width: 768px) {
+  
+  // ========================================
+  // 导航抽屉优化
+  // ========================================
+  .mobile-nav-drawer {
+    // 增强背景效果
+    background: var(--vp-c-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    // 优化阴影效果
+    box-shadow: 
+      -8px 0 32px rgba(0, 0, 0, 0.12),
+      -2px 0 8px rgba(0, 0, 0, 0.08);
+    
+    // 更流畅的动画
+    transition: 
+      transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+      opacity 0.25s ease;
+    
+    &.open {
+      opacity: 1;
+    }
+    
+    &:not(.open) {
+      opacity: 0;
+    }
+  }
+  
+  .mobile-nav-drawer-content {
+    padding: clamp(16px, 4vw, 24px) 0;
+    
+    // 添加顶部装饰线
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20px;
+      right: 20px;
+      height: 3px;
+      background: linear-gradient(
+        90deg, 
+        var(--primary-color, #0891b2) 0%, 
+        var(--secondary-color, #06b6d4) 100%
+      );
+      border-radius: 0 0 2px 2px;
+    }
+  }
+  
+  // ========================================
+  // 导航项增强
+  // ========================================
+  .mobile-nav-items {
+    padding: clamp(12px, 3vw, 20px) clamp(16px, 4vw, 24px);
+    gap: clamp(2px, 1vw, 6px);
+  }
+  
+  .mobile-nav-item {
+    padding: clamp(12px, 3.5vw, 16px) clamp(16px, 4vw, 20px);
+    border-radius: clamp(8px, 2vw, 12px);
+    font-size: clamp(14px, 4vw, 16px);
+    
+    // 增强视觉层次
+    position: relative;
+    overflow: hidden;
+    
+    // 添加微妙的边框
+    border: 1px solid transparent;
+    
+    .item-icon {
+      font-size: clamp(18px, 5vw, 22px);
+      opacity: 0.8;
+      transition: all 0.2s ease;
+    }
+    
+    .item-text {
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    
+    // 悬停效果增强
+    &:hover,
+    &:active {
+      background: var(--vp-c-bg-soft);
+      border-color: var(--vp-c-divider);
+      transform: translateX(4px);
+      
+      .item-icon {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+    }
+    
+    // 激活状态增强
+    &.active {
+      background: linear-gradient(
+        135deg,
+        var(--primary-color-alpha, rgba(8, 145, 178, 0.1)) 0%,
+        var(--primary-color-alpha, rgba(8, 145, 178, 0.05)) 100%
+      );
+      border-color: var(--primary-color-light, rgba(8, 145, 178, 0.3));
+      color: var(--primary-color);
+      
+      .item-icon {
+        color: var(--primary-color);
+        opacity: 1;
+      }
+      
+      // 添加激活指示器
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 60%;
+        background: var(--primary-color);
+        border-radius: 0 2px 2px 0;
+      }
+    }
+    
+    // 触摸反馈
+    &:active {
+      transform: translateX(2px) scale(0.98);
+    }
+  }
+  
+  // ========================================
+  // 导航分组增强
+  // ========================================
+  .mobile-nav-group {
+    margin-bottom: clamp(8px, 2vw, 12px);
+    
+    .mobile-nav-item-toggle {
+      padding: clamp(12px, 3.5vw, 16px) clamp(16px, 4vw, 20px);
+      border-radius: clamp(8px, 2vw, 12px);
+      font-size: clamp(14px, 4vw, 16px);
+      font-weight: 600;
+      
+      // 增强分组标题样式
+      background: var(--vp-c-bg-alt);
+      border: 1px solid var(--vp-c-divider-light);
+      
+      .item-icon {
+        font-size: clamp(18px, 5vw, 22px);
+        transition: transform 0.2s ease;
+      }
+      
+      .toggle-arrow {
+        margin-left: auto;
+        font-size: clamp(12px, 3vw, 14px);
+        transition: transform 0.2s ease;
+        opacity: 0.6;
+      }
+      
+      &:hover {
+        background: var(--vp-c-bg-soft);
+        border-color: var(--vp-c-divider);
+        
+        .toggle-arrow {
+          opacity: 1;
+        }
+      }
+      
+      &[aria-expanded="true"] {
+        color: var(--primary-color);
+        border-color: var(--primary-color-light);
+        
+        .toggle-arrow {
+          transform: rotate(180deg);
+        }
+      }
+    }
+    
+    // 子菜单项
+    .mobile-nav-subitems {
+      margin-top: clamp(4px, 1vw, 6px);
+      padding-left: clamp(16px, 4vw, 24px);
+      
+      .mobile-nav-item {
+        font-size: clamp(13px, 3.5vw, 15px);
+        padding: clamp(8px, 2.5vw, 12px) clamp(12px, 3vw, 16px);
+        
+        .item-icon {
+          font-size: clamp(16px, 4vw, 18px);
+          opacity: 0.6;
+        }
+        
+        &::before {
+          content: '';
+          position: absolute;
+          left: -12px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 2px;
+          height: 2px;
+          background: var(--vp-c-text-3);
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+  
+  // ========================================
+  // 底部操作区域
+  // ========================================
+  .mobile-nav-footer {
+    padding: clamp(16px, 4vw, 24px);
+    border-top: 1px solid var(--vp-c-divider-light);
+    margin-top: auto;
+    
+    .footer-actions {
+      display: flex;
+      gap: clamp(8px, 2vw, 12px);
+      
+      .action-btn {
+        flex: 1;
+        padding: clamp(10px, 3vw, 14px);
+        border: 1px solid var(--vp-c-divider);
+        background: var(--vp-c-bg-alt);
+        color: var(--vp-c-text-1);
+        border-radius: clamp(6px, 1.5vw, 8px);
+        font-size: clamp(12px, 3.5vw, 14px);
+        font-weight: 500;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background: var(--vp-c-bg-soft);
+          border-color: var(--primary-color-light);
+          color: var(--primary-color);
+        }
+        
+        &:active {
+          transform: scale(0.96);
+        }
+      }
+    }
+  }
+}
+
+// ========================================
+// 遮罩层优化
+// ========================================
+@media (max-width: 768px) {
+  .mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: 
+      opacity 0.25s ease,
+      visibility 0.25s ease;
+    
+    &.open {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+// ========================================
+// 暗色模式适配
+// ========================================
+@media (max-width: 768px) {
+  .dark {
+    .mobile-nav-drawer {
+      box-shadow: 
+        -8px 0 32px rgba(0, 0, 0, 0.3),
+        -2px 0 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .mobile-nav-overlay {
+      background: rgba(0, 0, 0, 0.6);
+    }
+  }
+}
+
+// ========================================
+// 动画性能优化
+// ========================================
+@media (max-width: 768px) {
+  .mobile-nav-drawer,
+  .mobile-nav-item,
+  .mobile-nav-item-toggle {
+    will-change: transform;
+  }
+  
+  // 减少动画的用户偏好
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-nav-drawer,
+    .mobile-nav-item,
+    .mobile-nav-item-toggle,
+    .mobile-nav-overlay {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}

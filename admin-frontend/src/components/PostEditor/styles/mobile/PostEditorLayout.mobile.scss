@@ -1,0 +1,105 @@
+/**
+ * PostEditorLayout 移动端样式
+ */
+
+@import '../common/variables.scss';
+
+/* ========== 移动端顶部操作栏 ========== */
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: white;
+  border-bottom: 1px solid $border-color-light;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.mobile-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: $text-color-primary;
+  flex: 1;
+  text-align: center;
+  margin: 0 $spacing-small;
+}
+
+.mobile-btn {
+  padding: $spacing-small 12px;
+}
+
+/* ========== 移动端模式容器 ========== */
+.mobile-mode {
+  padding-top: 56px;
+
+  .el-card {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+}
+
+/* ========== 全屏模式 ========== */
+.fullscreen-mode {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 2000;
+  overflow: hidden;
+}
+
+.mobile-fullscreen-editor {
+  width: 100%;
+  height: calc(100vh - 56px);
+  padding: 0;
+
+  :deep(.vditor) {
+    height: 100% !important;
+    border: none !important;
+  }
+
+  :deep(.vditor-toolbar) {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+  }
+}
+
+/* ========== 表单优化 ========== */
+.el-form-item {
+  margin-bottom: 18px;
+
+  :deep(.el-form-item__label) {
+    font-size: 14px;
+  }
+}
+
+/* ========== 小屏手机适配 ========== */
+@media screen and (max-width: $breakpoint-small) {
+  .mobile-header {
+    height: 50px;
+  }
+
+  .mobile-mode {
+    padding-top: 50px;
+  }
+
+  .mobile-title {
+    font-size: 15px;
+  }
+
+  .mobile-fullscreen-editor {
+    height: calc(100vh - 50px);
+  }
+}

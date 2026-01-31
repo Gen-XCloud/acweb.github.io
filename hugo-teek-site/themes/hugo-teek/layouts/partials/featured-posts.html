@@ -1,0 +1,62 @@
+{{/* 获取所有推荐文章 */}}
+{{ $featuredPosts := where .Site.RegularPages "Params.featured" true }}
+
+{{/* 分组：有权重 vs 无权重 */}}
+{{ $withWeight := slice }}
+{{ $noWeight := slice }}
+{{ range $featuredPosts }}
+  {{ if isset .Params "weight" }}
+    {{ $withWeight = $withWeight | append . }}
+  {{ else }}
+    {{ $noWeight = $noWeight | append . }}
+  {{ end }}
+{{ end }}
+
+{{/* 排序 */}}
+{{ $withWeight = sort $withWeight "Params.weight" "asc" }}
+{{ $noWeight = sort $noWeight "Date" "desc" }}
+
+{{/* 合并并取前5篇 */}}
+{{ $sortedFeatured := $withWeight | append $noWeight }}
+
+{{ if $sortedFeatured }}
+<div class="featured-posts-card">
+  <h4 class="featured-title">
+    <span class="featured-icon">⭐</span>
+    精选文章
+  </h4>
+
+  <ul class="featured-list">
+    {{ range first 5 $sortedFeatured }}
+    <li class="featured-item">
+      <a href="{{ .RelPermalink }}" class="featured-link">
+        {{ if .Params.coverImg }}
+        <div class="featured-thumb">
+          <img src="{{ .Params.coverImg }}" alt="{{ .Title }}" loading="lazy">
+        </div>
+        {{ end }}
+
+        <div class="featured-info">
+          <h5 class="featured-post-title">{{ .Title }}</h5>
+          <div class="featured-meta">
+            <span class="featured-date">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              {{ .Date.Format "01-02" }}
+            </span>
+            <span class="featured-views">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              {{ .ReadingTime }}分钟
+            </span>
+          </div>
+        </div>
+      </a>
+    </li>
+    {{ end }}
+  </ul>
+</div>
+{{ end }}

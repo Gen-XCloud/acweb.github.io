@@ -1,0 +1,682 @@
+.VPNav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+  border: 1px solid var(--vp-c-divider, rgba(60, 60, 67, 0.12));
+  border-left: 0;
+  border-right: 0;
+  background-color: transparent;
+}
+
+.VPNavBar {
+  position: relative;
+  height: var(--vp-nav-height, 64px);
+  pointer-events: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.25s ease, border-color 0.25s ease, backdrop-filter 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* 所有导航栏统一使用玻璃拟态样式（包括首页） */
+.VPNavBar.screen-open,
+.VPNavBar {
+  background-color: var(--vp-nav-bg-color, #ffffff);
+  border-bottom-color: var(--vp-c-divider, rgba(60, 60, 67, 0.12));
+  backdrop-filter: blur(18px) saturate(1.35);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.dark-mode .VPNavBar {
+  border-bottom-color: var(--vp-c-divider, rgba(84, 84, 88, 0.48));
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+.VPNavBar .wrapper {
+  padding: 0 8px 0 24px;
+}
+
+@media (max-width: 767px) {
+  .VPNavBar .wrapper {
+    padding: 0 clamp(0.75rem, 3vw, 1rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .VPNavBar .wrapper {
+    padding: 0 32px;
+  }
+}
+
+.VPNavBar .container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: calc(var(--vp-layout-max-width, 1440px) - 64px);
+  height: var(--vp-nav-height, 64px);
+  pointer-events: none;
+
+  @media (max-width: 767px) {
+    gap: clamp(0.75rem, 4vw, 1.5rem);
+  }
+}
+
+.VPNavBar .container > .title,
+.VPNavBar .container > .content {
+  pointer-events: none;
+}
+
+.VPNavBar .container * {
+  pointer-events: auto;
+}
+
+.VPNavBarTitle .title {
+  display: inline-flex;
+  align-items: center;
+  border-bottom: 1px solid transparent;
+  height: var(--vp-nav-height, 64px);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--vp-c-text-1, var(--text-color));
+  text-decoration: none;
+  transition: opacity 0.25s ease;
+
+  // 在移动端隐藏桌面端标题，避免与移动端导航栏重复显示
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.VPNavBarTitle .title:hover {
+  opacity: 0.6;
+}
+
+.VPNavBarTitle .logo {
+  margin-right: 8px;
+  height: var(--vp-nav-logo-height, 24px);
+}
+
+.VPNavBar .content {
+  flex-grow: 1;
+  
+  // 在移动端隐藏桌面端的内容区域，避免与移动端导航栏重叠
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.VPNavBar .content-body {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.75rem;
+  height: var(--vp-nav-height, 64px);
+
+  @media (max-width: 767px) {
+    gap: clamp(0.5rem, 2.5vw, 1rem);
+  }
+}
+
+.VPNavBarSearch {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .VPNavBarSearch {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    padding-left: 24px;
+  }
+}
+
+@media (min-width: 960px) {
+  .VPNavBarSearch {
+    padding-left: 32px;
+  }
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.VPNavBarMenu {
+  display: none;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .VPNavBarMenu {
+    display: flex;
+  }
+}
+
+.VPNavBarMenuLink,
+.VPFlyout > .button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: var(--vp-nav-height, 64px);
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vp-c-text-1, var(--text-color));
+  background: none;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.VPNavBarMenuLink.active,
+.VPNavBarMenuLink:hover,
+.VPFlyout > .button:hover {
+  color: var(--vp-c-brand-1, var(--primary-color));
+}
+
+.VPFlyout {
+  position: relative;
+}
+
+.VPFlyout .text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.VPFlyout .text-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.VPFlyout .menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1000;
+}
+
+.VPFlyout .menu::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+}
+
+.VPFlyout:hover .menu,
+.VPFlyout:focus-within .menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.VPMenu .items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.VPMenuLink .link,
+.VPMenuLink > .VPLink {
+  display: block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vp-c-text-1, var(--text-color));
+  text-decoration: none;
+  line-height: 1.4;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.VPMenuLink .link:hover,
+.VPMenuLink > .VPLink:hover {
+  color: var(--vp-c-brand-1, var(--primary-color));
+  background-color: var(--vp-c-default-soft, rgba(60, 60, 67, 0.08));
+}
+
+.VPMenuLink .desc {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--vp-c-text-2, var(--text-secondary));
+}
+
+.VPMenuGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 12px -12px 0;
+  padding: 12px 12px 0;
+  border-top: 1px solid var(--vp-c-divider, var(--border-color));
+}
+
+.VPMenuGroup:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.VPMenuGroup + .VPMenuGroup {
+  margin-top: 12px;
+}
+
+.VPMenuGroup .title {
+  padding: 0 12px 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--vp-c-text-2, var(--text-secondary));
+}
+
+.VPNavBarAppearance {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .VPNavBarAppearance {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.VPSwitch.VPSwitchAppearance {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--vp-c-text-1, var(--text-color));
+  cursor: pointer;
+  transition: color 0.25s ease, background-color 0.25s ease;
+  opacity: 0.85;
+}
+
+.VPSwitch.VPSwitchAppearance:hover {
+  color: var(--vp-c-brand-1, var(--primary-color));
+  background-color: var(--vp-c-default-soft, rgba(60, 60, 67, 0.08));
+  opacity: 1;
+}
+
+.VPSwitch.VPSwitchAppearance .check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  transition: transform 0.25s ease;
+}
+
+.VPSwitch.VPSwitchAppearance .icon {
+  position: relative;
+  width: 18px;
+  height: 18px;
+}
+
+.VPSwitch.VPSwitchAppearance .sun,
+.VPSwitch.VPSwitchAppearance .moon {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.25s ease;
+}
+
+.VPSwitch.VPSwitchAppearance .sun {
+  opacity: 1;
+}
+
+.VPSwitch.VPSwitchAppearance .moon {
+  opacity: 0;
+}
+
+.dark-mode .VPSwitch.VPSwitchAppearance .sun {
+  opacity: 0;
+}
+
+.dark-mode .VPSwitch.VPSwitchAppearance .moon {
+  opacity: 1;
+}
+
+@media (max-width: 767px) {
+  .VPNavBar .VPSwitch.VPSwitchAppearance {
+    width: 40px;
+    height: 22px;
+    border: 1px solid var(--vp-input-border-color, rgba(60, 60, 67, 0.3));
+    border-radius: 11px;
+    background-color: var(--vp-input-switch-bg-color, rgba(60, 60, 67, 0.08));
+  }
+
+  .VPNavBar .VPSwitch.VPSwitchAppearance:hover {
+    color: var(--vp-c-text-1, var(--text-color));
+    background-color: var(--vp-input-switch-bg-color, rgba(60, 60, 67, 0.12));
+  }
+
+  .VPNavBar .VPSwitch.VPSwitchAppearance .check {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--vp-c-neutral-inverse, #ffffff);
+    box-shadow: var(--vp-shadow-1, 0 1px 2px rgba(0, 0, 0, 0.08));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(0);
+  }
+
+  .VPNavBar .VPSwitch.VPSwitchAppearance .icon {
+    width: 100%;
+    height: 100%;
+  }
+
+  .dark-mode .VPNavBar .VPSwitch.VPSwitchAppearance .check {
+    transform: translateX(18px);
+  }
+}
+
+.VPSocialLinks {
+  display: none;
+  align-items: center;
+  gap: 4px;
+}
+
+@media (min-width: 1280px) {
+  .VPSocialLinks {
+    display: flex;
+  }
+}
+
+.VPSocialLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--vp-c-text-1, var(--text-color));
+  transition: color 0.25s ease, background-color 0.25s ease, opacity 0.25s ease;
+  opacity: 0.85;
+}
+
+.VPSocialLink:hover {
+  color: var(--vp-c-brand-1, var(--primary-color));
+  background-color: var(--vp-c-default-soft, rgba(60, 60, 67, 0.08));
+  opacity: 1;
+}
+
+.VPNavBarExtra {
+  display: none;
+  align-items: center;
+  margin-left: 12px;
+}
+
+@media (min-width: 768px) {
+  .VPNavBarExtra {
+    display: flex;
+  }
+}
+
+.VPNavBarExtra .header-clock {
+  display: inline-flex;
+  align-items: center;
+  text-align: center;
+  margin-left: 15px; // VP原版margin-left
+  font-size: 16px; // VP原版字体大小
+  font-weight: bold; // VP使用bold
+  font-family: var(--vp-font-family-mono, 'Monaco', 'Menlo', 'Consolas', monospace);
+  color: var(--vp-c-text-1, var(--text-color));
+  opacity: 0.85;
+  transition: opacity 0.25s ease;
+
+  .clock-time {
+    contain: content; // VP性能优化
+    letter-spacing: 0.05em; // VP字母间距
+    display: flex;
+    align-items: center;
+
+    span {
+      display: inline-block; // VP独立绘制单元优化
+    }
+  }
+}
+
+.VPNavBarExtra .header-clock:hover {
+  opacity: 1;
+}
+
+.VPNavBarExtra .header-clock .clock-icon {
+  display: none;
+}
+
+.VPNavBarHamburger {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: var(--vp-nav-height, 64px);
+  border: none;
+  background: transparent;
+  color: var(--vp-c-text-2, var(--text-secondary));
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.VPNavBarHamburger:hover {
+  color: var(--vp-c-text-1, var(--text-color));
+}
+
+.VPNavBarHamburger .container {
+  position: relative;
+  width: 1.25rem;
+  height: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.VPNavBarHamburger .container span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  border-radius: 1px;
+  background-color: currentColor;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+@media (min-width: 768px) {
+  .VPNavBarHamburger {
+    display: none;
+  }
+}
+
+.VPNavBar .content-body .menu + .appearance::before,
+.VPNavBar .content-body .menu + .VPSocialLinks::before,
+.VPNavBar .content-body .appearance + .VPSocialLinks::before,
+.VPNavBar .content-body .VPSocialLinks + .VPNavBarExtra::before {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 24px;
+  margin: 0 8px;
+  background-color: var(--vp-c-divider, rgba(60, 60, 67, 0.12));
+}
+
+.dark-mode .VPNavBar .content-body .menu + .appearance::before,
+.dark-mode .VPNavBar .content-body .menu + .VPSocialLinks::before,
+.dark-mode .VPNavBar .content-body .appearance + .VPSocialLinks::before,
+.dark-mode .VPNavBar .content-body .VPSocialLinks + .VPNavBarExtra::before {
+  background-color: var(--vp-c-divider, rgba(84, 84, 88, 0.48));
+}
+
+.VPNavBar .divider {
+  width: 100%;
+  height: 1px;
+}
+
+.VPNavBar .divider-line {
+  width: 100%;
+  height: 1px;
+  background-color: var(--vp-c-gutter, var(--border-color));
+  transition: background-color 0.3s ease;
+}
+
+@media (max-width: 767px) {
+  .VPNavBar .appearance,
+  .VPNavBar .VPSocialLinks,
+  .VPNavBar .VPNavBarExtra {
+    display: none;
+  }
+
+  .VPNavBar .content-body {
+    gap: 0.5rem;
+  }
+
+  .VPNavBar .content-body .appearance::before,
+  .VPNavBar .content-body .VPSocialLinks::before,
+  .VPNavBar .content-body .VPNavBarExtra::before {
+    display: none;
+  }
+
+  .VPNavBar.is-mobile-open {
+    background-color: var(--vp-nav-bg-color, #ffffff);
+    border-bottom-color: var(--vp-c-divider, rgba(60, 60, 67, 0.12));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  .dark-mode .VPNavBar.is-mobile-open {
+    border-bottom-color: var(--vp-c-divider, rgba(84, 84, 88, 0.48));
+    box-shadow: 0 8px 36px rgba(0, 0, 0, 0.35);
+  }
+
+  .VPNavBar.is-mobile-open .content-body {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 12px 0 16px;
+  }
+
+  .VPNavBar.is-mobile-open .VPNavBarSearch {
+    display: flex;
+    width: 100%;
+    padding: 0 16px;
+  }
+
+  .VPNavBar.is-mobile-open .VPNavBarMenu {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0;
+    padding: 0 16px;
+  }
+
+  .VPNavBar.is-mobile-open .VPNavBarMenuLink,
+  .VPNavBar.is-mobile-open .VPFlyout > .button {
+    width: 100%;
+    height: auto;
+    padding: 12px 0;
+    justify-content: space-between;
+  }
+
+  .VPNavBar.is-mobile-open .VPFlyout .menu {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    border: none;
+    padding: 0 0 8px;
+    margin-top: -4px;
+    background: transparent;
+  }
+
+  .VPNavBar.is-mobile-open .VPMenu .items {
+    gap: 0;
+  }
+
+  .VPNavBar.is-mobile-open .VPMenuLink .link,
+  .VPNavBar.is-mobile-open .VPMenuLink > .VPLink {
+    padding: 8px 0;
+    border-radius: 0;
+  }
+
+  .VPNavBar.is-mobile-open .VPMenuGroup {
+    margin: 8px 0 0;
+    padding: 8px 0 0;
+  }
+
+  .VPNavBar.is-mobile-open .VPMenuGroup .title {
+    padding: 8px 0;
+  }
+
+  .VPNavBar.is-mobile-open .VPNavBarHamburger .container span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .VPNavBar.is-mobile-open .VPNavBarHamburger .container span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .VPNavBar.is-mobile-open .VPNavBarHamburger .container span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}
+
+// ========================================
+// 暗色模式下图标增强优化
+// ========================================
+.dark-mode .VPSwitch.VPSwitchAppearance {
+  opacity: 0.9;
+}
+
+.dark-mode .VPSwitch.VPSwitchAppearance:hover {
+  opacity: 1;
+}
+
+.dark-mode .VPSocialLink {
+  opacity: 0.9;
+}
+
+.dark-mode .VPSocialLink:hover {
+  opacity: 1;
+}
+
+.dark-mode .VPNavBarExtra .header-clock {
+  opacity: 0.9;
+}
+
+.dark-mode .VPNavBarExtra .header-clock:hover {
+  opacity: 1;
+}

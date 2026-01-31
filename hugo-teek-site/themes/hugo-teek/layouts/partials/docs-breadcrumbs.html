@@ -1,0 +1,73 @@
+{{- $page := . -}}
+{{- $root := site.GetPage "section" "docs" -}}
+{{- $breadcrumbs := slice -}}
+
+{{/* 不再将 /docs/ 根目录添加到面包屑中 */}}
+
+{{- $ancestors := slice -}}
+{{- if $page.IsSection }}
+  {{- $ancestors = $page.Ancestors -}}
+{{- else if $page.CurrentSection }}
+  {{- $ancestors = $page.CurrentSection.Ancestors -}}
+{{- end -}}
+
+{{- range $ancestor := $ancestors }}
+  {{- $isRoot := and $root (eq $ancestor.RelPermalink $root.RelPermalink) -}}
+  {{- if and (not $isRoot) (eq $ancestor.Kind "section") }}
+    {{- $title := $ancestor.LinkTitle | default $ancestor.Title -}}
+    {{- $title = replaceRE "^\\d+[._\\-]?" "" $title -}}
+    {{/* 保留原样，不替换连字符 */}}
+    {{- if ne $title "" }}
+      {{- $breadcrumbs = $breadcrumbs | append (dict "title" $title "titleAttr" ($ancestor.Title | default $title) "url" $ancestor.RelPermalink "isLink" true) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if and (not $page.IsSection) $page.CurrentSection }}
+  {{- $section := $page.CurrentSection -}}
+  {{- if not (and $root (eq $section.RelPermalink $root.RelPermalink)) }}
+    {{- $title := $section.LinkTitle | default $section.Title -}}
+    {{- $title = replaceRE "^\\d+[._\\-]?" "" $title -}}
+    {{/* 保留原样，不替换连字符 */}}
+    {{- $breadcrumbs = $breadcrumbs | append (dict "title" $title "titleAttr" ($section.Title | default $title) "url" $section.RelPermalink "isLink" true) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $currentTitle := $page.LinkTitle | default $page.Title -}}
+{{- $currentTitle = replaceRE "^\\d+[._\\-]?" "" $currentTitle -}}
+{{/* 保留原样，不替换连字符 */}}
+{{- if $page.IsSection }}
+  {{- $breadcrumbs = $breadcrumbs | append (dict "title" $currentTitle "titleAttr" $page.Title "url" $page.RelPermalink "isLink" true) -}}
+{{- end -}}
+{{/* 普通文章页面不在面包屑中显示，因为下面有 h1 标题 */}}
+
+<nav class="tk-article-breadcrumb" aria-label="文章面包屑">
+  <div class="tk-breadcrumb">
+    {{/* 首页图标 */}}
+    <span class="tk-breadcrumb__item">
+      <span class="tk-breadcrumb__inner">
+        <a href="/" class="tk-breadcrumb__home hover-color" title="返回首页" aria-label="返回首页">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="16" height="16" fill="currentColor" aria-hidden="true">
+            <path d="M946.5 505L560.1 118.8l-25.9-25.9a31.5 31.5 0 0 0-44.4 0L77.5 505a63.9 63.9 0 0 0-18.8 46c.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8a63.6 63.6 0 0 0 18.7-45.3c0-17-6.7-33.1-18.8-45.2M568 868H456V664h112zm217.9-325.7V868H632V640c0-22.1-17.9-40-40-40H432c-22.1 0-40 17.9-40 40v228H238.1V542.3h-96l370-369.7 23.1 23.1L882 542.3z"/>
+          </svg>
+        </a>
+      </span>
+      <span class="tk-breadcrumb__separator">/</span>
+    </span>
+
+    {{- range $index, $item := $breadcrumbs }}
+      <span class="tk-breadcrumb__item">
+        <span class="tk-breadcrumb__inner">
+          {{- if and $item.isLink $item.url -}}
+            <a href="{{ $item.url }}" class="hover-color" title="{{ $item.titleAttr }}">{{ $item.title }}</a>
+          {{- else -}}
+            <span title="{{ $item.titleAttr }}">{{ $item.title }}</span>
+          {{- end -}}
+        </span>
+        {{- if lt (add $index 1) (len $breadcrumbs) }}
+          <span class="tk-breadcrumb__separator">/</span>
+        {{- end -}}
+      </span>
+    {{- end -}}
+  </div>
+</nav>

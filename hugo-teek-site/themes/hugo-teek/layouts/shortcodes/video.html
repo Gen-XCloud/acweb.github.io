@@ -1,0 +1,27 @@
+{{- $provider := lower (.Get "provider" | default "") -}}
+{{- $id := .Get "id" | default (.Inner | plainify | trim) -}}
+{{- $src := .Get "src" | default "" -}}
+
+{{- if and (ne $provider "") (eq $src "") -}}
+  {{- $src = cond (eq $provider "bilibili") (printf "https://player.bilibili.com/player.html?bvid=%s&autoplay=0" $id) $src -}}
+  {{- if eq $provider "tencent" }}{{ $src = printf "https://v.qq.com/txp/iframe/player.html?vid=%s" $id }}{{ end -}}
+  {{- if eq $provider "youku" }}{{ $src = printf "https://player.youku.com/embed/%s" $id }}{{ end -}}
+  {{- if eq $provider "youtube" }}{{ $src = printf "https://www.youtube-nocookie.com/embed/%s" $id }}{{ end -}}
+  {{- if eq $provider "vimeo" }}{{ $src = printf "https://player.vimeo.com/video/%s" $id }}{{ end -}}
+  {{- if eq $provider "xigua" }}{{ $src = printf "https://www.ixigua.com/iframe/%s" $id }}{{ end -}}
+{{- end -}}
+
+{{- if eq $src "" }}
+  {{- $src = $id -}}
+{{- end -}}
+
+<div class="tk-video-container">
+  <iframe
+    class="tk-video-container__iframe"
+    loading="lazy"
+    src="{{ $src }}"
+    title="{{ .Get "title" | default "Embedded video" }}"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+    allowfullscreen
+  ></iframe>
+</div>

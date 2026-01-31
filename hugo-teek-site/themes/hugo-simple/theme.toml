@@ -1,0 +1,12 @@
+name = "Hugo Simple"
+license = "MIT"
+licenselink = "https://github.com/yourusername/hugo-simple/blob/main/LICENSE"
+description = "一个简约优雅的 Hugo 博客主题，纯黑背景，卡片式布局"
+homepage = "https://github.com/yourusername/hugo-simple"
+tags = ["blog", "simple", "dark", "minimal", "responsive", "card-layout"]
+features = ["responsive", "dark-mode", "card-layout", "minimal", "dropdown-menu", "search"]
+min_version = "0.150.0"
+
+[author]
+  name = "Your Name"
+  homepage = "https://example.com"

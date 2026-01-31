@@ -1,0 +1,17 @@
+:root {
+  --tk-mark-color: #d63200;
+}
+
+:root.dark {
+  --tk-mark-color: #b160ea;
+}
+
+.vp-doc mark {
+  color: var(--tk-mark-color);
+  border: 1px solid var(--tk-mark-color);
+  background: transparent;
+  padding: 1px 8px;
+  border-radius: 32px;
+  margin: 0 3px;
+  font-size: 15px;
+}

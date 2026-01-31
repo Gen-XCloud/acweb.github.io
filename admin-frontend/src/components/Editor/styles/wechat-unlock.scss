@@ -1,0 +1,279 @@
+// ================================================
+// 微信公众号解锁预览样式
+// ================================================
+// 在编辑器中预览微信解锁 shortcode 的效果
+// ================================================
+
+/* ==================== 微信解锁预览容器 ==================== */
+.wechat-unlock-preview {
+  margin: 1.5em 0;
+  padding: var(--editor-spacing-lg);
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px dashed #adb5bd;
+  border-radius: var(--editor-radius-lg);
+  text-align: center;
+  position: relative;
+  transition: all var(--editor-transition-base);
+
+  &:hover {
+    border-color: #6c757d;
+    box-shadow: var(--editor-shadow-md);
+  }
+}
+
+/* ==================== 元信息栏 ==================== */
+.preview-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--editor-spacing-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--editor-spacing-lg);
+  padding-bottom: var(--editor-spacing-md);
+  border-bottom: 1px solid #dee2e6;
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+
+    &::before {
+      content: '💬';
+      margin-right: 4px;
+      font-size: 14px;
+    }
+  }
+
+  .meta-info {
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    color: #495057;
+    gap: 4px;
+
+    code {
+      background: white;
+      color: #d63384;
+      padding: 2px 8px;
+      border-radius: var(--editor-radius-sm);
+      font-family: var(--editor-font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid #f8d7da;
+    }
+  }
+}
+
+/* ==================== 解锁门禁区域 ==================== */
+.unlock-gate-preview {
+  margin: var(--editor-spacing-lg) 0;
+  padding: var(--editor-spacing-xl) var(--editor-spacing-md);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%);
+  border-radius: var(--editor-radius-md);
+  position: relative;
+
+  // 背景装饰
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+}
+
+/* ==================== 解锁按钮 ==================== */
+.unlock-button-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--editor-spacing-sm);
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--editor-transition-base);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  position: relative;
+  z-index: 1;
+  user-select: none;
+
+  // 锁图标
+  .button-icon-lock {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    transition: transform var(--editor-transition-base);
+  }
+
+  // 按钮文字
+  .button-text {
+    letter-spacing: 0.5px;
+  }
+
+  // 悬停效果
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+
+    .button-icon-lock {
+      transform: scale(1.1) rotate(-5deg);
+    }
+  }
+
+  // 点击效果
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  }
+
+  // 禁用状态（预览时始终禁用）
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+
+    &:hover {
+      transform: none;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+  }
+}
+
+/* ==================== 提示文字 ==================== */
+.preview-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--editor-spacing-xs);
+  margin-top: var(--editor-spacing-lg);
+  padding-top: var(--editor-spacing-md);
+  border-top: 1px solid #dee2e6;
+  font-size: 13px;
+  color: #6c757d;
+  font-style: italic;
+
+  svg {
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    opacity: 0.6;
+    animation: flash 2s ease-in-out infinite;
+  }
+}
+
+/* ==================== 闪烁动画 ==================== */
+@keyframes flash {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ==================== 编辑区域中的微信解锁 ==================== */
+.vditor-ir .wechat-unlock-preview {
+  // 在IR模式下保持完整显示
+  display: block;
+}
+
+/* ==================== 预览区域中的微信解锁 ==================== */
+.vditor-preview__content .wechat-unlock-preview {
+  // 预览模式下的样式调整
+  margin: 2em 0;
+}
+
+/* ==================== 打印样式 ==================== */
+@media print {
+  .wechat-unlock-preview {
+    border-style: solid;
+    border-color: #dee2e6;
+    background: #f8f9fa;
+    page-break-inside: avoid;
+
+    &::before {
+      display: none;
+    }
+
+    .unlock-button-preview {
+      box-shadow: none;
+
+      &:hover {
+        transform: none;
+      }
+    }
+
+    .preview-hint svg {
+      animation: none;
+    }
+  }
+}
+
+/* ==================== 移动端优化 ==================== */
+@media (max-width: 768px) {
+  .wechat-unlock-preview {
+    padding: var(--editor-spacing-md);
+  }
+
+  .preview-meta {
+    flex-direction: column;
+    gap: var(--editor-spacing-sm);
+    text-align: center;
+
+    .meta-badge {
+      font-size: 12px;
+      padding: 3px 10px;
+    }
+
+    .meta-info {
+      font-size: 12px;
+
+      code {
+        font-size: 11px;
+      }
+    }
+  }
+
+  .unlock-gate-preview {
+    padding: var(--editor-spacing-lg) var(--editor-spacing-sm);
+
+    &::before {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  .unlock-button-preview {
+    padding: 10px 24px;
+    font-size: 14px;
+
+    .button-icon-lock {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  .preview-hint {
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,12 @@
+{{ $categories := .Site.Taxonomies.categories }}
+{{ $limit := .Site.Params.category.limit | default 8 }}
+
+<div class="category-cards">
+  {{ range first $limit $categories.ByCount }}
+  <a href="{{ .Page.RelPermalink }}" class="category-card">
+    <div class="card-icon">📁</div>
+    <h4 class="card-name">{{ .Page.Title }}</h4>
+    <span class="card-count">{{ .Count }} 篇</span>
+  </a>
+  {{ end }}
+</div>

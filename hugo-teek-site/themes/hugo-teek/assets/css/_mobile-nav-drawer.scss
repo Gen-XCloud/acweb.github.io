@@ -1,0 +1,557 @@
+// ========================================
+// 移动端导航抽屉
+// Mobile Navigation Drawer
+// ========================================
+
+// ========================================
+// 移动端导航栏
+// ========================================
+.mobile-nav-bar {
+  display: none;
+  align-items: center;
+  gap: 3px; // 优化间距到 3px，平衡显示效果
+  flex: 1;
+  min-width: 0;
+  justify-content: flex-end;
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+}
+
+// 博客名称
+.mobile-blog-name {
+  margin-right: auto;
+  font-size: 13px; // 优化字体大小
+  font-weight: 600;
+  color: var(--vp-c-text-1, var(--text-color));
+  min-width: 0;
+  flex-shrink: 1;
+
+  span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 95px; // 优化最大宽度
+  }
+}
+
+// 头像
+.mobile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--vp-c-bg-soft, #f6f6f7); // 柔和的背景色
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: white; // 为透明图片提供白色背景
+  }
+
+  .avatar-placeholder {
+    color: var(--vp-c-text-1, #333);
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  // 暗色模式
+  .dark-mode & {
+    background: var(--vp-c-bg-elv, #161b22);
+
+    img {
+      background: var(--vp-c-bg-soft, #1c2128);
+    }
+
+    .avatar-placeholder {
+      color: var(--vp-c-text-1, #e6edf3);
+    }
+  }
+}
+
+// 搜索按钮
+.mobile-search-btn {
+  width: 32px; // 进一步缩小按钮，从36px改为32px
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 6px; // 相应调整圆角
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--vp-c-text-1, var(--text-color));
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0; // 不允许收缩
+
+  &:hover,
+  &:active {
+    background: var(--vp-c-bg-soft, rgba(142, 150, 170, 0.14));
+  }
+
+  .search-icon {
+    flex-shrink: 0;
+    width: 16px; // 缩小图标尺寸
+    height: 16px;
+  }
+}
+
+// 移动端时钟 - VP风格
+.mobile-clock {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-left: 8px; // VP原版15px，移动端缩小
+  font-size: 14px; // VP原版16px，移动端略小
+  font-weight: bold; // VP使用bold
+  color: var(--vp-c-text-1, var(--text-color));
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  flex-shrink: 0;
+  order: 99; // VP使用order控制位置
+
+  .clock-time {
+    contain: content; // VP性能优化
+    letter-spacing: 0.05em; // VP字母间距
+    display: flex;
+    align-items: center;
+
+    span {
+      display: inline-block; // VP独立绘制单元优化
+    }
+
+    .separator {
+      animation: blink 1.5s infinite;
+    }
+  }
+}
+
+@keyframes blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0.3;
+  }
+}
+
+// 菜单按钮
+.mobile-menu-btn {
+  width: 32px; // 进一步缩小按钮，从36px改为32px
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 6px; // 相应调整圆角
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--vp-c-text-1, var(--text-color));
+  transition: all 0.2s ease;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0; // 不允许收缩，确保菜单按钮始终可见
+
+  &:hover,
+  &:active {
+    background: var(--vp-c-bg-soft, rgba(142, 150, 170, 0.14));
+  }
+
+  .icon-menu,
+  .icon-close {
+    position: absolute;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    width: 20px; // 缩小图标尺寸
+    height: 20px;
+  }
+
+  .icon-menu {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  .icon-close {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  &[aria-expanded="true"] {
+    .icon-menu {
+      opacity: 0;
+      transform: rotate(-90deg);
+    }
+
+    .icon-close {
+      opacity: 1;
+      transform: rotate(0deg);
+    }
+  }
+}
+
+// ========================================
+// 抽屉式导航菜单
+// ========================================
+.mobile-nav-drawer {
+  position: fixed;
+  top: var(--vp-nav-height, 64px);
+  right: 0;
+  bottom: 0;
+  width: 85vw;
+  max-width: 320px;
+  background: var(--vp-c-bg, #ffffff);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 999;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &.open {
+    transform: translateX(0);
+  }
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+}
+
+.mobile-nav-drawer-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 16px 0;
+}
+
+// 导航项
+.mobile-nav-items {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 12px;
+}
+
+.mobile-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--vp-c-text-1, var(--text-color));
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+
+  .item-icon {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .item-text {
+    flex: 1;
+  }
+
+  // 如果没有图标，移除不必要的间距
+  &:not(:has(.item-icon)) {
+    gap: 0;
+  }
+
+  &:hover,
+  &:active {
+    background: var(--vp-c-bg-soft, rgba(142, 150, 170, 0.14));
+  }
+
+  &.active {
+    background: var(--primary-color-alpha, rgba(8, 145, 178, 0.1));
+    color: var(--primary-color, #0891b2);
+  }
+}
+
+// 导航分组
+.mobile-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &.active {
+    .mobile-nav-item-toggle {
+      color: var(--primary-color, #0891b2);
+    }
+  }
+}
+
+.mobile-nav-item-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  color: var(--vp-c-text-1, var(--text-color));
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+
+  .item-icon {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .item-text {
+    flex: 1;
+  }
+
+  // 如果没有图标，移除不必要的间距
+  &:not(:has(.item-icon)) {
+    gap: 8px;
+  }
+
+  .chevron-icon {
+    transition: transform 0.3s ease;
+    color: var(--vp-c-text-3, var(--text-color-muted));
+  }
+
+  &:hover,
+  &:active {
+    background: var(--vp-c-bg-soft, rgba(142, 150, 170, 0.14));
+  }
+
+  &[aria-expanded="true"] {
+    .chevron-icon {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+// 子菜单
+.mobile-nav-submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding-left: 20px;
+
+  &.open {
+    max-height: 2000px;
+  }
+}
+
+.mobile-nav-subgroup {
+  margin-bottom: 12px;
+
+  .subgroup-title {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--vp-c-text-2, var(--text-color-secondary));
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+  }
+}
+
+.mobile-nav-subitem {
+  display: block;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--vp-c-text-2, var(--text-color-secondary));
+  font-size: 14px;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover,
+  &:active {
+    background: var(--vp-c-bg-soft, rgba(142, 150, 170, 0.14));
+    color: var(--vp-c-text-1, var(--text-color));
+  }
+
+  &.active {
+    background: var(--primary-color-alpha, rgba(8, 145, 178, 0.1));
+    color: var(--primary-color, #0891b2);
+  }
+}
+
+// ========================================
+// 底部操作栏
+// ========================================
+.mobile-nav-footer {
+  border-top: 1px solid var(--vp-c-divider, rgba(60, 60, 67, 0.12));
+  padding: 16px;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+// 主题切换按钮
+.mobile-theme-toggle {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: var(--vp-c-bg-soft, rgba(142, 150, 170, 0.14));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+
+  .icon {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .sun-icon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+
+  .moon-icon {
+    opacity: 0;
+    transform: rotate(180deg) scale(0.5);
+  }
+
+  &:hover,
+  &:active {
+    background: var(--primary-color-alpha, rgba(8, 145, 178, 0.2));
+  }
+}
+
+.dark-mode {
+  .mobile-theme-toggle {
+    .sun-icon {
+      opacity: 0;
+      transform: rotate(-180deg) scale(0.5);
+    }
+
+    .moon-icon {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+  }
+}
+
+// 社交链接
+.mobile-social-links {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+
+  .social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vp-c-text-2, var(--text-color-secondary));
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover,
+    &:active {
+      background: var(--vp-c-bg-soft, rgba(142, 150, 170, 0.14));
+      color: var(--vp-c-text-1, var(--text-color));
+    }
+  }
+}
+
+// ========================================
+// 遮罩层
+// ========================================
+.mobile-nav-overlay {
+  position: fixed;
+  top: var(--vp-nav-height, 64px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 998;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+}
+
+// 防止页面滚动
+body.mobile-nav-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+// ========================================
+// 隐藏桌面端导航在移动端
+// ========================================
+@media (max-width: 768px) {
+  .VPNavBar {
+    .content-body {
+      // 隐藏桌面端的导航元素
+      .VPNavBarSearch,
+      .VPNavBarMenu,
+      .VPNavBarAppearance,
+      .VPNavBarSocialLinks,
+      .VPNavBarExtra,
+      .VPNavBarHamburger {
+        display: none !important;
+      }
+    }
+  }
+}
+
+// ========================================
+// 暗色模式适配
+// ========================================
+.dark-mode {
+  .mobile-nav-drawer {
+    background: var(--vp-c-bg, #1a1a1a);
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .mobile-nav-footer {
+    border-top-color: var(--vp-c-divider, rgba(84, 84, 88, 0.48));
+  }
+
+  .mobile-nav-overlay {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}

@@ -1,0 +1,13 @@
+{{ define "main" }}
+<article class="post-single thanks-page">
+  <h1>致谢</h1>
+  <div class="post-content">
+    {{ .Content }}
+  </div>
+  {{ if .Site.Params.comment.enabled }}
+  <div class="post-comment">
+    {{ partial "comment.html" . }}
+  </div>
+  {{ end }}
+</article>
+{{ end }}

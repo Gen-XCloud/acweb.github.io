@@ -1,0 +1,245 @@
+// ========================================
+// Card Components (Article, Blogger, Sidebar)
+// ========================================
+// 注意：本文件已重构，使用统一侧边栏样式系统
+// 详见：_sidebar-cards-unified.scss
+// ========================================
+
+// ========================================
+// 文章卡片（主内容区）- 保持独立样式
+// ========================================
+.article-card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 1.2s ease-in-out, box-shadow 0.8s ease-in-out;
+  margin-bottom: 1.5rem;
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-cover {
+    img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+  }
+
+  .card-content {
+    padding: 1.5rem;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+
+    a {
+      color: var(--text-color);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  .card-excerpt {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+
+    .tag {
+      background: var(--tag-bg);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: var(--primary-color);
+    }
+  }
+}
+
+// ========================================
+// 博主卡片 - 使用统一基础样式 + 特有样式
+// ========================================
+.blogger-card {
+  // 继承统一基础样式（通过 mixin 在统一文件中定义）
+  @include sidebar-card-base;
+  @include sidebar-card-hover-light;
+  @include sidebar-card-mobile;
+
+  // 博主卡片特有样式
+  background-color: var(--card-bg);  // 改为 background-color，不会覆盖 background-image
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+
+  // 背景图样式
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  // 头像容器
+  .avatar-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1rem;
+
+    &.circle-rotate {
+      .blogger-avatar {
+        border-radius: 50%;
+        transition: transform 0.3s;
+        animation: none;
+        transform: rotate(0deg);
+
+        &:hover {
+          animation: rotateClockwise 0.6s linear 1;
+        }
+
+        &:not(:hover) {
+          animation: rotateCounterClockwise 0.6s linear 1;
+        }
+      }
+    }
+
+    .blogger-avatar {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 1 / 1; // CLS 优化：保持宽高比
+      object-fit: cover;
+      border-radius: 50%;
+      display: block; // 防止图片底部空隙
+    }
+
+    .status-icon {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+  }
+
+  // 博主名称
+  .blogger-name {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: white !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  // 博主口号
+  .blogger-slogan {
+    color: white !important;
+    font-size: 0.9rem;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  // 社交图标样式（新版）
+  .blogger-social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin: 1rem 0 0.75rem 0;
+
+    .blogger-social-icon {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+
+      .social-icon-img {
+        width: 22px;
+        height: 22px;
+        display: block; // 防止图片底部空隙
+        filter: brightness(0) invert(1) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      }
+
+      &:hover {
+        background: rgba(13, 91, 209, 0.685);
+        transform: translateY(-3px) scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+        .social-icon-img {
+          filter: brightness(0) invert(1) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
+        }
+      }
+
+      &:active {
+        transform: translateY(-1px) scale(1.05);
+      }
+    }
+  }
+
+  // 社交图标样式（旧版，保留兼容）
+  .blogger-social {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .social-icon {
+      color: var(--text-secondary);
+      transition: color 0.3s;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+}
+
+// ========================================
+// 通用侧边栏卡片 - 使用统一基础样式
+// ========================================
+.sidebar-widget {
+  // 继承统一基础样式
+  @include sidebar-card-base;
+  @include sidebar-card-hover-light;
+  @include sidebar-card-mobile;
+
+  padding: 1.5rem;
+
+  // 标题样式
+  .widget-title {
+    @include sidebar-card-title;
+  }
+
+  // 列表样式（如最近文章）
+  .recent-posts {
+    @include sidebar-card-list;
+  }
+}
+
+// ========================================
+// 注意：以下样式已移到统一文件
+// ========================================
+// - 暗色模式 hover 效果 → _sidebar-cards-unified.scss
+// - @keyframes rotate → _sidebar-cards-unified.scss
+// - @keyframes pulse → _sidebar-cards-unified.scss
+// - @keyframes sparkle → _sidebar-cards-unified.scss

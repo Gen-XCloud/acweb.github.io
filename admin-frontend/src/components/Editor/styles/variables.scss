@@ -1,0 +1,143 @@
+// ================================================
+// Hugo Teek Markdown Editor - 设计系统变量
+// ================================================
+// 说明：
+// - 所有变量使用 --editor- 前缀，避免与全局样式冲突
+// - 采用 Notion/Typora 现代简约风格
+// - 为未来暗色主题预留变量接口
+// ================================================
+
+:root {
+  // ===== 基础色彩系统 =====
+  --editor-bg: #ffffff;
+  --editor-text: #37352f;             // Notion深灰色文字
+  --editor-text-secondary: #787774;   // 次要文字
+  --editor-text-tertiary: #9b9a97;    // 第三级文字（placeholder等）
+
+  // ===== 工具栏色彩 =====
+  --editor-toolbar-bg: #ffffff;
+  --editor-toolbar-border: #e3e2e0;
+  --editor-toolbar-btn-bg: transparent;
+  --editor-toolbar-btn-hover: #f7f6f5;
+  --editor-toolbar-btn-active: #e3e2e0;
+  --editor-toolbar-icon: #787774;
+  --editor-toolbar-icon-hover: #37352f;
+  --editor-toolbar-divider: #e3e2e0;
+
+  // ===== 编辑区域色彩 =====
+  --editor-area-bg: #ffffff;
+  --editor-cursor: #37352f;
+  --editor-selection: rgba(46, 170, 220, 0.15);  // 浅蓝色选中
+  --editor-placeholder: #9b9a97;
+  --editor-link: #2e8bc0;
+  --editor-link-hover: #1e6fa0;
+
+  // ===== VitePress 容器色彩 =====
+  // Info 容器
+  --vp-info-bg: #e7f2fd;
+  --vp-info-border: #2e8bc0;
+  --vp-info-text: #193c47;
+  --vp-info-title: #1e6fa0;
+
+  // Tip 容器
+  --vp-tip-bg: #e6f6e6;
+  --vp-tip-border: #059669;
+  --vp-tip-text: #1a3a1a;
+  --vp-tip-title: #047857;
+
+  // Warning 容器
+  --vp-warning-bg: #fff4e5;
+  --vp-warning-border: #f59e0b;
+  --vp-warning-text: #472400;
+  --vp-warning-title: #d97706;
+
+  // Danger 容器
+  --vp-danger-bg: #fee;
+  --vp-danger-border: #e11d48;
+  --vp-danger-text: #3d0b0b;
+  --vp-danger-title: #be123c;
+
+  // Details 容器
+  --vp-details-bg: #f7f6f5;
+  --vp-details-border: #e3e2e0;
+  --vp-details-text: #37352f;
+  --vp-details-title: #787774;
+
+  // ===== 代码块色彩 =====
+  --editor-code-bg: #f7f6f5;
+  --editor-code-border: #e3e2e0;
+  --editor-code-text: #37352f;
+  --editor-inline-code-bg: #f7f6f5;
+  --editor-inline-code-text: #eb5757;  // 红色行内代码
+  --editor-code-keyword: #d73a49;
+  --editor-code-string: #032f62;
+  --editor-code-comment: #6a737d;
+
+  // ===== 表格色彩 =====
+  --editor-table-border: #e3e2e0;
+  --editor-table-header-bg: #f7f6f5;
+  --editor-table-row-hover: #fafbfc;
+
+  // ===== 引用块色彩 =====
+  --editor-blockquote-border: #e3e2e0;
+  --editor-blockquote-bg: #fafbfc;
+  --editor-blockquote-text: #787774;
+
+  // ===== 尺寸与间距 =====
+  --editor-radius-sm: 4px;
+  --editor-radius-md: 8px;
+  --editor-radius-lg: 12px;
+  --editor-spacing-xs: 4px;
+  --editor-spacing-sm: 8px;
+  --editor-spacing-md: 16px;
+  --editor-spacing-lg: 24px;
+  --editor-spacing-xl: 32px;
+
+  // ===== 阴影系统 =====
+  --editor-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --editor-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --editor-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+  // ===== 字体系统 =====
+  --editor-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                        'Noto Sans', Helvetica, Arial, sans-serif,
+                        'Apple Color Emoji', 'Segoe UI Emoji';
+  --editor-font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono',
+                      Consolas, 'Courier New', monospace;
+
+  // ===== 字体大小 =====
+  --editor-font-size-base: 16px;
+  --editor-font-size-sm: 14px;
+  --editor-font-size-lg: 18px;
+  --editor-line-height-base: 1.75;
+  --editor-line-height-tight: 1.5;
+
+  // ===== 动画时长 =====
+  --editor-transition-fast: 0.15s;
+  --editor-transition-base: 0.2s;
+  --editor-transition-slow: 0.3s;
+
+  // ===== Z-index 层级 =====
+  --editor-z-dropdown: 1000;
+  --editor-z-tooltip: 1100;
+  --editor-z-modal: 1200;
+}
+
+// ===== 移动端变量覆盖 =====
+@media (max-width: 768px) {
+  :root {
+    --editor-font-size-base: 15px;
+    --editor-spacing-md: 12px;
+    --editor-spacing-lg: 16px;
+  }
+}
+
+// ===== 小屏手机变量覆盖 =====
+@media (max-width: 480px) {
+  :root {
+    --editor-font-size-base: 14px;
+    --editor-spacing-sm: 6px;
+    --editor-spacing-md: 10px;
+    --editor-spacing-lg: 14px;
+  }
+}

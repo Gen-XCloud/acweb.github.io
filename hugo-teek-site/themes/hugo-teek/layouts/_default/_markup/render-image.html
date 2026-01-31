@@ -1,0 +1,10 @@
+{{- /* 图片渲染 Hook - 自动添加懒加载 */ -}}
+<img
+  src="{{ .Destination | safeURL }}"
+  alt="{{ .Text }}"
+  {{ with .Title }}title="{{ . }}"{{ end }}
+  loading="lazy"
+  decoding="async"
+  {{- /* 添加防止布局偏移的样式 */ -}}
+  style="max-width: 100%; height: 100%;"
+/>

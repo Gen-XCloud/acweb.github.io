@@ -1,0 +1,53 @@
+{{ define "main" }}
+<div class="taxonomy-page tags-page">
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">
+        <span class="page-icon">🏷️</span>
+        标签云
+      </h1>
+      <p class="page-description">按标签浏览文章</p>
+    </div>
+
+    <!-- 标签选择器 -->
+    <div class="taxonomy-selector taxonomy-selector-tags">
+      <a href="/tags" class="taxonomy-item taxonomy-item-tag" data-filter-type="all">
+        <span class="taxonomy-name">全部</span>
+        <span class="taxonomy-count">{{ len .Site.RegularPages }}</span>
+      </a>
+      {{ $tagColors := slice
+        (dict "border" "#bfdbfe" "bg" "#eff6ff" "text" "#1d4ed8")
+        (dict "border" "#e9d5ff" "bg" "#faf5ff" "text" "#7c3aed")
+        (dict "border" "#fbcfe8" "bg" "#fdf2f8" "text" "#be185d")
+        (dict "border" "#a7f3d0" "bg" "#ecfdf5" "text" "#047857")
+        (dict "border" "#fde68a" "bg" "#fffbeb" "text" "#b45309")
+        (dict "border" "#a5f3fc" "bg" "#ecfeff" "text" "#0e7490")
+        (dict "border" "#c7d2fe" "bg" "#eef2ff" "text" "#4338ca")
+      }}
+      {{ range $index, $tag := .Site.Taxonomies.tags.ByCount }}
+        {{ $colorIndex := mod $index (len $tagColors) }}
+        {{ $color := index $tagColors $colorIndex }}
+        <a href="#tag-{{ $tag.Page.Title | urlize }}"
+           class="taxonomy-item taxonomy-item-tag filter-tag"
+           data-tag="{{ $tag.Page.Title }}"
+           data-count="{{ $tag.Count }}"
+           style="background: {{ $color.bg }}; color: {{ $color.text }}; border-color: {{ $color.border }};">
+          <span class="taxonomy-name">{{ $tag.Page.Title }}</span>
+          <span class="taxonomy-count">{{ $tag.Count }}</span>
+        </a>
+      {{ end }}
+    </div>
+
+    <!-- 文章列表 -->
+    <div class="taxonomy-articles">
+      <div class="post-grid">
+        {{ $mainSections := .Site.Params.mainSections | default (slice "docs") }}
+        {{ $pages := where .Site.RegularPages "Type" "in" $mainSections }}
+        {{ range $pages }}
+        {{ partial "article-card-compact.html" . }}
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

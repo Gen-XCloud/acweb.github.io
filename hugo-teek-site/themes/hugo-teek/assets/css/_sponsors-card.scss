@@ -1,0 +1,252 @@
+// ========================================
+// Sponsors Card (赞赏清单卡片)
+// 中文注释：展示赞赏者列表，支持自动轮播
+// ========================================
+// 注意：本文件已重构，container使用统一侧边栏样式
+// 详见：_sidebar-cards-unified.scss
+// ========================================
+
+.tk-sponsors-card {
+  // 继承统一侧边栏卡片基础样式
+  @include sidebar-card-base;
+  @include sidebar-card-hover-light;
+  @include sidebar-card-mobile;
+
+  // 特有样式
+  position: relative;
+
+  // 头部右上角按钮容器
+  .tk-carousel-controls {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    gap: 8px;
+  }
+
+  // 左右切换按钮样式
+  .tk-carousel-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+
+    // 中文注释：添加涟漪效果背景层
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: var(--primary-color);
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s, opacity 0.6s;
+    }
+
+    &:hover {
+      background: var(--hover-bg, rgba(8, 145, 178, 0.08));
+      color: var(--primary-color);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-color: var(--primary-color);
+    }
+
+    &:active::before {
+      width: 48px;
+      height: 48px;
+      opacity: 0.2;
+      transition: width 0s, height 0s, opacity 0.3s;
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.95);
+    }
+  }
+
+  // 轮播容器
+  .tk-carousel-container {
+    margin-top: 8px;
+  }
+
+  .tk-carousel-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    // 中文注释：固定高度，不使用 max-height，防止翻页时高度变化
+    height: calc(80px * var(--items-per-page, 5) + 10px * (var(--items-per-page, 5) - 1));
+    overflow: hidden;
+
+    // 中文注释：当记录数量不满足 limit 时，使用自适应高度
+    &.auto-height {
+      height: auto;
+      overflow: visible;
+    }
+  }
+
+  // 每一项赞赏记录样式
+  .tk-sponsor-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-radius: 10px;
+    background: var(--item-bg-color, var(--card-bg));
+    padding: 12px;
+    // 中文注释：移除高度限制，让item根据内容自适应
+    opacity: 1;
+    transform: translateX(0);
+    border: 1px solid var(--border-color);
+    flex-shrink: 0; // 中文注释：不被压缩
+
+    // 中文注释：切换动画状态
+    &.animating {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+    }
+
+    &.fade-out {
+      opacity: 0;
+      transform: translateX(-12px) scale(0.98);
+      transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+      pointer-events: none;
+    }
+
+    &.fade-in {
+      animation: sponsorFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    &.fade-in-prepare {
+      opacity: 0;
+      transform: translateX(12px) scale(0.98);
+    }
+
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-color: var(--primary-color);
+    }
+  }
+
+  // 左侧信息区域
+  .tk-sponsor-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .tk-sponsor-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 4px;
+
+    strong {
+      color: var(--primary-color);
+    }
+  }
+
+  .tk-sponsor-msg {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    word-break: break-word;
+    // 中文注释：限制显示1行，超过20字显示省略号
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  // 右侧元数据（时间+金额）
+  .tk-sponsor-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    margin-left: 12px;
+    min-width: 90px;
+  }
+
+  .tk-sponsor-time {
+    font-size: 11px;
+    color: var(--text-secondary);
+    opacity: 0.8;
+  }
+
+  .tk-sponsor-amount {
+    font-weight: bold;
+    color: #2563eb;
+    margin-top: 4px;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+  // 空状态
+  .tk-sponsor-empty {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+    padding: 60px 20px; // 增加内边距，确保空状态有足够高度
+    opacity: 0.7;
+    min-height: 120px; // 空状态最小高度
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// 中文注释：赞赏项淡入动画关键帧
+@keyframes sponsorFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateX(12px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+// 移动端适配
+@media (max-width: 768px) {
+  .tk-sponsors-card {
+    .tk-sponsor-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .tk-sponsor-meta {
+      align-items: flex-start;
+      text-align: left;
+      margin-left: 0;
+      margin-top: 8px;
+      flex-direction: row;
+      gap: 12px;
+    }
+
+    .tk-sponsor-time {
+      order: 2;
+    }
+
+    .tk-sponsor-amount {
+      order: 1;
+      margin-top: 0;
+    }
+  }
+}

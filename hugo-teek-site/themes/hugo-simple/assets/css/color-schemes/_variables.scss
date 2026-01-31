@@ -1,0 +1,68 @@
+// ========================================
+// 配色方案公共变量定义
+// ========================================
+
+// 方案1: 纯白/纯黑（高对比）
+$scheme-pure-light-bg: #ffffff;
+$scheme-pure-light-bg-secondary: #f8f9fa;
+$scheme-pure-light-text: #000000;
+$scheme-pure-light-text-secondary: #333333;
+$scheme-pure-light-border: #e0e0e0;
+
+$scheme-pure-dark-bg: #000000;
+$scheme-pure-dark-bg-secondary: #0a0a0a;
+$scheme-pure-dark-text: #ffffff;
+$scheme-pure-dark-text-secondary: #cccccc;
+$scheme-pure-dark-border: #1a1a1a;
+
+// 方案2: 暖色调（米色/深棕）
+$scheme-warm-light-bg: #faf9f6;
+$scheme-warm-light-bg-secondary: #f5f2ed;
+$scheme-warm-light-text: #2c2416;
+$scheme-warm-light-text-secondary: #5c4a2a;
+$scheme-warm-light-border: #e8dfd0;
+
+$scheme-warm-dark-bg: #1a1612;
+$scheme-warm-dark-bg-secondary: #252018;
+$scheme-warm-dark-text: #f5f2ed;
+$scheme-warm-dark-text-secondary: #d4c9b8;
+$scheme-warm-dark-border: #3a3228;
+
+// 方案3: 冷色调（淡蓝/深蓝）
+$scheme-cool-light-bg: #f0f4f8;
+$scheme-cool-light-bg-secondary: #e1e8ed;
+$scheme-cool-light-text: #0f1419;
+$scheme-cool-light-text-secondary: #3c4858;
+$scheme-cool-light-border: #cbd6e2;
+
+$scheme-cool-dark-bg: #0f1419;
+$scheme-cool-dark-bg-secondary: #1a1f2e;
+$scheme-cool-dark-text: #e1e8ed;
+$scheme-cool-dark-text-secondary: #b8c5d0;
+$scheme-cool-dark-border: #2a3441;
+
+// 方案4: 护眼色（淡绿/深灰绿）
+$scheme-eye-light-bg: #f5f9f0;
+$scheme-eye-light-bg-secondary: #ebf3e0;
+$scheme-eye-light-text: #1a1f1a;
+$scheme-eye-light-text-secondary: #3d4a3d;
+$scheme-eye-light-border: #d4e5c4;
+
+$scheme-eye-dark-bg: #1a1f1a;
+$scheme-eye-dark-bg-secondary: #232a23;
+$scheme-eye-dark-text: #ebf3e0;
+$scheme-eye-dark-text-secondary: #c5d9b5;
+$scheme-eye-dark-border: #334433;
+
+// 方案5: 默认色（浅灰蓝/深灰蓝）
+$scheme-default-light-bg: #f8fafc;
+$scheme-default-light-bg-secondary: #f1f5f9;
+$scheme-default-light-text: #0f172a;
+$scheme-default-light-text-secondary: #475569;
+$scheme-default-light-border: #e2e8f0;
+
+$scheme-default-dark-bg: #1e293b;
+$scheme-default-dark-bg-secondary: #0f172a;
+$scheme-default-dark-text: #f1f5f9;
+$scheme-default-dark-text-secondary: #cbd5e1;
+$scheme-default-dark-border: #334155;

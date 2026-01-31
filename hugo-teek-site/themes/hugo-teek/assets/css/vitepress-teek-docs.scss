@@ -1,0 +1,2154 @@
+// ========================================
+// 文档标题锚点偏移（避免被导航栏遮挡）
+// ========================================
+.tk-doc-content,
+.vp-doc,
+.VPDoc,
+.content-container {
+  h1, h2, h3, h4, h5, h6 {
+    scroll-margin-top: calc(var(--vp-nav-height, 64px) + var(--vp-layout-top-height, 0px) + 120px);
+  }
+  
+  // 📸 文章图片样式 - 重构文档落地页的图片样式，避免父级影响
+  img,
+  .docs-article__body img { // ◀️ 确保覆盖docs.css中的图片样式
+    display: block;
+    margin: 16px auto; // ◀️ 增加上下间距
+    border: none; // ◀️ 彻底移除边框，确保没有白色边框
+    outline: none; // ◀️ 初始状态没有轮廓线
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), // ◀️ 上下左右添加阴影色
+                0 -4px 12px rgba(0, 0, 0, 0.15),
+                4px 0 12px rgba(0, 0, 0, 0.15),
+                -4px 0 12px rgba(0, 0, 0, 0.15) ;
+    transition: all 0.2s ease-out; // ◀️ 使用更平滑的过渡曲线
+    width: auto; // ◀️ 确保宽度自适应
+    height: auto; // ◀️ 确保高度自适应
+    padding: 0; // ◀️ 移除内边距
+    box-sizing: border-box; // ◀️ 确保边框和内边距包含在尺寸内
+    position: relative; // ◀️ 确保定位正常
+    z-index: 1; // ◀️ 确保图片在正常层级
+    border-radius: 9px; // ◀️ 添加圆角
+  }
+  
+  // 🎨 全局图片样式悬停效果 - 显示边框，移除阴影
+  img:hover,
+  .docs-article__body img:hover { // ◀️ 确保覆盖docs.css中的图片悬停样式
+    border: none !important; // ◀️ 保持无边框
+    box-shadow: none !important; // ◀️ 悬停时移除阴影
+    outline: 2px solid #3364ea !important; // ◀️ 悬停时使用outline显示边框，outline不影响布局
+    z-index: 2 !important; // ◀️ 悬停时提高层级
+    border-top-left-radius: 9px !important; // ◀️ 左上角圆角
+    border-top-right-radius: 9px !important; // ◀️  右上角圆角
+    border-bottom-left-radius: 9px !important; // ◀️ 左下角圆角
+    border-bottom-right-radius: 9px !important; // ◀️ 右下角圆角
+  }
+  
+  // 🌆 暗色模式下的全局图片样式
+  .dark-mode img,
+  .dark-mode .docs-article__body img { // ◀️ 确保覆盖docs.css中的暗色模式图片样式
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15), // ◀️ 添加阴影色
+                0 -4px 12px rgba(255, 255, 255, 0.15),
+                4px 0 12px rgba(255, 255, 255, 0.15),
+                -4px 0 12px rgba(255, 255, 255, 0.15) !important;
+  }
+  
+  // 🌆 暗色模式下的全局图片样式悬停效果
+  .dark-mode img:hover,
+  .dark-mode .docs-article__body img:hover { // ◀️ 确保覆盖docs.css中的暗色模式图片悬停样式
+    border: none !important; // ◀️ 保持无边框
+    outline: 2px solid #a855f7 !important; // ◀️ 暗色模式下悬停使用outline显示边框
+    box-shadow: none !important; // ◀️ 悬停时移除阴影
+    border-top-left-radius: 8px !important; // ◀️ 左上角圆角
+    border-top-right-radius: 8px !important; // ◀️ 右上角圆角
+    border-bottom-left-radius: 8px !important; // ◀️ 左下角圆角
+    border-bottom-right-radius: 8px !important; // ◀️ 右下角圆角
+  }
+}
+
+// 确保所有图片容器都允许阴影显示
+.tk-doc-content,
+.vp-doc,
+.VPDoc,
+.content-container,
+.content,
+.post-content {
+  overflow: visible !important; // ◀️ 允许内容溢出，确保图片阴影显示
+  max-width: 100% !important;
+}
+
+// 确保图片父级元素都允许阴影显示
+.tk-doc-content > *, 
+.vp-doc > *, 
+.VPDoc > *, 
+.content-container > *, 
+.content > *, 
+.post-content > * {
+  overflow: visible !important; // ◀️ 允许所有子元素溢出，确保图片阴影显示
+}
+
+// 全局标题锚点偏移
+:target {
+  scroll-margin-top: calc(var(--vp-nav-height, 64px) + var(--vp-layout-top-height, 0px) + 120px);
+  // 禁用浏览器默认的:target闪烁高亮效果
+  animation: none !important;
+}
+
+// 禁用标题高亮闪烁动画
+.tk-article-heading-highlight {
+  animation: none !important;
+}
+
+.tk-doc-pagination {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.tk-doc-pagination__item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 20px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 16px;
+  background: var(--vp-c-bg-alt);
+  color: var(--vp-c-text-1);
+  text-decoration: none;
+  box-shadow: var(--vp-shadow-1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.tk-doc-pagination__item:hover {
+  transform: translateY(-2px);
+  border-color: var(--tk-theme-color);
+  box-shadow: var(--vp-shadow-2);
+}
+
+.tk-doc-pagination__label {
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.tk-doc-pagination__title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--vp-c-text-1);
+}
+
+.tk-article-share {
+  padding: 0 0 14px 0;
+  margin-bottom: 14px;
+
+  // 移动端隐藏分享按钮
+  @media (max-width: 960px) {
+    display: none;
+  }
+}
+
+.tk-article-share__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 7px 14px;
+  border-radius: 14px;
+  background: var(--vp-c-bg-alt);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tk-theme-color);
+  width: 100%;
+  z-index: 1;
+  text-align: center;
+}
+
+.tk-article-share__button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: var(--vp-c-brand-soft);
+  transition: left 0.4s ease;
+  z-index: -1;
+}
+
+.tk-article-share__button:hover {
+  background: var(--vp-c-brand-soft);
+  border-color: var(--vp-c-brand-soft);
+  transform: translateY(-1px);
+}
+
+.tk-article-share__button:active {
+  transform: scale(0.9);
+}
+
+.tk-article-share__button .share-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+  fill: currentColor;
+  flex-shrink: 0;
+  margin-right: 6px;
+}
+
+
+.tk-article-share__button.copied {
+  background: var(--vp-c-brand-soft);
+  color: var(--tk-theme-color);
+}
+
+.tk-article-share__button.copied::before {
+  left: 0;
+  background-color: var(--vp-c-brand-soft);
+}
+
+.tk-article-share__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: currentColor;
+}
+
+.tk-article-share__label--copied {
+  display: none;
+}
+
+.tk-article-share__button.copied .tk-article-share__label--default {
+  display: none;
+}
+
+.tk-article-share__button.copied .tk-article-share__label--copied {
+  display: flex;
+}
+
+// ========================================
+// tk-doc-header - 文档头部区域
+// ========================================
+.tk-doc-header {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; // ◀️ 组件内部间距，缩小最后更新区域与其他元素的距离
+  margin-bottom: 5px; // ◀️ 整体底部外边距
+  padding-bottom: 12px;
+  // border-bottom: 1px solid var(--vp-c-divider); // 已移除下分割线
+}
+
+// 第一行：面包屑 + 元信息
+.tk-doc-header__info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+// 文章标题
+.tk-doc-header__title {
+  margin: 0;
+  padding: 0;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--vp-c-text-1);
+  word-break: break-word;
+}
+
+// 标签显示
+.tk-doc-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+
+  .tk-doc-tags__icon {
+    flex-shrink: 0;
+    color: var(--vp-c-text-2);
+    opacity: 0.8;
+  }
+
+  .tk-doc-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--vp-c-bg-soft, rgba(8, 145, 178, 0.08));
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--vp-c-brand-1, var(--primary-color));
+    text-decoration: none;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+
+    &:hover {
+      background: var(--vp-c-brand-1, var(--primary-color));
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(8, 145, 178, 0.25);
+    }
+  }
+}
+
+// 暗色模式适配
+.dark-mode .tk-doc-header {
+  border-bottom-color: rgba(84, 84, 88, 0.48);
+}
+
+.dark-mode .tk-doc-header__title {
+  color: var(--vp-c-text-1);
+}
+
+.dark-mode .tk-doc-tags {
+  .tk-doc-tags__icon {
+    color: var(--vp-c-text-2);
+  }
+
+  .tk-doc-tag {
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--vp-c-brand-1, #38bdf8);
+
+    &:hover {
+      background: var(--vp-c-brand-1, #38bdf8);
+      color: #0f172a;
+      box-shadow: 0 2px 12px rgba(56, 189, 248, 0.4);
+    }
+  }
+}
+
+// 响应式优化
+@media (max-width: 960px) {
+  .tk-doc-header {
+    gap: 16px;
+  }
+
+  .tk-doc-header__info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .tk-doc-header__title {
+    font-size: 28px;
+  }
+
+  .tk-doc-tags {
+    margin-top: 12px;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tk-doc-header {
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .tk-doc-header__title {
+    font-size: 24px;
+  }
+
+  .tk-doc-tags {
+    margin-top: 10px;
+
+    .tk-doc-tag {
+      padding: 3px 10px;
+      font-size: 12px;
+      border-radius: 10px;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .tk-doc-header {
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+  }
+
+  .tk-doc-header__title {
+    font-size: 22px;
+  }
+
+  .tk-doc-tags {
+    margin-top: 8px;
+    gap: 5px;
+
+    .tk-doc-tags__icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    .tk-doc-tag {
+      padding: 2px 8px;
+      font-size: 11px;
+    }
+  }
+}
+
+.VPSidebar {
+  position: relative;
+  background: var(--vp-c-bg);
+  // border-right 已移除，视觉更简洁
+  padding: 24px 12px 40px 16px;
+  overflow-y: auto;
+  overflow-x: visible;  // 改为 visible，让拖拽手柄可以显示在右侧边框外
+  // 主题切换丝滑过渡
+  transition:
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // 性能优化：overscroll-behavior 已移至移动端样式中
+}
+
+// ========================================
+// 侧边栏折叠按钮样式
+// ========================================
+.sidebar-header {
+  position: relative;
+  margin-bottom: 16px;
+  padding: 0 10px;
+}
+
+.sidebar-toggle-btn {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: var(--vp-c-bg-alt);
+  color: var(--vp-c-text-1);
+  transition:
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease;
+  will-change: transform;
+  z-index: 10;
+
+  &:hover {
+    background: var(--vp-c-brand-soft);
+    color: var(--vp-c-brand-1);
+    transform: scale(1.12) translateY(-1px);
+    box-shadow: 0 4px 12px rgba(8, 145, 178, 0.2);
+  }
+
+  &:active, &.active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 6px rgba(8, 145, 178, 0.15);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+    // 移除旋转动画
+  }
+}
+
+// 移除折叠状态下SVG的旋转
+// body.sidebar-collapsed .sidebar-toggle-btn svg {
+//   transform: rotate(180deg);
+//   transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+// }
+
+// ========================================
+// 侧边栏折叠状态
+// ========================================
+body.sidebar-collapsed {
+  .VPDoc.has-sidebar .container > .VPSidebar {
+    width: 60px !important;
+    overflow: visible !important;  // 改为 visible，确保折叠按钮不被裁剪
+    // ❌ 移除 transform，因为它会创建新的包含块，导致内部 position: fixed 失效
+
+    // 添加整体轻微缩放效果
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.02) 80%);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
+
+    .sidebar-header {
+      margin-bottom: 0;
+      width: 60px !important;  // 改为 60px，与外层容器一致
+      left: 0 !important;  // 确保左对齐
+      z-index: 101 !important;  // 确保在最上层
+      overflow: visible !important;  // 确保按钮不被裁剪
+    }
+
+    .sidebar-toggle-btn {
+      right: 14px;  // 保持在容器内
+    }
+
+    // 压缩导航树和 curtain 阴影 - 弹性动画，增强自然感
+    .nav,
+    .curtain {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: scaleX(0.5) translateX(-20px);
+      transform-origin: left center;
+      transition:
+        opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+        visibility 0s 0.4s;
+    }
+  }
+
+  .VPDoc.has-sidebar .container > .content {
+    flex: 1;
+    min-width: 0;
+    margin-left: 20px;  // 保持与侧边栏的间距
+  }
+
+  .VPDoc.has-sidebar .container > .content .content-container {
+    max-width: 100% !important; // 折叠时充分利用可用宽度
+  }
+
+  // 右侧TOC保持稳定，不随折叠变化
+  .VPDoc .aside {
+    // 移除所有动画
+  }
+}
+
+// 响应式适配
+@media (min-width: 1280px) {
+  body.sidebar-collapsed {
+    .VPDoc .aside {
+      // 移除padding-left变化，保持稳定
+    }
+
+    // ⚡ 关键修复：折叠状态下，侧边栏外层容器必须缩小到60px
+    .VPDoc.has-sidebar .container > .VPSidebar {
+      flex: 0 0 60px !important;  // 覆盖强制优先级块的 flex-basis
+      width: 60px !important;
+    }
+
+    .VPDoc.has-sidebar .container > .content {
+      flex: 1 1 auto !important;  // 确保使用 !important 覆盖
+      min-width: 0 !important;
+      margin-left: 20px;  // 保持与侧边栏的间距
+    }
+
+    .VPDoc.has-sidebar .container > .content .content-container {
+      max-width: 100% !important; // 折叠时充分利用可用宽度
+    }
+
+    // 同步 .nav 的宽度变化（虽然已经被隐藏，但保持一致）
+    .VPSidebar .nav {
+      width: calc(60px - 28px);  // 与外层的 60px 保持同步
+    }
+
+    // 折叠按钮的 header 容器确保可见
+    .VPSidebar .sidebar-header {
+      overflow: visible !important;  // 确保按钮不被裁剪
+    }
+  }
+}
+
+// 超大屏幕（≥1440px）：折叠时把侧边栏省出的宽度完全让给文章容器
+@media (min-width: 1440px) {
+  // 展开状态：容器充满整个视口（已移除居中布局）
+
+  // 折叠状态：正文宽度自动扩展以利用释放的空间
+  body.sidebar-collapsed {
+    // .VPContent.has-sidebar {
+    //   无需额外调整，保持全宽布局
+    // }
+
+    // ⚡ 关键修复：折叠状态下，侧边栏外层容器必须缩小到60px
+    .VPDoc.has-sidebar .container > .VPSidebar {
+      flex: 0 0 60px !important;  // 覆盖强制优先级块的 flex-basis
+      width: 60px !important;
+    }
+
+    .VPDoc.has-sidebar .container > .content {
+      flex: 1 1 auto !important;  // 确保使用 !important 覆盖
+      min-width: 0 !important;
+      margin-left: 20px;  // 保持与侧边栏的间距
+    }
+
+    .VPDoc.has-sidebar .container > .content .content-container {
+      // 折叠时充分利用可用宽度
+      max-width: 100% !important;
+    }
+  }
+}
+
+// 丝滑弹性过渡动画 - 使用弹性缓动函数 + 硬件加速
+.VPContent.has-sidebar {
+  transition:
+    padding-left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    padding-right 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+  will-change: padding-left, padding-right;
+}
+
+.VPDoc.has-sidebar .container > .VPSidebar {
+  transition:
+    width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    // ❌ 移除 transform 过渡，因为 transform 会创建新的包含块
+  will-change: width;  // 移除 transform
+}
+
+.VPDoc.has-sidebar .container > .content {
+  transition:
+    margin-left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    max-width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: margin-left, max-width;
+}
+
+// 正文容器宽度过渡 - 已禁用（即时切换）
+.VPDoc.has-sidebar .container > .content .content-container {
+  transition: none !important; // 禁用所有过渡，实现即时切换
+  // 移除will-change和硬件加速优化，不再需要
+}
+
+// 右侧TOC保持稳定，移除所有过渡动画
+// .VPDoc .aside {
+//   不添加任何过渡效果
+// }
+
+// 展开状态下 curtain 和 nav 正常显示（带分阶段淡入动画）
+.VPDoc.has-sidebar .container > .VPSidebar .curtain {
+  transform: scaleX(1) translateX(0);
+  transform-origin: left center;
+  transition:
+    opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s,
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s,
+    visibility 0s 0s;
+}
+
+.VPDoc.has-sidebar .container > .VPSidebar .nav {
+  transform: scaleX(1) translateX(0);
+  transform-origin: left center;
+  transition:
+    opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.08s,
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s,
+    visibility 0s 0s;
+}
+
+.VPDoc.has-sidebar .container {
+  display: flex !important;  // 确保flex布局
+  flex-direction: row !important;  // 确保横向排列
+  width: 100% !important;
+  overflow-x: hidden !important;  // 防止横向滚动条
+  // 移除最大宽度限制，让容器充满整个视口
+  // max-width: 1440px;
+  // 移除居中对齐，让容器贴近左侧
+  // margin: 0 auto;
+  // 移除左右 padding，只保留上下边距
+  padding: 32px 0 72px 0 !important;  // 使用 !important 确保覆盖其他样式
+  position: relative;
+  align-items: stretch !important;  // 确保所有子元素拉伸到相同高度
+}
+
+.VPDoc.has-sidebar .container > .VPSidebar {
+  position: relative;  // 外层占位容器（与右侧 TOC 的 .aside 一致）
+  width: var(--sidebar-width, 300px);
+  flex-shrink: 0;  // 防止被压缩
+  align-self: flex-start;  // 顶部对齐
+  overflow-x: hidden;  // 防止sidebar内容横向溢出
+  z-index: 10;
+}
+
+// 左侧侧边栏拖拽手柄（在右边框）- 完全镜像右侧 TOC 样式
+.sidebar-resize-handle {
+  position: absolute !important;  // 相对于 .nav (fixed容器) 定位
+  right: -4px !important;  // 往右偏移4px，避免与折叠按钮重叠
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 4px !important;
+  cursor: col-resize !important;
+  background: transparent;  // 默认透明，只有 hover 时才显示
+  transition: background 0.2s ease;
+  z-index: 100 !important;  // 提高层级确保可以点击
+
+  // Hover 状态：变成品牌色
+  &:hover {
+    background: var(--vp-c-brand-1, var(--primary-color));
+  }
+
+  // 拖拽状态：品牌色
+  &.dragging {
+    background: var(--vp-c-brand-1, var(--primary-color));
+  }
+
+  // 伪元素扩大可点击区域
+  &::before {
+    content: '';
+    position: absolute;
+    right: -2px;  // 向右扩展，镜像 TOC 的 left: -2px
+    top: 0;
+    bottom: 0;
+    width: 8px;  // 与 TOC 保持一致
+  }
+}
+
+
+.VPDoc.has-sidebar .container > .content {
+  flex: 1 1 auto !important;  // 允许伸缩
+  min-width: 0 !important;  // 关键：允许flex子元素收缩到0
+  margin-left: 0px !important;  // 与左侧侧边栏的间距
+  overflow: hidden !important;  // 防止内容溢出
+}
+
+.VPDoc.has-sidebar .container > .content .content-container {
+  max-width: 100% !important;  // 充分利用可用空间
+  width: 100% !important;  // 确保填满父元素
+  margin: 0 !important;
+  box-sizing: border-box !important;  // 确保padding计入宽度
+  // 默认展开状态，无缩放
+  transform: scale(1) translateX(0);
+}
+
+// ========================================
+// Visual Enhancements
+// ========================================
+
+// Card-style content with subtle shadow
+.VPDoc.has-sidebar .container > .content .content-container {
+  background: var(--vp-c-bg);
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.06),
+    0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: 
+    box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1); // 主题切换过渡
+
+  &:hover {
+    box-shadow:
+      0 4px 12px rgba(15, 23, 42, 0.08),
+      0 2px 4px rgba(15, 23, 42, 0.05);
+  }
+}
+
+.dark-mode .VPDoc.has-sidebar .container > .content .content-container {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.08);
+
+  &:hover {
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.18),
+      0 2px 4px rgba(0, 0, 0, 0.12);
+  }
+}
+
+// Glassmorphism effect for TOC
+@media (min-width: 1280px) {
+  .VPDoc.has-sidebar .aside .aside-container {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 12px;
+    padding: 20px 8px;
+    margin-right: 20px;
+    // 主题切换丝滑过渡
+    transition:
+      background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      backdrop-filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark-mode .VPDoc.has-sidebar .aside .aside-container {
+    background: var(--vp-c-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  // Subtle gradient separator between content and TOC
+  .VPDoc.has-sidebar .container > .content::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(148, 163, 184, 0.1) 20%,
+      rgba(148, 163, 184, 0.15) 50%,
+      rgba(148, 163, 184, 0.1) 80%,
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  .dark-mode .VPDoc.has-sidebar .container > .content::after {
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(255, 255, 255, 0.08) 20%,
+      rgba(255, 255, 255, 0.12) 50%,
+      rgba(255, 255, 255, 0.08) 80%,
+      transparent
+    );
+  }
+
+  // Scroll shadow indicator for aside
+  .VPDoc.has-sidebar .aside .aside-container::before {
+    content: '';
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(
+      to bottom,
+      var(--vp-c-bg),
+      transparent
+    );
+    pointer-events: none;
+    z-index: 5;
+    margin: -20px -16px 0;
+  }
+}
+
+.dark-mode .VPSidebar {
+  background: var(--vp-c-bg);
+  // border-right 已移除，视觉更简洁
+  // 继承主题切换过渡
+}
+
+.VPSidebar .nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+// 桌面端：内层fixed容器（完全镜像右侧 TOC 的实现）
+@media (min-width: 1280px) {
+  // ========================================
+  // 强制样式优先级（覆盖迁移的老样式）
+  // ========================================
+
+  // ⚡ 关键修复：完全覆盖 _vp-doc-layout.scss 中的包含块属性
+  .VPSidebar {
+    position: relative !important;  // 覆盖移动端的 position: fixed
+    overflow: visible !important;   // 覆盖 overflow-y: auto，防止创建滚动上下文
+    transform: none !important;     // 覆盖 transform: translateX(0)，防止创建包含块
+  }
+
+  // ⚡ 关键修复：移除 .nav 的 transform，防止创建包含块
+  .VPDoc.has-sidebar .container > .VPSidebar .nav {
+    transform: none !important;  // 移除 transform，让 position: fixed 生效
+  }
+
+  // 确保三栏布局的flex配置正确
+  .VPDoc.has-sidebar .container {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+  }
+
+  // 左侧侧边栏：固定宽度，不伸缩
+  .VPDoc.has-sidebar .container > .VPSidebar {
+    flex: 0 0 var(--sidebar-width, 300px) !important;
+    width: var(--sidebar-width, 300px) !important;
+    min-width: 200px !important;
+    max-width: 600px !important;
+  }
+
+  // 中间内容区：自动伸缩（关键！）
+  .VPDoc.has-sidebar .container > .content {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  // 右侧TOC：固定宽度，不伸缩
+  .VPDoc.has-sidebar .container .aside {
+    display: block !important;  // 确保在大屏幕上显示 TOC
+    flex: 0 0 var(--toc-width, 256px) !important;
+    width: var(--toc-width, 256px) !important;
+  }
+
+  // 外层容器：position: relative，作为占位容器（与右侧 .aside 一致）
+  .VPDoc.has-sidebar .container > .VPSidebar {
+    position: relative;
+    overflow: visible !important;  // ✅ 关键修复：移除滚动上下文，让内部 position: fixed 生效
+    width: var(--sidebar-width, 300px);
+    max-width: 600px;
+    min-width: 200px;
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  // 折叠按钮固定在顶部
+  .VPSidebar .sidebar-header {
+    position: fixed !important;  // 强制固定定位
+    top: calc(var(--vp-nav-height) + 24px) !important;
+    left: 0 !important;  // 硬编码，依赖容器左padding为0
+    width: calc(var(--sidebar-width, 300px) - 8px) !important;
+    z-index: 101 !important;  // 在 .nav 之上
+    background: var(--vp-c-bg);
+    padding: 0 10px;
+    margin: 0;
+  }
+
+  // 导航容器：position: fixed（镜像右侧 .aside-container 的实现）
+  .VPSidebar .nav,
+  .VPSidebar .simple-sidebar {
+    position: fixed !important;  // 强制固定在视口，实现滚动时固定效果
+    top: var(--vp-nav-height) !important;  // 从导航栏底部开始
+    left: 0 !important;  // 硬编码，依赖容器左padding为0（右侧TOC同样不动态设置right）
+    padding-top: 12px;  // 顶部间距（simple-sidebar__header 已有自己的高度）
+    height: calc(100vh - var(--vp-nav-height)) !important;  // 占满导航栏以下的视口高度
+    width: calc(var(--sidebar-width, 300px) - 28px) !important;  // 减去左右padding (12px + 16px)
+    overflow-y: auto;  // 允许内容滚动
+    overflow-x: hidden;
+    scrollbar-width: none;  // 隐藏滚动条
+    background: transparent;  // 透明背景
+  }
+
+  .VPSidebar .nav::-webkit-scrollbar,
+  .VPSidebar .simple-sidebar::-webkit-scrollbar {
+    display: none;  // 隐藏webkit滚动条
+  }
+}
+
+.VPSidebar .group {
+  padding: 6px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.VPSidebarItem {
+  width: 100%;
+}
+
+.VPSidebarItem .item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 6px;
+  color: var(--vp-c-text-2);
+  transition: 
+    all 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), // 主题切换过渡
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1); // 主题切换过渡
+  cursor: pointer;
+  position: relative;
+  line-height: 1.5;
+}
+
+.VPSidebarItem.level-0 > .item {
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+  padding: 10px 12px;
+  margin-bottom: 2px;
+}
+
+.VPSidebarItem.level-1 > .item {
+  padding: 7px 12px;
+}
+
+.VPSidebarItem.level-2 > .item {
+  padding: 6px 10px;
+}
+
+.VPSidebarItem.level-0 > .items {
+  margin-top: 4px;
+  padding-left: 10px;  /* VitePress 原版间距 */
+}
+
+.VPSidebarItem .item:hover {
+  background: rgba(66, 133, 244, 0.1);
+  color: var(--vp-c-text-1);
+  /* transform 已移除 - 只保留背景色和阴影效果，避免点击后元素向右移动 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.dark-mode .VPSidebarItem .item:hover {
+  background: rgba(96, 165, 250, 0.12);
+  color: var(--vp-c-text-1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.VPSidebarItem .item .indicator {
+  width: 3px;
+  border-radius: 999px;
+  align-self: stretch;
+  background: transparent;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);  // ✅ 所有属性，弹性动画
+}
+
+/* 当前激活页面的高亮样式 */
+/* 只高亮真正选中的文章（is-link），不高亮父级文件夹 */
+.VPSidebarItem.is-link .item.is-active {
+  color: var(--vp-c-text-1);
+  font-weight: 600;
+}
+
+/* 🔧 增强修复：彻底禁止text元素位移效果（同时覆盖is-active和hover状态） */
+.VPSidebarItem.is-link .item.is-active .text,
+.VPSidebarItem .item.is-active .text,
+.VPSidebarItem.is-link .item:hover .text,
+.VPSidebarItem.is-link .item.is-active:hover .text {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  transform: none !important;
+}
+
+/* 激活文章的左侧蓝色指示条 - 已禁用 */
+.VPSidebarItem.is-link .item.is-active .indicator {
+  background: transparent;
+  box-shadow: none;
+}
+
+/* 暗色模式下的激活文章指示条 - 已禁用 */
+.dark-mode .VPSidebarItem.is-link .item.is-active .indicator {
+  background: transparent;
+  box-shadow: none;
+}
+
+.VPSidebarItem .VPLink {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.VPSidebarItem .text {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  flex: 1;
+  font-weight: 400;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+/* VitePress Teek 原版选择器 - 完全复刻 */
+.VPSidebar .nav .item h2.text {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+.VPSidebar .nav .item h3.text {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+.VPSidebar .nav .item p.text {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  /* transition 已移除 - 避免与 _sidebar.scss 中的 padding-left transition 冲突 */
+}
+
+/* 已移除 .text:hover 的 transform 样式，避免文本向右移动
+   如需hover效果，使用 _sidebar.scss 中的 padding-left 实现 */
+
+/* 确保所有子级标题不会太大 */
+.VPSidebarItem h2,
+.VPSidebarItem h3,
+.VPSidebarItem h4,
+.VPSidebarItem h5 {
+  font-size: inherit;
+  font-weight: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.VPSidebarItem.level-1 > .items,
+.VPSidebarItem.level-2 > .items {
+  padding-left: 20px;
+  border-left: 1px solid rgba(148, 163, 184, 0.3);
+  margin-left: 6px;
+}
+
+.sidebar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: inherit;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+/* 文件夹图标 - 黄色/橙色（参考语雀风格） */
+.sidebar-icon--folder {
+  color: #f7ba1e;
+  width: 16px;
+  height: 16px;
+}
+
+/* 文档图标 - 蓝色（参考语雀风格） */
+.sidebar-icon--doc {
+  width: 15px;
+  height: 15px;
+  color: #4a90e2;
+}
+
+/* Hover 状态图标颜色加深 */
+.VPSidebarItem .item:hover .sidebar-icon--folder,
+.VPSidebarItem .item.is-active .sidebar-icon--folder {
+  color: #f5a623;
+  transform: scale(1.1);
+}
+
+.VPSidebarItem .item:hover .sidebar-icon--doc,
+.VPSidebarItem .item.is-active .sidebar-icon--doc {
+  color: #357abd;
+  transform: scale(1.05);
+}
+
+/* 暗色模式下的图标颜色 */
+.dark-mode .sidebar-icon--folder {
+  color: #f5a623;
+}
+
+.dark-mode .sidebar-icon--doc {
+  color: #5b9bf8;
+}
+
+.VPSidebarItem .item:hover .text {
+  color: var(--vp-c-text-1);
+}
+
+/* 层级缩进 - 参考语雀的清晰层级 */
+.VPSidebarItem.level-1 > .items {
+  padding-left: 20px;
+  margin-left: 4px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border-left: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.VPSidebarItem.level-2 > .items {
+  padding-left: 20px;
+  margin-left: 4px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border-left: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+/* 不同层级的字体大小 */
+.VPSidebarItem.level-1 .text {
+  font-size: 14px;
+}
+
+.VPSidebarItem.level-2 .text {
+  font-size: 13px;
+}
+
+.VPSidebarItem.level-3 .text {
+  font-size: 12px;
+}
+
+/* 暗色模式下的层级线 */
+.dark-mode .VPSidebarItem.level-1 > .items {
+  border-left-color: rgba(148, 163, 184, 0.4);
+}
+
+.dark-mode .VPSidebarItem.level-2 > .items {
+  border-left-color: rgba(148, 163, 184, 0.3);
+}
+
+/* 折叠箭头 - 参考语雀的简洁风格 */
+.VPSidebarItem .caret {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  background: transparent;
+  color: rgba(148, 163, 184, 0.6);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.VPSidebarItem .caret-icon {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.VPSidebarItem .item:hover .caret {
+  background: rgba(148, 163, 184, 0.1);
+  color: rgba(74, 144, 226, 0.8);
+}
+
+/* 展开状态的箭头旋转 */
+.VPSidebarItem.expanded > .item .caret .caret-icon {
+  transform: rotate(90deg);
+}
+
+.VPSidebarItem.expanded > .item .caret {
+  color: rgba(74, 144, 226, 0.9);
+}
+
+/* 暗色模式下的箭头 */
+.dark-mode .VPSidebarItem .caret {
+  color: rgba(203, 213, 225, 0.5);
+}
+
+.dark-mode .VPSidebarItem .item:hover .caret {
+  background: rgba(148, 163, 184, 0.15);
+  color: rgba(91, 155, 248, 0.8);
+}
+
+.VPSidebarItem.collapsible {
+  margin-bottom: 4px;
+}
+
+.VPSidebarItem.collapsible .items {
+  overflow: hidden;
+  // 使用标准缓动曲线,避免中段停顿感
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease;
+  will-change: auto;  // 默认不启用硬件加速,节省内存
+}
+
+// 仅在动画期间启用 will-change (通过 JS 添加 .expanding 类)
+.VPSidebarItem.collapsible.expanding .items {
+  will-change: max-height, opacity;
+}
+
+.VPSidebarItem.collapsible .caret-icon {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: auto;  // 默认不启用硬件加速
+}
+
+.VPSidebarItem.collapsible.expanding .caret-icon {
+  will-change: transform;
+}
+
+.VPSidebarItem.collapsible.collapsed > .items {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  opacity: 0;
+}
+
+.VPSidebarItem.collapsible.expanded > .items {
+  max-height: 9999px;  /* 与 JavaScript 统一，确保多文件夹展开正常 */
+  margin-top: 6px;
+  opacity: 1;
+}
+
+.VPSidebarItem.collapsible.expanded .caret {
+  background: rgba(66, 133, 244, 0.18);
+  color: var(--tk-theme-color);
+}
+
+.VPSidebarItem.collapsible.expanded .caret-icon {
+  color: currentColor;
+}
+
+.VPSidebarItem.is-link .item {
+  cursor: pointer;
+}
+
+.VPSidebarItem.is-link .item:hover .indicator {
+  background: linear-gradient(180deg, rgba(66, 133, 244, 0.8), rgba(66, 133, 244, 0.45));
+}
+
+/* 已删除: .VPSidebarItem.is-link .item:hover p.text 的 transform 规则，避免hover时文本向右移动 */
+
+/* 已删除: .VPSidebarItem .item p.text 的 transition 定义，避免transform过渡动画 */
+
+
+.dark-mode .VPSidebarItem .item {
+  color: rgba(226, 232, 240, 0.75);
+}
+
+.VPSidebar .group:not(:last-child)::after {
+  content: "";
+  height: 1px;
+  width: calc(100% - 12px);
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.25), transparent);
+  margin: 16px auto 6px;
+  display: block;
+}
+
+.VPSidebarItem.level-0 > .item::before {
+  content: "";
+  position: absolute;
+  inset: 4px 10px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(66, 133, 244, 0.12), rgba(66, 185, 131, 0.08));
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: -1;
+}
+
+/* 只在 hover 时显示背景，不在 has-active 时显示（只高亮真正选中的文件） */
+.VPSidebarItem.level-0 > .item:hover::before {
+  opacity: 1;
+}
+
+.VPSidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.VPSidebar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 999px;
+}
+
+.dark-mode .VPSidebar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+}
+
+@keyframes tk-sidebar-glow {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.55;
+  }
+  to {
+    transform: translate3d(10px, 8px, 0);
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .VPSidebar,
+  .VPSidebar * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+.tk-catalogue {
+  display: block;
+}
+
+.tk-catalogue__header {
+  border-bottom: 1px solid var(--vp-c-divider);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.tk-catalogue__header .description {
+  margin-top: 12px;
+  color: var(--vp-c-text-2);
+}
+
+.tk-catalogue__wrapper .title {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.tk-catalogue__intro {
+  margin-bottom: 24px;
+}
+
+.section-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+  color: var(--vp-c-text-2);
+}
+
+// ========================================
+// tk-article-analyze - 文章元信息区域
+// ========================================
+.tk-article-analyze__wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+
+  // 图标通用样式
+  svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    vertical-align: -2px;
+    flex-shrink: 0;
+  }
+
+  // 内容元素
+  [data-doc-meta] {
+    color: var(--vp-c-text-2);
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+  }
+
+  // 链接 hover 效果
+  a {
+    transition: color 0.25s ease;
+
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+
+  // flex 容器内的元素
+  .flx-center {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+}
+
+// 暗色模式适配
+.dark-mode .tk-article-analyze__wrapper {
+  color: var(--vp-c-text-2);
+
+  [data-doc-meta] {
+    color: var(--vp-c-text-2);
+  }
+
+  a:hover {
+    color: var(--primary-color);
+  }
+}
+
+// 响应式优化
+@media (max-width: 768px) {
+  .tk-article-analyze__wrapper {
+    font-size: 13px;
+    gap: 10px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    [data-doc-meta] {
+      font-size: 13px;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .tk-article-analyze__wrapper {
+    gap: 8px;
+
+    // 在小屏幕上简化显示
+    .tk-article-info {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+// ========================================
+// tk-article-info - 文章信息优化
+// ========================================
+.tk-article-info {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+
+  &__icon {
+    vertical-align: -2px;
+  }
+
+  a {
+    text-decoration: none;
+    transition: color 0.25s ease;
+
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+}
+
+// 暗色模式
+.dark-mode .tk-article-info {
+  color: var(--vp-c-text-2);
+
+  a {
+    color: var(--vp-c-text-2);
+
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+}
+
+// ========================================
+// tk-breadcrumb - 面包屑导航优化
+// ========================================
+.tk-article-breadcrumb {
+  flex: 1 1 auto;
+  min-width: 0;
+
+  .tk-breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 14px;
+    line-height: 1.5;
+
+    &__item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    &__separator {
+      color: var(--vp-c-border);
+      margin: 0 4px;
+    }
+
+    &__home {
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.25s ease;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+
+    &__inner {
+      a {
+        font-weight: 500;
+        color: var(--vp-c-text-1);
+        text-decoration: none;
+        transition: color 0.25s ease;
+
+        &:hover {
+          color: var(--primary-color);
+        }
+      }
+
+      span {
+        color: var(--vp-c-text-2);
+        font-weight: 400;
+      }
+    }
+  }
+}
+
+// 暗色模式
+.dark-mode .tk-article-breadcrumb {
+  .tk-breadcrumb {
+    &__separator {
+      color: rgba(84, 84, 88, 0.48);
+    }
+
+    &__inner {
+      a {
+        color: var(--vp-c-text-1);
+
+        &:hover {
+          color: var(--primary-color);
+        }
+      }
+
+      span {
+        color: var(--vp-c-text-2);
+      }
+    }
+  }
+}
+
+// ========================================
+// tk-article-meta - 文章元信息样式
+// ========================================
+.tk-article-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+  margin-left: auto;
+  flex-shrink: 0;
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    position: relative;
+
+    &--expandable {
+      .tk-article-meta__categories,
+      .tk-article-meta__tags {
+        position: relative;
+      }
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+
+  &__categories {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  &__tags {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  &__more {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 2px 6px;
+    background: rgba(8, 145, 178, 0.1);
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--vp-c-text-2);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+
+    &:hover {
+      background: rgba(8, 145, 178, 0.2);
+      color: var(--primary-color);
+    }
+
+    &.active {
+      background: var(--primary-color);
+      color: white;
+    }
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: var(--vp-c-bg);
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    min-width: 120px;
+    max-width: 200px;
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+
+    &.show {
+      display: flex;
+    }
+  }
+
+  &__dropdown-item {
+    display: block;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--vp-c-text-1);
+    text-decoration: none;
+    font-size: 13px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(8, 145, 178, 0.1);
+      color: var(--primary-color);
+    }
+  }
+
+  &__sep {
+    margin: 0 4px;
+    opacity: 0.5;
+  }
+
+  .hover-color {
+    transition: color 0.25s ease;
+
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+}
+
+// 暗色模式
+.dark-mode .tk-article-meta {
+  color: var(--vp-c-text-2);
+
+  &__icon {
+    opacity: 0.7;
+  }
+
+  &__more {
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--vp-c-text-2);
+
+    &:hover {
+      background: rgba(56, 189, 248, 0.25);
+      color: var(--vp-c-brand-1, #38bdf8);
+    }
+
+    &.active {
+      background: var(--vp-c-brand-1, #38bdf8);
+      color: #0f172a;
+    }
+  }
+
+  .tk-article-meta__dropdown {
+    background: var(--vp-c-bg-elv);
+    border-color: var(--vp-c-divider);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .tk-article-meta__dropdown-item {
+    color: var(--vp-c-text-1);
+
+    &:hover {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--vp-c-brand-1, #38bdf8);
+    }
+  }
+}
+
+// 响应式
+@media (max-width: 960px) {
+  .tk-article-meta {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .tk-article-breadcrumb .tk-breadcrumb {
+    font-size: 13px;
+  }
+
+  .tk-article-meta {
+    font-size: 12px;
+    gap: 10px;
+
+    &__item {
+      gap: 3px;
+    }
+  }
+
+  .tk-article-info {
+    font-size: 13px;
+    gap: 10px;
+
+    &__item {
+      gap: 3px;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .tk-article-meta {
+    font-size: 11px;
+    gap: 8px;
+  }
+}
+
+/* 重复的折叠样式已移除，使用第505-538行的完整定义 */
+
+.docs-toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.92);
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  z-index: 1200;
+}
+
+.docs-toast--show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.docs-toast--success {
+  background: linear-gradient(120deg, #10b981, #0ea5e9);
+}
+
+.docs-toast--error {
+  background: linear-gradient(120deg, #f87171, #ef4444);
+}
+
+.docs-toast--warning {
+  background: linear-gradient(120deg, #fbbf24, #f97316);
+}
+
+/* 响应式优化 */
+@media (max-width: 1440px) {
+  .VPDoc.has-sidebar .container {
+    // 移除左右 padding，只保留上下边距
+    padding: 32px 0 72px 0 !important;  // 使用 !important 确保覆盖
+  }
+
+  .VPDoc.has-sidebar .container > .VPSidebar {
+    width: 280px;
+    left: 0;
+  }
+
+  .VPDoc.has-sidebar .container > .content {
+    margin-left: 20px;  // 与侧边栏的间距
+  }
+
+  .VPDoc.has-sidebar .container > .content .content-container {
+    max-width: 100%;  // 充分利用可用空间
+  }
+}
+
+@media (max-width: 1280px) {
+  .VPDoc.has-sidebar .container {
+    // 移除左右 padding，只保留上下边距
+    padding: 24px 0 60px 0 !important;  // 使用 !important 确保覆盖
+  }
+
+  .VPDoc.has-sidebar .container > .VPSidebar {
+    width: 260px;
+    left: 0;
+  }
+
+  .VPDoc.has-sidebar .container > .content {
+    margin-left: 20px;  // 与侧边栏的间距
+  }
+
+  .VPDoc.has-sidebar .container > .content .content-container {
+    max-width: 100%;  // 充分利用可用空间
+  }
+
+  .VPSidebar {
+    padding: 20px 10px 32px 12px;
+  }
+}
+
+@media (max-width: 960px) {
+  .VPDoc.has-sidebar .container {
+    padding: 20px 16px 48px 16px;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  // 移动端隐藏原来的桌面端侧边栏，改用底部抽屉
+  .VPDoc.has-sidebar .container > .VPSidebar {
+    display: none !important;
+  }
+
+  .VPDoc.has-sidebar .container > .content {
+    max-width: 100%;
+    margin-left: 0;
+    // padding-right: 0;
+    overflow-x: hidden;
+  }
+
+  .VPDoc.has-sidebar .container > .content .content-container {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .VPSidebarItem .item {
+    padding: 8px 10px;
+  }
+
+  .VPSidebarItem.level-0 > .item {
+    padding: 9px 10px;
+  }
+
+  // 强制所有内容不超出容器
+  .vp-doc,
+  .tk-doc-content {
+    max-width: 100%;
+    overflow-x: hidden;
+
+    > * {
+      max-width: 100%;
+    }
+  }
+}
+
+/* 锚点偏移 - 避免被导航栏遮挡 */
+.VPDoc h1[id],
+.VPDoc h2[id],
+.VPDoc h3[id],
+.VPDoc h4[id],
+.VPDoc h5[id],
+.VPDoc h6[id] {
+  scroll-margin-top: calc(var(--vp-nav-height) + 32px);
+}
+
+/* 确保平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
+// ========================================
+// 移动端适配样式
+// ========================================
+// 注意: mobile-fab, mobile-sidebar-drawer, mobile-toc-drawer, mobile-content-optimize
+// 已在 main.scss 中导入，此处删除避免重复
+@import 'mobile-sidebar-drawer';
+
+// ========================================
+// 移动端全局防溢出（最高优先级）
+// ========================================
+@media (max-width: 960px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  // 主容器严格限制宽度
+  .VPContent,
+  .VPDoc {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+// ========================================
+// 覆盖VitePress全局img样式
+// 确保导航栏头像正确显示为24px×24px
+// ========================================
+.VPNavBarTitle,
+.VPNavBar .title {
+  a.title img.blogger-avatar,
+  img.blogger-avatar {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    flex-shrink: 0 !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+  }
+}
+
+// ========================================
+// 文章内容即时显示（已禁用动画，实现Vue SPA效果）
+// ========================================
+.content-container {
+  // 移除淡入动画，内容即时显示
+  opacity: 1;
+  transform: none;
+
+  // 移除loaded类的动画效果
+  &.loaded {
+    // 无需动画，保持即时显示
+  }
+}
+
+// 淡入关键帧已移除（不再需要）
+
+// ========================================
+// 加载遮罩层 - 已禁用（Swup 接管页面过渡）
+// ========================================
+/*
+.page-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--vp-c-bg, #ffffff);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.5rem;
+  opacity: 1;
+  transition: opacity 0.15s ease-out;
+
+  &.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--vp-c-divider, rgba(60, 60, 67, 0.12));
+  border-top-color: var(--vp-c-brand-1, var(--primary-color));
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--vp-c-text-1, var(--text-color));
+  letter-spacing: 0.5px;
+
+  // 闪烁效果
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// 暗色模式适配
+.dark-mode .page-loading-overlay {
+  background: var(--vp-c-bg, #1a1a1a);
+}
+*/
+
+// ========================================
+// 页面过渡动画 - 丝滑淡入淡出效果
+// ========================================
+// 页面淡出效果
+.page-fade-out {
+  animation: pageFadeOut 0.25s cubic-bezier(0.4, 0, 1, 1) forwards;
+  pointer-events: none; // 淡出时禁用交互
+}
+
+// 页面淡入效果
+.page-fade-in {
+  animation: pageFadeIn 0.4s cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+// 淡出关键帧
+@keyframes pageFadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
+// 淡入关键帧 - 交叉淡入淡出方案
+@keyframes pageFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// 确保内容容器支持过渡
+.content-container,
+.tk-vp-container,
+.vp-doc {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}

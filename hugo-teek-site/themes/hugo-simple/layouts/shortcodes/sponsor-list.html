@@ -1,0 +1,24 @@
+<!-- 简化版 sponsor-list shortcode for hugo-simple theme -->
+<div style="margin: 2rem 0;">
+  <h2 style="margin-bottom: 1rem;">打赏名单</h2>
+  <p style="color: #666; margin-bottom: 1.5rem;">
+    感谢各位大佬的打赏，因为你们，让我感受到开发项目的价值。很高兴这些项目能够帮助到你们，你们的打赏会让我在这条路上走得更远。
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+    {{ range .Site.Data.sponsors.sponsors }}
+    <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; background: #fafafa;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+        <strong style="font-size: 1.1rem;">{{ .name }}</strong>
+        <span style="color: #e74c3c; font-weight: bold;">¥{{ .amount }}</span>
+      </div>
+      <div style="color: #999; font-size: 0.9rem; margin-bottom: 0.5rem;">{{ .date }}</div>
+      {{ if .message }}
+      <div style="color: #555; font-size: 0.95rem; font-style: italic; padding: 0.5rem; background: white; border-radius: 4px;">
+        "{{ .message }}"
+      </div>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+</div>

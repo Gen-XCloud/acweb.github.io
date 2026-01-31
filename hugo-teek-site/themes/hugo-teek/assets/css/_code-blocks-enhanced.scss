@@ -1,0 +1,447 @@
+// ========================================
+// Enhanced Code Blocks for Hugo Chroma
+// 优化的代码块样式
+// ========================================
+
+:root {
+  --code-bg: #282c34;
+  --code-bg-hover: #2c313a;
+  --code-text: #abb2bf;
+  --code-border: rgba(255, 255, 255, 0.1);
+  --code-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --code-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --code-header-bg: rgba(0, 0, 0, 0.2);
+  --code-copy-btn-bg: rgba(255, 255, 255, 0.1);
+  --code-copy-btn-hover: rgba(255, 255, 255, 0.2);
+  --code-line-highlight: rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode {
+  --code-bg: #1e1e1e;
+  --code-bg-hover: #252526;
+  --code-text: #d4d4d4;
+  --code-border: rgba(255, 255, 255, 0.08);
+  --code-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --code-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+// ========================================
+// 代码块容器
+// ========================================
+.highlight,
+div[class*='language-'],
+.vp-doc div[class*='language-'] {
+  position: relative;
+  margin: 24px 0;
+  border-radius: 12px;
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  box-shadow: var(--code-shadow);
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: var(--code-shadow-hover);
+    border-color: rgba(139, 148, 255, 0.3);
+  }
+}
+
+// ========================================
+// Pre 标签样式
+// ========================================
+.highlight pre,
+div[class*='language-'] pre,
+.vp-doc div[class*='language-'] pre {
+  margin: 0;
+  padding: 20px 0 24px 0; // ◀️ 增加底部内边距，确保代码块最后一行距离底部边缘有12px空白
+  background: transparent;
+  overflow-x: auto;
+  font-family: 'Fira Code', 'JetBrains Mono', 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--code-text);
+  font-feature-settings: 'liga' 1, 'calt' 1; /* 启用连字 */
+
+  /* 优化滚动条 */
+  &::-webkit-scrollbar {
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+}
+
+// ========================================
+// Code 标签样式
+// ========================================
+.highlight pre code,
+div[class*='language-'] pre code,
+.vp-doc div[class*='language-'] pre code {
+  display: block;
+  padding: 0 24px;
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  tab-size: 2;
+}
+
+// ========================================
+// 内联行号样式 (lineNumbersInTable = false)
+// ========================================
+.highlight .ln,
+.highlight .lnt {
+  display: inline-block;
+  width: 32px;
+  margin-right: 12px;
+  padding-right: 8px;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.3);
+  user-select: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+// ========================================
+// 语言标签
+// ========================================
+.highlight::before,
+div[class*='language-']::before {
+  content: attr(data-lang);
+  position: absolute;
+  top: 12px;
+  right: 60px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  background: var(--code-header-bg);
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  z-index: 2;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.highlight:hover::before,
+div[class*='language-']:hover::before {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(139, 148, 255, 0.2);
+}
+
+// 特定语言标签颜色
+.highlight[data-lang='javascript']::before,
+.language-javascript::before {
+  content: 'JavaScript';
+  background: rgba(240, 219, 79, 0.15);
+  color: #f0db4f;
+}
+
+.highlight[data-lang='typescript']::before,
+.language-typescript::before {
+  content: 'TypeScript';
+  background: rgba(49, 120, 198, 0.15);
+  color: #3178c6;
+}
+
+.highlight[data-lang='python']::before,
+.language-python::before {
+  content: 'Python';
+  background: rgba(55, 118, 171, 0.15);
+  color: #3776ab;
+}
+
+.highlight[data-lang='go']::before,
+.language-go::before {
+  content: 'Go';
+  background: rgba(0, 173, 216, 0.15);
+  color: #00add8;
+}
+
+.highlight[data-lang='rust']::before,
+.language-rust::before {
+  content: 'Rust';
+  background: rgba(222, 165, 132, 0.15);
+  color: #dea584;
+}
+
+.highlight[data-lang='bash']::before,
+.highlight[data-lang='shell']::before,
+.language-bash::before,
+.language-shell::before {
+  content: 'Bash';
+  background: rgba(137, 224, 81, 0.15);
+  color: #89e051;
+}
+
+.highlight[data-lang='json']::before,
+.language-json::before {
+  content: 'JSON';
+  background: rgba(41, 128, 185, 0.15);
+  color: #2980b9;
+}
+
+.highlight[data-lang='yaml']::before,
+.highlight[data-lang='yml']::before,
+.language-yaml::before,
+.language-yml::before {
+  content: 'YAML';
+  background: rgba(203, 56, 55, 0.15);
+  color: #cb3837;
+}
+
+.highlight[data-lang='html']::before,
+.language-html::before {
+  content: 'HTML';
+  background: rgba(227, 76, 38, 0.15);
+  color: #e34c26;
+}
+
+.highlight[data-lang='css']::before,
+.language-css::before {
+  content: 'CSS';
+  background: rgba(38, 77, 228, 0.15);
+  color: #264de4;
+}
+
+.highlight[data-lang='scss']::before,
+.language-scss::before {
+  content: 'SCSS';
+  background: rgba(207, 100, 154, 0.15);
+  color: #cf649a;
+}
+
+.highlight[data-lang='markdown']::before,
+.highlight[data-lang='md']::before,
+.language-markdown::before,
+.language-md::before {
+  content: 'Markdown';
+  background: rgba(8, 126, 164, 0.15);
+  color: #087ea4;
+}
+
+.highlight[data-lang='sql']::before,
+.language-sql::before {
+  content: 'SQL';
+  background: rgba(232, 119, 34, 0.15);
+  color: #e87722;
+}
+
+.highlight[data-lang='docker']::before,
+.highlight[data-lang='dockerfile']::before,
+.language-docker::before,
+.language-dockerfile::before {
+  content: 'Docker';
+  background: rgba(27, 149, 224, 0.15);
+  color: #1b95e0;
+}
+
+// ========================================
+// 复制按钮
+// ========================================
+.highlight .copy-code-button,
+div[class*='language-'] .copy-code-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 12px;
+  background: var(--code-copy-btn-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  &:hover {
+    background: var(--code-copy-btn-hover);
+    color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+
+  &.copied {
+    background: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+    border-color: rgba(40, 167, 69, 0.3);
+
+    svg {
+      animation: checkmark 0.3s ease;
+    }
+  }
+}
+
+@keyframes checkmark {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+// ========================================
+// 内联代码样式
+// ========================================
+.vp-doc :not(pre) > code,
+.docs-article__body :not(pre) > code,
+p code,
+li code,
+td code {
+  padding: 3px 8px;
+  margin: 0 2px;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: 'Fira Code', 'JetBrains Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+  color: var(--vp-c-brand-1);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--vp-c-brand-soft);
+    border-color: var(--vp-c-brand-1);
+  }
+}
+
+// ========================================
+// 代码块行高亮
+// ========================================
+.highlight .hl {
+  display: block;
+  background: var(--code-line-highlight);
+  margin: 0 -24px;
+  padding: 0 24px;
+}
+
+// ========================================
+// 响应式优化
+// ========================================
+@media (max-width: 768px) {
+  .highlight,
+  div[class*='language-'] {
+    margin: 16px 0;
+    border-radius: 8px;
+  }
+
+  .highlight pre code,
+  div[class*='language-'] pre code {
+    padding: 0 16px;
+    font-size: 13px;
+  }
+
+  // 移动端内联行号
+  .highlight .ln,
+  .highlight .lnt {
+    width: 28px;
+    margin-right: 8px;
+    font-size: 13px;
+  }
+
+  .highlight::before,
+  div[class*='language-']::before {
+    display: none; // 移动端隐藏语言标签
+  }
+
+  .highlight .copy-code-button,
+  div[class*='language-'] .copy-code-button {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}
+
+// ========================================
+// Chroma 语法高亮颜色 (Monokai 主题优化)
+// ========================================
+.chroma {
+  .err { color: #f92672; } /* Error */
+  .hl { background-color: var(--code-line-highlight); }
+  // 内联行号样式已在上方定义
+  .k { color: #66d9ef; } /* Keyword */
+  .kc { color: #66d9ef; } /* KeywordConstant */
+  .kd { color: #66d9ef; } /* KeywordDeclaration */
+  .kn { color: #f92672; } /* KeywordNamespace */
+  .kp { color: #66d9ef; } /* KeywordPseudo */
+  .kr { color: #66d9ef; } /* KeywordReserved */
+  .kt { color: #66d9ef; } /* KeywordType */
+  .na { color: #a6e22e; } /* NameAttribute */
+  .nb { color: #f8f8f2; } /* NameBuiltin */
+  .nc { color: #a6e22e; } /* NameClass */
+  .no { color: #66d9ef; } /* NameConstant */
+  .nd { color: #a6e22e; } /* NameDecorator */
+  .ni { color: #f8f8f2; } /* NameEntity */
+  .ne { color: #a6e22e; } /* NameException */
+  .nf { color: #a6e22e; } /* NameFunction */
+  .nl { color: #f8f8f2; } /* NameLabel */
+  .nn { color: #f8f8f2; } /* NameNamespace */
+  .nx { color: #a6e22e; } /* NameOther */
+  .py { color: #f8f8f2; } /* NameProperty */
+  .nt { color: #f92672; } /* NameTag */
+  .nv { color: #f8f8f2; } /* NameVariable */
+  .s { color: #e6db74; } /* LiteralString */
+  .sa { color: #e6db74; } /* LiteralStringAffix */
+  .sb { color: #e6db74; } /* LiteralStringBacktick */
+  .sc { color: #e6db74; } /* LiteralStringChar */
+  .dl { color: #e6db74; } /* LiteralStringDelimiter */
+  .sd { color: #e6db74; } /* LiteralStringDoc */
+  .s2 { color: #e6db74; } /* LiteralStringDouble */
+  .se { color: #ae81ff; } /* LiteralStringEscape */
+  .sh { color: #e6db74; } /* LiteralStringHeredoc */
+  .si { color: #e6db74; } /* LiteralStringInterpol */
+  .sx { color: #e6db74; } /* LiteralStringOther */
+  .sr { color: #e6db74; } /* LiteralStringRegex */
+  .s1 { color: #e6db74; } /* LiteralStringSingle */
+  .ss { color: #e6db74; } /* LiteralStringSymbol */
+  .m { color: #ae81ff; } /* LiteralNumber */
+  .mb { color: #ae81ff; } /* LiteralNumberBin */
+  .mf { color: #ae81ff; } /* LiteralNumberFloat */
+  .mh { color: #ae81ff; } /* LiteralNumberHex */
+  .mi { color: #ae81ff; } /* LiteralNumberInteger */
+  .il { color: #ae81ff; } /* LiteralNumberIntegerLong */
+  .mo { color: #ae81ff; } /* LiteralNumberOct */
+  .o { color: #f92672; } /* Operator */
+  .ow { color: #f92672; } /* OperatorWord */
+  .p { color: #f8f8f2; } /* Punctuation */
+  .c { color: #75715e; } /* Comment */
+  .ch { color: #75715e; } /* CommentHashbang */
+  .cm { color: #75715e; } /* CommentMultiline */
+  .c1 { color: #75715e; } /* CommentSingle */
+  .cs { color: #75715e; } /* CommentSpecial */
+  .cp { color: #75715e; } /* CommentPreproc */
+  .cpf { color: #75715e; } /* CommentPreprocFile */
+  .gd { color: #f92672; } /* GenericDeleted */
+  .ge { font-style: italic; } /* GenericEmph */
+  .gi { color: #a6e22e; } /* GenericInserted */
+  .gs { font-weight: bold; } /* GenericStrong */
+  .gu { color: #75715e; } /* GenericSubheading */
+}

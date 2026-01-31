@@ -1,0 +1,35 @@
+<div class="sponsor-list-container">
+
+  <!-- 标题区域 -->
+  <div class="sponsor-header">
+    <h2 class="sponsor-title">打赏名单</h2>
+    <button class="sponsor-button" id="openSponsorModal" aria-label="赞赏博主">
+      赞赏博主
+    </button>
+  </div>
+  <!-- 介绍文字 -->
+  <div class="sponsor-intro">
+    <p>感谢各位大佬的打赏，因为你们，让我感受到开发项目的价值。很高兴这些项目能够帮助到你们，你们的打赏会让我在这条路上走得更远。</p>
+  </div>
+
+  <!-- 赞助者卡片网格 -->
+  <div class="sponsor-grid">
+    {{ range .Site.Data.sponsors.sponsors }}
+    <div class="sponsor-card" data-message="{{ .message }}" data-has-message="{{ if .message }}true{{ else }}false{{ end }}">
+      <div class="sponsor-card-content">
+        <div class="sponsor-name">{{ .name }}</div>
+        <div class="sponsor-info">
+          <span class="sponsor-amount">¥{{ .amount }}</span>
+          <span class="sponsor-date">{{ .date }}</span>
+        </div>
+      </div>
+      {{ if .message }}
+      <div class="sponsor-message">{{ .message }}</div>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+</div>
+
+<!-- 引入赞赏弹窗 -->
+{{partial "sponsor-modal.html" .}}

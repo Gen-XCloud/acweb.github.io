@@ -1,0 +1,23 @@
+{{ define "main" }}
+<div class="taxonomy-page">
+  <div class="taxonomy-header">
+    <h1 class="taxonomy-title">
+      {{ if eq .Data.Singular "category" }}
+        <span class="taxonomy-icon">📁</span>
+      {{ else if eq .Data.Singular "tag" }}
+        <span class="taxonomy-icon">🏷️</span>
+      {{ end }}
+      {{ .Title }}
+    </h1>
+    <p class="taxonomy-count">共 {{ len .Pages }} 篇文章</p>
+  </div>
+
+  <div class="post-list">
+    {{ range .Pages.ByPublishDate.Reverse }}
+      {{ partial "article-card.html" . }}
+    {{ end }}
+  </div>
+
+  {{ template "_internal/pagination.html" . }}
+</div>
+{{ end }}

@@ -1,0 +1,331 @@
+// ========================================
+// Simple Sidebar - 全新设计，零VitePress依赖
+// ========================================
+
+.simple-sidebar {
+  width: 100%;
+  height: 100%;
+  padding: 12px 0;
+}
+
+.simple-sidebar__nav {
+  width: 100%;
+  position: relative;  /* 为resize-handle提供定位上下文 */
+}
+
+.simple-sidebar__tree,
+.simple-sidebar__children {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.simple-sidebar__children {
+  padding-left: 20px;
+  margin-top: 4px;
+  display: none; /* 默认折叠 */
+}
+
+.simple-sidebar__item.is-expanded > .simple-sidebar__children {
+  display: block;
+}
+
+.simple-sidebar__item-inner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+}
+
+/* 🔥 关键：文件夹整行可点击 */
+.simple-sidebar__item.has-children > .simple-sidebar__item-inner {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* 文件行不可点击（只有链接可点） */
+.simple-sidebar__item:not(.has-children) > .simple-sidebar__item-inner {
+  cursor: default;
+}
+
+.simple-sidebar__item-inner:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 激活状态 - 🔥 关键：只改变颜色和字重，绝不改变位置 */
+.simple-sidebar__item.is-active > .simple-sidebar__item-inner {
+  color: var(--vp-c-brand-1, #4285f4);
+  font-weight: 600;
+  background-color: rgba(66, 133, 244, 0.1);
+}
+
+// ========================================
+// 折叠箭头（CSS border chevron - Docusaurus 风格）
+// ========================================
+
+.simple-sidebar__chevron {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  transition: transform 0.2s ease;
+
+  // 使用 ::before 伪元素绘制 chevron 箭头
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 1.5px solid rgba(0, 0, 0, 0.5);
+    transform: rotate(-45deg);  // 指向右边
+    transition: border-color 0.2s ease;
+  }
+}
+
+/* 展开时旋转 */
+.simple-sidebar__item.is-expanded > .simple-sidebar__item-inner .simple-sidebar__chevron {
+  transform: rotate(90deg);
+}
+
+/* Hover效果 - 箭头颜色加深 */
+.simple-sidebar__item-inner:hover .simple-sidebar__chevron::before {
+  border-color: rgba(0, 0, 0, 0.8);
+}
+
+/* 暗色模式支持 */
+.dark-mode .simple-sidebar__chevron::before {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.dark-mode .simple-sidebar__item-inner:hover .simple-sidebar__chevron::before {
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+// ========================================
+// 标题和链接
+// ========================================
+
+.simple-sidebar__title,
+.simple-sidebar__link {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.5;
+  text-decoration: none;
+  color: inherit;
+  /* 🔥 关键：不使用任何可能导致位移的属性 */
+  padding: 0;
+  margin: 0;
+  transform: none !important;
+  text-indent: 0 !important;
+}
+
+// ========================================
+// 一级菜单特殊样式（与老版本保持一致）
+// ========================================
+
+.simple-sidebar__tree > .simple-sidebar__item > .simple-sidebar__item-inner {
+  .simple-sidebar__title,
+  .simple-sidebar__link {
+    font-size: 18px;
+    font-weight: 600;
+    // 紫红渐变色（与文章标题保持一致） 左侧TOC的一级菜单颜色控制的CSS
+    background: linear-gradient(10deg, #bd34fe 5%, #e43498 15%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    padding-left: 15px;
+  }
+}
+
+// 暗色模式下的一级菜单颜色（渐变色在暗色模式下同样适用）
+
+.simple-sidebar__link:hover {
+  text-decoration: underline;
+}
+
+// ========================================
+// 暗色模式
+// ========================================
+
+.dark-mode .simple-sidebar__item-inner:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode .simple-sidebar__item.is-active > .simple-sidebar__item-inner {
+  color: var(--vp-c-brand-1, #60a5fa);
+  background-color: rgba(96, 165, 250, 0.15);
+}
+
+// ========================================
+// 空状态
+// ========================================
+
+.simple-sidebar--empty {
+  padding: 24px;
+  text-align: center;
+}
+
+.simple-sidebar__empty-message {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+.dark-mode .simple-sidebar__empty-message {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+// ========================================
+// Sidebar Header (collapse按钮容器)
+// ========================================
+
+.simple-sidebar__header {
+  position: relative;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 8px;
+}
+
+.dark-mode .simple-sidebar__header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+// ========================================
+// Collapse按钮
+// ========================================
+
+.simple-sidebar__collapse-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: var(--vp-c-text-2);
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    background: var(--vp-c-brand-soft, rgba(66, 133, 244, 0.1));
+    color: var(--vp-c-brand-1, #4285f4);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.dark-mode .simple-sidebar__collapse-btn {
+  &:hover {
+    background: var(--vp-c-brand-soft, rgba(96, 165, 250, 0.15));
+    color: var(--vp-c-brand-1, #60a5fa);
+  }
+}
+
+// ========================================
+// Resize Handle
+// ========================================
+
+.simple-sidebar__resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  cursor: col-resize;
+  background: var(--vp-c-divider, rgba(60, 60, 67, 0.12));  // 默认显示细分割线
+  transition: background 0.2s ease, width 0.2s ease;
+  z-index: 100;
+
+  &:hover {
+    width: 4px;
+    background: var(--vp-c-brand-1, #4285f4);
+  }
+
+  &.is-dragging {
+    width: 4px;
+    background: var(--vp-c-brand-1, #4285f4);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: 0;
+    bottom: 0;
+    width: 12px;
+    cursor: col-resize;
+  }
+}
+
+.dark-mode .simple-sidebar__resize-handle {
+  &:hover,
+  &.is-dragging {
+    background: var(--vp-c-brand-1, #60a5fa);
+  }
+}
+
+// ========================================
+// Collapsed状态（整个sidebar收起）
+// ========================================
+
+body.simple-sidebar-collapsed {
+  // 只需要隐藏sidebar内容，宽度由CSS变量控制
+  .simple-sidebar__nav {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .simple-sidebar__header {
+    opacity: 1;
+    pointer-events: all;
+    // 居中显示按钮
+    justify-content: center;
+  }
+
+  // 隐藏resize handle（折叠状态不需要调整宽度）
+  .simple-sidebar__resize-handle {
+    display: none;
+  }
+
+  // 限制sidebar最小宽度为60px
+  .docs-sidebar {
+    min-width: 60px;
+    max-width: 60px;
+  }
+}
+
+// ========================================
+// 响应式设计
+// ========================================
+
+@media (max-width: 768px) {
+  .simple-sidebar {
+    padding: 8px 0;
+  }
+
+  .simple-sidebar__item-inner {
+    padding: 8px 16px;
+  }
+
+  .simple-sidebar__children {
+    padding-left: 16px;
+  }
+}

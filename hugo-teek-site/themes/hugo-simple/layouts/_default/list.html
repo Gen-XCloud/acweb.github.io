@@ -1,0 +1,91 @@
+{{ define "main" }}
+<div class="container">
+    <div class="list-page">
+        <!-- Section Header -->
+        <header class="list-header">
+            <h1 class="list-title">{{ .Title }}</h1>
+            {{ if .Description }}
+            <p class="list-description">{{ .Description }}</p>
+            {{ end }}
+        </header>
+
+        <!-- Section Content (from _index.md) -->
+        {{ if .Content }}
+        <div class="list-content">
+            {{ .Content }}
+        </div>
+        {{ end }}
+
+        <!-- Posts/Pages List -->
+        {{ if .Pages }}
+        <div class="posts-list">
+            {{ range .Paginator.Pages }}
+            <article class="post-item">
+                <div class="post-item-header">
+                    <h2 class="post-item-title">
+                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                    </h2>
+                    <div class="post-item-meta">
+                        <span class="meta-date">{{ .Date.Format "2006-01-02" }}</span>
+                        {{ if .Params.categories }}
+                        <span class="meta-separator">·</span>
+                        <span class="meta-category">{{ delimit .Params.categories ", " }}</span>
+                        {{ end }}
+                        {{ if .ReadingTime }}
+                        <span class="meta-separator">·</span>
+                        <span class="meta-reading-time">{{ .ReadingTime }} 分钟</span>
+                        {{ end }}
+                    </div>
+                </div>
+
+                {{ if .Description }}
+                <div class="post-item-summary">
+                    {{ .Description }}
+                </div>
+                {{ else if .Summary }}
+                <div class="post-item-summary">
+                    {{ .Summary }}
+                </div>
+                {{ end }}
+
+                {{ if .Params.tags }}
+                <div class="post-item-tags">
+                    {{ range .Params.tags }}
+                    <span class="tag">{{ . }}</span>
+                    {{ end }}
+                </div>
+                {{ end }}
+            </article>
+            {{ end }}
+        </div>
+
+        <!-- Pagination -->
+        {{ if gt .Paginator.TotalPages 1 }}
+        <nav class="pagination">
+            {{ if .Paginator.HasPrev }}
+            <a href="{{ .Paginator.Prev.URL }}" class="pagination-prev">
+                ← 上一页
+            </a>
+            {{ end }}
+
+            <span class="pagination-info">
+                第 {{ .Paginator.PageNumber }} 页 / 共 {{ .Paginator.TotalPages }} 页
+            </span>
+
+            {{ if .Paginator.HasNext }}
+            <a href="{{ .Paginator.Next.URL }}" class="pagination-next">
+                下一页 →
+            </a>
+            {{ end }}
+        </nav>
+        {{ end }}
+
+        {{ else }}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <p>暂无内容</p>
+        </div>
+        {{ end }}
+    </div>
+</div>
+{{ end }}

@@ -1,0 +1,599 @@
+<!-- Lazy Loading (load early, before other scripts) -->
+{{ $lazyLoadJs := resources.Get "js/lazy-load.js" }}
+{{ if $lazyLoadJs }}
+  {{ $lazyLoadJs = $lazyLoadJs | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $lazyLoadJs.RelPermalink }}"></script>
+{{ end }}
+
+<!-- Core JavaScript Modules -->
+{{ $js := resources.Get "js/main.js" }}
+{{ if $js }}
+  {{ $js = $js | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $js.RelPermalink }}"></script>
+{{ end }}
+
+<!-- URL Auto Link - Convert plain text URLs to clickable links -->
+{{ $urlAutoLinkJs := resources.Get "js/url-auto-link.js" }}
+{{ if $urlAutoLinkJs }}
+  {{ $urlAutoLinkJs = $urlAutoLinkJs | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $urlAutoLinkJs.RelPermalink }}"></script>
+{{ end }}
+
+{{ $scrollConfig := .Site.Params.scrollProgress | default dict }}
+{{ if ne (default true $scrollConfig.enabled) false }}
+  {{ $scrollProgressJs := resources.Get "js/scroll-progress.js" }}
+  {{ if $scrollProgressJs }}
+    {{ $scrollProgressJs = $scrollProgressJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $scrollProgressJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}
+
+<!-- Theme Toggle -->
+{{ $themeJs := resources.Get "js/theme-toggle.js" }}
+{{ if $themeJs }}
+  {{ $themeJs = $themeJs | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $themeJs.RelPermalink }}"></script>
+{{ end }}
+
+<!-- Mobile Navigation -->
+{{ $mobileNavJs := resources.Get "js/mobile-nav.js" }}
+{{ if $mobileNavJs }}
+  {{ $mobileNavJs = $mobileNavJs | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $mobileNavJs.RelPermalink }}"></script>
+{{ end }}
+
+<!-- Mobile Enhancements -->
+{{ $mobileEnhancementsJs := resources.Get "js/mobile-enhancements.js" }}
+{{ if $mobileEnhancementsJs }}
+  {{ $mobileEnhancementsJs = $mobileEnhancementsJs | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $mobileEnhancementsJs.RelPermalink }}"></script>
+{{ end }}
+
+<!-- Custom Block Details (for ::: details syntax) -->
+{{ $customBlockDetailsJs := resources.Get "js/custom-block-details.js" }}
+{{ if $customBlockDetailsJs }}
+  {{ $customBlockDetailsJs = $customBlockDetailsJs | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $customBlockDetailsJs.RelPermalink }}"></script>
+{{ end }}
+
+{{ $titleConfig := .Site.Params.titleChange | default dict }}
+{{ if ne (default true $titleConfig.enabled) false }}
+  {{ $titleChangeJs := resources.Get "js/title-change.js" }}
+  {{ if $titleChangeJs }}
+    {{ $titleChangeJs = $titleChangeJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $titleChangeJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}
+
+<!-- Header Scroll Effect (homepage only) -->
+{{ if .IsHome }}
+  {{ $headerScrollJs := resources.Get "js/header-scroll.js" }}
+  {{ if $headerScrollJs }}
+    {{ $headerScrollJs = $headerScrollJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $headerScrollJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}
+
+<!-- Clock Component -->
+{{ $clockJs := resources.Get "js/clock.js" }}
+{{ if $clockJs }}
+  {{ $clockJs = $clockJs | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $clockJs.RelPermalink }}"></script>
+{{ end }}
+
+<!-- Calendar Component (homepage only) -->
+{{ if .IsHome }}
+  {{ $calendarJs := resources.Get "js/calendar.js" }}
+  {{ if $calendarJs }}
+    {{ $calendarJs = $calendarJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $calendarJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}
+
+<!-- Twikoo Comment System -->
+{{ if .Site.Params.comment.enabled }}
+  {{ $twikoo := resources.Get "js/twikoo.all.min.js" }}
+  {{ if $twikoo }}
+    {{ if or .IsPage (eq .Type "docs") }}
+      <!-- Article/Docs page: 延迟 500ms 加载（评论区在页面下方，非首屏） -->
+      <script>
+      (function() {
+        // 页面加载完成后延迟 500ms 加载 Twikoo（评论区在下方，用户需要滚动）
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            var script = document.createElement('script');
+            script.src = '{{ $twikoo.RelPermalink }}';
+            script.defer = true;
+            // 脚本加载完成后触发事件，通知 comment.html 初始化
+            script.onload = function() {
+              console.log('[Twikoo] 库加载完成');
+              window.dispatchEvent(new CustomEvent('twikoo-loaded'));
+            };
+            script.onerror = function() {
+              console.error('[Twikoo] 库加载失败');
+            };
+            document.body.appendChild(script);
+          }, 500);
+        });
+      })();
+      </script>
+    {{ else if .IsHome }}
+      <!-- Home page: Lazy load when recent comments card is visible -->
+      <script id="twikoo-script" data-src="{{ $twikoo.RelPermalink }}" type="text/plain"></script>
+      <script>
+        (function() {
+          function setupLazyLoad() {
+            const recentCommentsCard = document.querySelector('.recent-comments-card');
+            if (!recentCommentsCard) {
+              setTimeout(setupLazyLoad, 100);
+              return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  const script = document.createElement('script');
+                  script.src = document.getElementById('twikoo-script').dataset.src;
+                  script.defer = true;
+                  script.onload = function() {
+                    window.dispatchEvent(new CustomEvent('twikoo-loaded'));
+                  };
+                  document.body.appendChild(script);
+                  observer.disconnect();
+                }
+              });
+            }, { rootMargin: '200px' });
+
+            observer.observe(recentCommentsCard);
+          }
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupLazyLoad);
+          } else {
+            setupLazyLoad();
+          }
+        })();
+      </script>
+
+      <!-- Load recent comments script -->
+      {{ $recentCommentsJs := resources.Get "js/recent-comments.js" }}
+      {{ if $recentCommentsJs }}
+        {{ $recentCommentsJs = $recentCommentsJs | resources.Minify | resources.Fingerprint }}
+        <script src="{{ $recentCommentsJs.RelPermalink }}" defer></script>
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+<!-- Share Button -->
+{{ $shareCardJs := resources.Get "js/share-card.js" }}
+{{ if $shareCardJs }}
+  {{ $shareCardJs = $shareCardJs | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $shareCardJs.RelPermalink }}"></script>
+{{ end }}
+
+<!-- Widget Carousel (homepage only - for friend links/sponsors cards) -->
+{{ if .IsHome }}
+  {{ $widgetCarouselJs := resources.Get "js/widget-carousel.js" }}
+  {{ if $widgetCarouselJs }}
+    {{ $widgetCarouselJs = $widgetCarouselJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $widgetCarouselJs.RelPermalink }}"></script>
+  {{ end }}
+
+  <!-- Sidebar Lazy Load (homepage performance optimization) -->
+  {{ $sidebarLazyLoadJs := resources.Get "js/sidebar-lazy-load.js" }}
+  {{ if $sidebarLazyLoadJs }}
+    {{ $sidebarLazyLoadJs = $sidebarLazyLoadJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $sidebarLazyLoadJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}
+
+<!-- Hero Background Slider (homepage only, when enabled) -->
+{{ if and .IsHome .Site.Params.heroBg.enabled }}
+  {{ $heroBgJs := resources.Get "js/hero-bg.js" }}
+  {{ if $heroBgJs }}
+    {{ $heroBgJs = $heroBgJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $heroBgJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}
+
+<!-- Hero Fullscreen (homepage only) -->
+{{ if .IsHome }}
+  {{ $heroFullscreenJs := resources.Get "js/hero-fullscreen.js" }}
+  {{ if $heroFullscreenJs }}
+    {{ $heroFullscreenJs = $heroFullscreenJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $heroFullscreenJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}
+
+<!-- Hero Subtitle Typewriter (homepage only) -->
+{{ if .IsHome }}
+  {{ $heroSubtitleJs := resources.Get "js/hero-subtitle.js" }}
+  {{ if $heroSubtitleJs }}
+    {{ $heroSubtitleJs = $heroSubtitleJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $heroSubtitleJs.RelPermalink }}"></script>
+  {{ end }}
+  {{ $articleFilterJs := resources.Get "js/article-filter.js" }}
+  {{ if $articleFilterJs }}
+    {{ $articleFilterJs = $articleFilterJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $articleFilterJs.RelPermalink }}"></script>
+  {{ end }}
+  {{ $cardExpandJs := resources.Get "js/card-expand.js" }}
+  {{ if $cardExpandJs }}
+    {{ $cardExpandJs = $cardExpandJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $cardExpandJs.RelPermalink }}"></script>
+  {{ end }}
+  {{ $excerptTooltipJs := resources.Get "js/excerpt-tooltip.js" }}
+  {{ if $excerptTooltipJs }}
+    {{ $excerptTooltipJs = $excerptTooltipJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $excerptTooltipJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}
+
+<!-- TOC Tooltip (文章页面 TOC 悬浮提示) -->
+{{ $tocTooltipJs := resources.Get "js/toc-tooltip.js" }}
+{{ if $tocTooltipJs }}
+  {{ $tocTooltipJs = $tocTooltipJs | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $tocTooltipJs.RelPermalink }}"></script>
+{{ end }}
+
+<!-- Back to Top Button - 懒加载：滚动后再加载 -->
+{{ $backToTopJs := resources.Get "js/back-to-top.js" }}
+{{ if $backToTopJs }}
+  {{ $backToTopJs = $backToTopJs | resources.Minify | resources.Fingerprint }}
+  <script>
+  // 滚动超过 300px 后再加载回到顶部按钮（非首屏功能）
+  (function() {
+    var loaded = false;
+    function loadBackToTop() {
+      if (loaded) return;
+      loaded = true;
+      var script = document.createElement('script');
+      script.src = '{{ $backToTopJs.RelPermalink }}';
+      script.defer = true;
+      document.body.appendChild(script);
+    }
+
+    // 滚动触发或 3 秒后自动加载（保底）
+    window.addEventListener('scroll', function checkScroll() {
+      if (window.pageYOffset > 300) {
+        loadBackToTop();
+        window.removeEventListener('scroll', checkScroll);
+      }
+    }, { passive: true });
+
+    setTimeout(loadBackToTop, 3000);
+  })();
+  </script>
+{{ end }}
+
+<!-- WeChat QR Code Modal (Must load BEFORE Image Viewer to prevent conflicts) -->
+{{ $wechatQrcodeModalJs := resources.Get "js/wechat-qrcode-modal.js" }}
+{{ if $wechatQrcodeModalJs }}
+  {{ $wechatQrcodeModalJs = $wechatQrcodeModalJs | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $wechatQrcodeModalJs.RelPermalink }}"></script>
+{{ end }}
+
+<!-- Image Viewer (Global - works on all pages) -->
+{{ $imageViewerJs := resources.Get "js/image-viewer.js" }}
+{{ if $imageViewerJs }}
+  {{ $imageViewerJs = $imageViewerJs | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $imageViewerJs.RelPermalink }}"></script>
+{{ end }}
+
+<!-- Cursor Particle Effect (VP光标彩色粒子效果 - Global) -->
+{{ $cursorParticleJs := resources.Get "js/cursor-particle-effect.js" }}
+{{ if $cursorParticleJs }}
+  {{ $cursorParticleJs = $cursorParticleJs | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $cursorParticleJs.RelPermalink }}"></script>
+{{ end }}
+
+<!-- Code Block Features (post pages only) -->
+{{ if .IsPage }}
+  <!-- VitePress Style Code Blocks (复刻 vitepress-theme-teek 效果) -->
+  {{ $codeBlockVPJs := resources.Get "js/code-block-vitepress.js" }}
+  {{ if $codeBlockVPJs }}
+    {{ $codeBlockVPJs = $codeBlockVPJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $codeBlockVPJs.RelPermalink }}"></script>
+  {{ end }}
+
+  <!-- Appreciation Component -->
+  {{ if .Site.Params.appreciation.enabled }}
+    {{ $appreciationJs := resources.Get "js/appreciation.js" }}
+    {{ if $appreciationJs }}
+      {{ $appreciationJs = $appreciationJs | resources.Minify | resources.Fingerprint }}
+      <script defer src="{{ $appreciationJs.RelPermalink }}"></script>
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+<!-- Docs Features (docs pages only) -->
+{{ if eq .Type "docs" }}
+  {{ $docsJs := resources.Get "js/docs.js" }}
+  {{ if $docsJs }}
+    {{/* 临时禁用Minify,验证是否是压缩问题导致TOC功能失效 */}}
+    {{ $docsJs = $docsJs | resources.Fingerprint }}
+    <script defer src="{{ $docsJs.RelPermalink }}"></script>
+  {{ end }}
+
+  <!-- ⚠️ 新版: Simple Sidebar (零VP依赖的简单sidebar系统) -->
+  {{ $simpleSidebarJs := resources.Get "js/simple-sidebar.js" }}
+  {{ if $simpleSidebarJs }}
+    {{ $simpleSidebarJs = $simpleSidebarJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $simpleSidebarJs.RelPermalink }}"></script>
+  {{ end }}
+
+  <!-- Sidebar Resize功能 -->
+  {{ $sidebarResizeJs := resources.Get "js/sidebar-resize.js" }}
+  {{ if $sidebarResizeJs }}
+    {{ $sidebarResizeJs = $sidebarResizeJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $sidebarResizeJs.RelPermalink }}"></script>
+  {{ end }}
+
+  <!-- Sidebar Collapse功能 -->
+  {{ $sidebarCollapseJs := resources.Get "js/sidebar-collapse.js" }}
+  {{ if $sidebarCollapseJs }}
+    {{ $sidebarCollapseJs = $sidebarCollapseJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $sidebarCollapseJs.RelPermalink }}"></script>
+  {{ end }}
+
+  {{/* 旧版sidebar-dynamic.js已被simple-sidebar.js替代
+  {{ $sidebarDynamicJs := resources.Get "js/sidebar-dynamic.js" }}
+  {{ if $sidebarDynamicJs }}
+    {{ $sidebarDynamicJs = $sidebarDynamicJs | resources.Fingerprint }}
+    <script defer src="{{ $sidebarDynamicJs.RelPermalink }}"></script>
+  {{ end }}
+  */}}
+
+  <!-- Article Meta Dropdown (分类/标签展开) -->
+  {{ $articleMetaDropdownJs := resources.Get "js/article-meta-dropdown.js" }}
+  {{ if $articleMetaDropdownJs }}
+    {{ $articleMetaDropdownJs = $articleMetaDropdownJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $articleMetaDropdownJs.RelPermalink }}"></script>
+  {{ end }}
+
+  <!-- 🆕 TOC Enhanced (Rspress 风格优化) -->
+  {{ $tocEnhancedJs := resources.Get "js/toc-enhanced.js" }}
+  {{ if $tocEnhancedJs }}
+    {{ $tocEnhancedJs = $tocEnhancedJs | resources.Fingerprint }}
+    <script defer src="{{ $tocEnhancedJs.RelPermalink }}"></script>
+  {{ end }}
+
+  <!-- TOC Resize (目录宽度拖拽调整) -->
+  {{ $tocResizeJs := resources.Get "js/toc-resize.js" }}
+  {{ if $tocResizeJs }}
+    {{ $tocResizeJs = $tocResizeJs | resources.Fingerprint }}
+    <script defer src="{{ $tocResizeJs.RelPermalink }}"></script>
+  {{ end }}
+
+  <!-- Appreciation Component (docs pages) -->
+  {{ if .Site.Params.appreciation.enabled }}
+    {{ $appreciationJs := resources.Get "js/appreciation.js" }}
+    {{ if $appreciationJs }}
+      {{ $appreciationJs = $appreciationJs | resources.Minify | resources.Fingerprint }}
+      <script defer src="{{ $appreciationJs.RelPermalink }}"></script>
+    {{ end }}
+  {{ end }}
+  {{ $inlineTocJs := resources.Get "js/inline-toc.js" }}
+  {{ if $inlineTocJs }}
+    {{ $inlineTocJs = $inlineTocJs | resources.Fingerprint }}
+    <script defer src="{{ $inlineTocJs.RelPermalink }}"></script>
+  {{ end }}
+  {{ $demoJs := resources.Get "js/demo-runner.js" }}
+  {{ if $demoJs }}
+    {{ $demoJs = $demoJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $demoJs.RelPermalink }}"></script>
+  {{ end }}
+  {{ $headingJs := resources.Get "js/article-heading-highlight.js" }}
+  {{ if $headingJs }}
+    {{ $headingJs = $headingJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $headingJs.RelPermalink }}"></script>
+  {{ end }}
+  {{ $styleJs := resources.Get "js/article-page-style.js" }}
+  {{ if $styleJs }}
+    {{ $styleJs = $styleJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $styleJs.RelPermalink }}"></script>
+  {{ end }}
+  {{/* share-card.js已移至全局加载 */}}
+  {{/* 移动端工具栏交互 - 新版 */}}
+  {{ $mobileToolbarJs := resources.Get "js/mobile-toolbar.js" }}
+  {{ if $mobileToolbarJs }}
+    {{ $mobileToolbarJs = $mobileToolbarJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $mobileToolbarJs.RelPermalink }}"></script>
+  {{ end }}
+  {{/* 移动端FAB按钮交互 - 旧版（已注释，保留以防需要回滚）
+  {{ $mobileFabJs := resources.Get "js/mobile-fab.js" }}
+  {{ if $mobileFabJs }}
+    {{ $mobileFabJs = $mobileFabJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $mobileFabJs.RelPermalink }}"></script>
+  {{ end }}
+  */}}
+  {{/* 文章内容丝滑淡入 - 已禁用（实现即时切换效果） */}}
+  {{/*
+  {{ $contentFadeInJs := resources.Get "js/content-fade-in.js" }}
+  {{ if $contentFadeInJs }}
+    {{ $contentFadeInJs = $contentFadeInJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $contentFadeInJs.RelPermalink }}"></script>
+  {{ end }}
+  */}}
+
+  <!-- WeChat Unlock Feature (公众号解锁功能) -->
+  {{ if .Site.Params.wechatUnlock.enabled }}
+    <script>
+      // Expose wechatUnlock config to JavaScript
+      window.siteConfig = window.siteConfig || {};
+      window.siteConfig.wechatUnlock = {
+        salt: "{{ .Site.Params.wechatUnlock.salt | default "default-salt-2025" }}",
+        maxAttempts: {{ .Site.Params.wechatUnlock.maxAttempts | default 5 }},
+        lockTime: {{ .Site.Params.wechatUnlock.lockTime | default 3600 }},
+        verifyDelay: {{ .Site.Params.wechatUnlock.verifyDelay | default 500 }},
+        accountName: "{{ .Site.Params.wechatOfficial.name | default "公众号" }}"
+      };
+    </script>
+    {{ $wechatUnlockJs := resources.Get "js/wechat-unlock.js" }}
+    {{ if $wechatUnlockJs }}
+      {{ $wechatUnlockJs = $wechatUnlockJs | resources.Minify | resources.Fingerprint }}
+      <script defer src="{{ $wechatUnlockJs.RelPermalink }}"></script>
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ if or (.HasShortcode "confetti") (.Params.confetti) }}
+  {{ $confettiJs := resources.Get "js/confetti.js" }}
+  {{ if $confettiJs }}
+    {{ $confettiJs = $confettiJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $confettiJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}
+
+<!-- Sponsor Modal (thanks page) -->
+{{ if or (.HasShortcode "sponsor-list") (eq .RelPermalink "/about/thanks/") }}
+  {{ $sponsorModalJs := resources.Get "js/sponsor-modal.js" }}
+  {{ if $sponsorModalJs }}
+    {{ $sponsorModalJs = $sponsorModalJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $sponsorModalJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}
+
+<!-- Search (if enabled) -->
+{{ if .Site.Params.search.enabled }}
+  <!-- Pako gzip 解压库 (用于解压搜索索引) -->
+  {{ $pakoLib := resources.Get "js/pako.min.js" }}
+  {{ if $pakoLib }}
+    {{ $pakoLib = $pakoLib | resources.Fingerprint }}
+    <script defer src="{{ $pakoLib.RelPermalink }}"></script>
+  {{ end }}
+
+  <!-- FlexSearch 库 (本地) -->
+  {{ $flexSearchLib := resources.Get "js/flexsearch.bundle.min.js" }}
+  {{ if $flexSearchLib }}
+    {{ $flexSearchLib = $flexSearchLib | resources.Fingerprint }}
+    <script defer src="{{ $flexSearchLib.RelPermalink }}"></script>
+  {{ end }}
+
+  <!-- FlexSearch 提供者 -->
+  {{ $searchFlexSearchJs := resources.Get "js/search-flexsearch.js" }}
+  {{ if $searchFlexSearchJs }}
+    {{ $searchFlexSearchJs = $searchFlexSearchJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $searchFlexSearchJs.RelPermalink }}"></script>
+  {{ end }}
+
+  <!-- 搜索匹配器 (三层匹配逻辑) -->
+  {{ $searchMatcherJs := resources.Get "js/search-matcher.js" }}
+  {{ if $searchMatcherJs }}
+    {{ $searchMatcherJs = $searchMatcherJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $searchMatcherJs.RelPermalink }}"></script>
+  {{ end }}
+
+  <!-- 搜索 UI (FlexSearch 版本) -->
+  {{ $searchUIJs := resources.Get "js/search-flexsearch-ui.js" }}
+  {{ if $searchUIJs }}
+    {{ $searchUIJs = $searchUIJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $searchUIJs.RelPermalink }}"></script>
+  {{ end }}
+
+{{ end }}
+
+<!-- Busuanzi Analytics - 优化加载速度 -->
+{{ if .Site.Params.analytics.busuanzi.enabled }}
+{{ $busuanziUrl := .Site.Params.analytics.busuanzi.url }}
+{{ $busuanziApi := .Site.Params.analytics.busuanzi.api | default "https://busuanzi.xxdevops.cn/api" }}
+{{ $busuanziPrefix := .Site.Params.analytics.busuanzi.prefix | default "busuanzi" }}
+{{ $busuanziStyle := .Site.Params.analytics.busuanzi.style | default "default" }}
+{{ $busuanziPjax := .Site.Params.analytics.busuanzi.pjax }}
+{{ $busuanziType := .Site.Params.analytics.busuanzi.type | default "classic" }}
+{{ if eq $busuanziType "eo" }}
+<!-- EO 版本：先设置全局配置（确保在 busuanzi.eo.js 加载前执行） -->
+<script>
+  window.BUSUANZI_API_URL = '{{ $busuanziApi }}';
+  window.BUSUANZI_CONFIG = {
+    apiUrl: '{{ $busuanziApi }}',
+    autoInit: true,
+    debug: false
+  };
+</script>
+{{ end }}
+<script>
+(function() {
+  // 优化加载策略：减少延迟，提升用户体验
+  function loadBusuanzi() {
+    var script = document.createElement('script');
+    script.src = '{{ $busuanziUrl }}';
+    {{ if eq $busuanziType "classic" }}
+    script.setAttribute('data-api', '{{ $busuanziApi }}');
+    script.setAttribute('data-prefix', '{{ $busuanziPrefix }}');
+    script.setAttribute('data-style', '{{ $busuanziStyle }}');
+    {{ if $busuanziPjax }}script.setAttribute('pjax', '');{{ end }}
+    {{ end }}
+    script.async = true;
+    document.body.appendChild(script);
+  }
+
+  // 首页立即加载，其他页面使用空闲时加载
+  var isHomePage = document.body.classList.contains('home-page');
+
+  if (document.readyState === 'complete') {
+    // 页面已经加载完成
+    if (isHomePage) {
+      // 首页：立即加载或仅延迟200ms
+      setTimeout(loadBusuanzi, 200);
+    } else {
+      // 其他页面：空闲时加载或延迟500ms
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadBusuanzi);
+      } else {
+        setTimeout(loadBusuanzi, 500);
+      }
+    }
+  } else {
+    // 等待DOM加载完成即可（不等完整load）
+    if (document.readyState === 'interactive' || document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        if (isHomePage) {
+          setTimeout(loadBusuanzi, 200);
+        } else {
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadBusuanzi);
+          } else {
+            setTimeout(loadBusuanzi, 500);
+          }
+        }
+      });
+    }
+  }
+})();
+</script>
+{{ end }}
+
+<!-- Friend Links Page (friends page only) -->
+{{ if eq .Type "friends" }}
+  {{ $friendLinksPageJs := resources.Get "js/friend-links-page.js" }}
+  {{ if $friendLinksPageJs }}
+    {{ $friendLinksPageJs = $friendLinksPageJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $friendLinksPageJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}
+
+<!-- Archives Page (archives page only) -->
+{{ if eq .Layout "archives" }}
+  {{ $archivesJs := resources.Get "js/archives-lazy-load.js" }}
+  {{ if $archivesJs }}
+    {{ $archivesJs = $archivesJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $archivesJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}
+
+<!--  PjaxLite - 轻量级 SPA 页面过渡 (仅文档页面，本地文件) -->
+{{ if or (eq .Section "docs") (eq .Type "docs") (in (slice "linux" "frontend" "code" "hacker" "topic" "tools") .Section) }}
+  {{ $pjaxLiteJs := resources.Get "js/pjax-lite.js" }}
+  {{ if $pjaxLiteJs }}
+    {{ $pjaxLiteJs = $pjaxLiteJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $pjaxLiteJs.RelPermalink }}"></script>
+  {{ end }}
+
+  {{ $pjaxInitJs := resources.Get "js/pjax-init.js" }}
+  {{ if $pjaxInitJs }}
+    {{ $pjaxInitJs = $pjaxInitJs | resources.Minify | resources.Fingerprint }}
+    <script defer src="{{ $pjaxInitJs.RelPermalink }}"></script>
+  {{ end }}
+{{ end }}

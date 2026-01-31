@@ -1,0 +1,424 @@
+// ========================================
+// VitePress Doc Layout (ported from vitepress-theme-teek)
+// ========================================
+
+.VPContent {
+  flex-grow: 1;
+  flex-shrink: 0;
+  margin: var(--vp-layout-top-height, 0px) auto 0;
+  width: 100%;
+  padding-top: calc(var(--vp-nav-height) + var(--vp-layout-top-height, 0px));
+
+  &.has-sidebar {
+    margin: 0;
+  }
+
+  .VPDoc {
+    width: 100%;
+    padding: 0; // 移动端不占据空间，像固定定位的侧边栏一样
+
+    &.has-sidebar {
+      padding: 0;
+    }
+
+    .container {
+      max-width: none;
+      margin: 0 auto;
+      padding: 0;
+      width: 100%;
+    }
+
+    .aside {
+      display: none;
+      order: 2;
+      flex-grow: 1;
+      padding-left: 32px;
+      width: 100%;
+      max-width: var(--toc-width, 256px);  /* 支持动态调整宽度 */
+      min-width: 200px;  /* 最小宽度 */
+      position: relative;  /* 为拖拽手柄定位 */
+    }
+
+    .content {
+      position: relative;
+      margin: 0 auto;
+      width: 100%;
+      padding: 32px 16px 96px; // 移动端正文区域的留白，从容器转移到内容区
+    }
+
+    .content-container {
+      margin: 0 auto;
+    }
+  }
+}
+
+.VPSidebar {
+  position: fixed;
+  top: var(--vp-layout-top-height, 0px);
+  bottom: 0;
+  left: 0;
+  z-index: 120;
+  padding: 32px 32px 96px;
+  width: calc(100vw - 64px);
+  max-width: 320px;
+  background-color: var(--vp-sidebar-bg-color);
+  opacity: 0;
+  visibility: hidden;
+  box-shadow: var(--vp-shadow-3);
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translateX(-100%);
+  transition:
+    opacity 0.5s,
+    transform 0.25s ease;
+  overscroll-behavior: contain;
+}
+
+.VPSidebar.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  transition:
+    opacity 0.25s,
+    transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.dark-mode .VPSidebar {
+  box-shadow: var(--vp-shadow-1);
+}
+
+@media (min-width: 768px) {
+  .VPContent .VPDoc {
+    padding: 48px 32px 128px;
+  }
+}
+
+@media (min-width: 960px) {
+  .VPContent {
+    &.has-sidebar {
+      margin: var(--vp-layout-top-height, 0px) 0 0;
+      // 移除 padding-left，让容器贴近左侧边框
+      // padding-left: var(--vp-sidebar-width);
+    }
+
+    .VPDoc {
+      padding: 48px 32px 0;
+
+      &.has-sidebar {
+        padding: 0;
+      }
+
+      &:not(.has-sidebar) {
+        .container {
+          display: flex;
+          justify-content: center;
+          max-width: 992px;
+        }
+
+        .content {
+          max-width: 752px;
+        }
+      }
+
+      .content {
+        padding: 0 32px 128px;
+      }
+    }
+  }
+
+  .VPSidebar {
+    padding: var(--vp-nav-height) 32px 96px;
+    width: var(--vp-sidebar-width);
+    max-width: 100%;
+    background-color: var(--vp-sidebar-bg-color);
+    opacity: 1;
+    visibility: visible;
+    box-shadow: none;
+    transform: translateX(0);
+  }
+
+  .VPSidebar .curtain {
+    position: sticky;
+    top: calc(var(--vp-nav-height) * -1);
+    left: 0;
+    z-index: 1;
+    margin: calc(var(--vp-nav-height) * -1) -32px 0;
+    height: var(--vp-nav-height);
+    background-color: var(--vp-sidebar-bg-color);
+  }
+}
+
+@media (min-width: 1280px) {
+  .VPContent {
+    .VPDoc {
+      .container {
+        display: flex;
+        // justify-content: center;
+      }
+
+      .aside {
+        display: block;
+        position: relative;
+
+        .aside-container {
+          position: fixed;
+          top: calc(var(--vp-nav-height) + var(--vp-layout-top-height, 0px) + var(--vp-doc-top-height, 0px) + 24px);  /* 减少顶部间距 */
+          bottom: 0;  /* 延伸到浏览器底部 */
+          width: calc(var(--toc-width, 256px) - 32px);  /* 减去 padding-left */
+          height: auto;  /* 自动高度，从top到bottom */
+          overflow-x: visible;
+          overflow-y: auto;
+          scrollbar-width: none;
+        }
+
+        .aside-container::-webkit-scrollbar {
+          display: none;
+        }
+
+        .aside-curtain {
+          position: fixed;
+          bottom: 0;
+          right: clamp(20px, calc((100vw - 1440px) / 2), 100vw);
+          z-index: 10;
+          width: 224px;
+          height: 32px;
+          background: linear-gradient(transparent, var(--vp-c-bg) 70%);
+          pointer-events: none;
+        }
+
+        // 优化右侧边栏 - 即本页导航栏的样式
+        .aside-content {
+          display: flex;
+          flex-direction: column;
+          // max-height: calc(100vh - var(--vp-nav-height) - var(--vp-layout-top-height, 0px) - 80px);
+          // padding-bottom: 32px;
+          // overflow: visible;
+          height: 100%;
+          max-height: 100%;
+          padding-bottom: 0;
+          overflow: hidden;
+
+          .content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            overflow: auto; // 原visible
+          }
+        }
+
+        &.left-aside {
+          order: 1;
+          padding-left: unset;
+          padding-right: 32px;
+        }
+      }
+
+      .content {
+        order: 1;
+        margin: 0;
+        min-width: 640px;
+        padding: 55px 32px 128px;
+      }
+
+      &.has-aside {
+        .content-container {
+          max-width: 688px;
+        }
+      }
+    }
+  }
+
+  .VPSidebar {
+    padding-left: clamp(32px, calc((100vw - (var(--vp-layout-max-width) - 64px)) / 2), 100vw);
+    width: calc((100vw - (var(--vp-layout-max-width) - 64px)) / 2 + var(--vp-sidebar-width) - 32px);
+  }
+}
+
+@media (min-width: 1440px) {
+  // 移除居中效果，让容器贴近浏览器边框
+  // .VPContent.has-sidebar {
+  //   padding-right: calc((100vw - var(--vp-layout-max-width)) / 2);
+  //   padding-left: calc((100vw - var(--vp-layout-max-width)) / 2);
+  // }
+
+  .VPContent .VPDoc:not(.has-sidebar) {
+    .content {
+      max-width: 784px;
+    }
+
+    .container {
+      max-width: 1104px;
+    }
+  }
+}
+
+// ========================================
+// Layout variants (mirrors vitepress-theme-teek article-page-style)
+// ========================================
+
+.tk-card,
+.tk-card-nav {
+  .VPContent:not(.is-home) .VPDoc {
+    &.has-sidebar {
+      background-color: var(--vp-c-bg);
+      padding-top: 0;
+      padding-left: 0; // 移除左边距，让容器更靠左
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    &:not(.has-sidebar) {
+      padding-top: 0;
+
+      .container {
+        background-color: var(--vp-c-bg);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+        > .content {
+          padding-left: 0;
+          padding-right: 10px;
+        }
+      }
+    }
+  }
+}
+
+.tk-segment,
+.tk-segment-nav {
+  .VPContent:not(.is-home) .VPDoc {
+    padding: 0;
+
+    &:not(.has-sidebar) .container > .content {
+      max-width: 845px;
+    }
+
+    .container > .content {
+      background-color: var(--vp-c-bg);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .aside {
+      .aside-container {
+        .aside-content {
+          padding-bottom: 20px;
+
+          .content {
+            padding: 16px 15px 10px 16px;
+            border-left: none;
+            background-color: var(--vp-c-bg);
+            border-radius: 4px;
+            box-shadow: var(--vp-shadow-1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+          }
+        }
+      }
+
+      .aside-curtain {
+        display: none;
+      }
+    }
+  }
+}
+
+// ========================================
+// Article analyze meta bar
+// ========================================
+
+.tk-article-analyze {
+  width: 100%;
+  align-items: center;
+
+  .tk-article-breadcrumb {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+.tk-article-analyze__wrapper {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+
+  > .flx-center {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tk-article-info {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    &__item {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    &.article > span:not(:last-child),
+    &__item:not(.split):not(:last-child) {
+      margin-right: 0;
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  .tk-article-analyze {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    justify-content: flex-start;
+  }
+
+  .tk-article-analyze__wrapper {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+}
+
+// ========================================
+// 移动端代码块占满宽度（640px - 960px）
+// ========================================
+@media (max-width: 960px) {
+  .VPContent .VPDoc .content {
+    // 代码块突破padding，占满全宽
+    .vp-code-block,
+    div[class*='language-'],
+    pre[class*='language-'] {
+      margin-left: -16px;
+      margin-right: -16px;
+      border-radius: 0; // 移除圆角，贴合边缘
+    }
+  }
+}
+
+// ========================================
+// 小屏幕优化（< 640px）- 最大化内容显示区域
+// ========================================
+@media (max-width: 640px) {
+  .VPContent .VPDoc {
+    padding: 0; // 容器完全不占空间
+
+    .content {
+      padding: 24px 12px 64px; // 进一步减少正文区padding：上下24px/64px，左右12px
+
+      // 代码块突破padding，占满全宽
+      .vp-code-block,
+      div[class*='language-'],
+      pre[class*='language-'] {
+        margin-left: -12px;
+        margin-right: -12px;
+        border-radius: 0; // 移除圆角，贴合边缘
+      }
+    }
+  }
+
+  .VPSidebar {
+    padding: 24px 16px 64px; // 侧边栏也减少padding
+    width: calc(100vw - 32px); // 宽度调整匹配padding
+  }
+}

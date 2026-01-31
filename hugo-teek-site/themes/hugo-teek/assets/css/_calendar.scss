@@ -1,0 +1,382 @@
+// 日历卡片样式
+// ==================
+
+.tk-calendar-card {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  .tk-calendar-body {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+
+    // 响应式：移动端改为垂直布局
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 0.75rem;
+    }
+
+    // 小屏幕手机适配
+    @media (max-width: 480px) {
+      padding: 0.625rem;
+      gap: 0.5rem;
+    }
+  }
+
+  // 左侧：日期详情（4行布局）
+  .tk-calendar-left {
+    flex: 0 0 auto;
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-right: 1rem;
+    padding-left: 0.5rem;
+    border-right: 1px solid var(--vp-c-divider, rgba(60, 60, 67, 0.12));
+
+    // 平板适配
+    @media (max-width: 1024px) {
+      min-width: 100px;
+      padding-right: 0.75rem;
+    }
+
+    // 移动端适配
+    @media (max-width: 768px) {
+      border-right: none;
+      border-bottom: 1px solid var(--vp-c-divider, rgba(60, 60, 67, 0.12));
+      // padding-right: 0;
+      padding-bottom: 0.75rem;
+      min-width: 100%;
+      width: 100%;
+    }
+
+    // 小屏幕手机适配
+    @media (max-width: 480px) {
+      gap: 0.375rem;
+      padding-left: 0.25rem;
+      padding-bottom: 0.625rem;
+    }
+
+    // 第1行：第X周 周X
+    .calendar-row-1 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--vp-c-text-2, var(--text-secondary));
+      font-weight: 500;
+
+      #calendar-weekday {
+        text-align: center;
+      }
+
+      // 移动端字体调整
+      @media (max-width: 768px) {
+        font-size: clamp(0.7rem, 3vw, 0.75rem);
+      }
+
+      // 小屏幕手机
+      @media (max-width: 480px) {
+        font-size: 0.7rem;
+      }
+    }
+
+    // 第2行：日期大号居中
+    .calendar-row-2 {
+      text-align: center;
+      margin: 0.3rem 0;
+
+      .calendar-day {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #0e7490;  // 更深的蓝色，提升对比度 (WCAG AA)
+        line-height: 1;
+
+        .dark-mode & {
+          color: #22d3ee;  // 暗色模式使用亮色
+        }
+
+        // 响应式字体大小
+        @media (max-width: 1024px) {
+          font-size: 2.25rem;
+        }
+
+        @media (max-width: 768px) {
+          font-size: clamp(2rem, 8vw, 2.5rem);
+        }
+
+        @media (max-width: 480px) {
+          font-size: 2rem;
+        }
+      }
+    }
+
+    // 第3行：XX年XX月第X天
+    .calendar-row-3 {
+      display: flex;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--vp-c-text-1, var(--text-color));
+      font-weight: 500;
+
+      @media (max-width: 768px) {
+        justify-content: center;
+        font-size: clamp(0.75rem, 3.5vw, 0.8rem);
+      }
+
+      @media (max-width: 480px) {
+        font-size: 0.75rem;
+        gap: 0.3rem;
+      }
+    }
+
+    // 第4行：农历XX年 X月 初X
+    .calendar-row-4 {
+      display: flex;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--vp-c-text-2, var(--text-secondary));
+      flex-wrap: wrap;
+
+      @media (max-width: 768px) {
+        justify-content: center;
+        font-size: clamp(0.7rem, 3vw, 0.75rem);
+      }
+
+      @media (max-width: 480px) {
+        font-size: 0.7rem;
+        gap: 0.3rem;
+      }
+    }
+  }
+
+  // 右侧：迷你日历
+  .tk-calendar-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .calendar-mini {
+      width: 100%;
+      max-width: 160px;
+
+      // 移动端适配：增大日历宽度，更好利用空间
+      @media (max-width: 768px) {
+        max-width: 100%;
+        width: 100%;  // 确保占满容器宽度
+      }
+
+      // 小屏幕手机适配：保持较大的显示宽度
+      @media (max-width: 480px) {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.15rem;
+      margin-bottom: 0.3rem;
+
+      span {
+        text-align: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--vp-c-text-2, var(--text-secondary));
+        padding: 0.2rem 0;
+
+        // 移动端字体调整：增大字体，更易读
+        @media (max-width: 768px) {
+          font-size: clamp(0.7rem, 3vw, 0.8rem);
+          padding: 0.25rem 0;
+        }
+
+        @media (max-width: 480px) {
+          font-size: 0.7rem;
+        }
+      }
+    }
+
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.15rem;
+
+      // 移动端间距调整：增大间距，使日期更清晰
+      @media (max-width: 768px) {
+        gap: clamp(0.2rem, 1.5vw, 0.3rem);
+      }
+
+      @media (max-width: 480px) {
+        gap: 0.2rem;
+      }
+
+      .calendar-day-cell {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        color: var(--vp-c-text-1, var(--text-color));
+        border-radius: 50%;
+        transition: all 0.2s ease;
+
+        // 移动端字体调整：增大字体，更易读
+        @media (max-width: 768px) {
+          font-size: clamp(0.75rem, 3vw, 0.85rem);
+        }
+
+        @media (max-width: 480px) {
+          font-size: 0.75rem;
+        }
+
+        &.empty {
+          visibility: hidden;
+        }
+
+        &.today {
+          background: #0e7490;  // 更深的蓝色，确保白色文字对比度
+          color: white;
+          font-weight: 700;
+          box-shadow: 0 2px 6px rgba(14, 116, 144, 0.3);
+
+          .dark-mode & {
+            background: #0891b2;
+            box-shadow: 0 2px 6px rgba(8, 145, 178, 0.3);
+          }
+        }
+
+        &:not(.empty):not(.today):hover {
+          background: var(--vp-c-default-soft, rgba(0, 0, 0, 0.04));
+          cursor: pointer;
+
+          .dark-mode & {
+            background: rgba(255, 255, 255, 0.08);
+          }
+        }
+      }
+    }
+  }
+}
+
+// 暗色模式适配
+.dark-mode .tk-calendar-card {
+  .tk-calendar-left {
+    border-color: var(--vp-c-border, rgba(56, 189, 248, 0.35));
+  }
+
+  @media (max-width: 768px) {
+    .tk-calendar-left {
+      border-color: var(--vp-c-border, rgba(56, 189, 248, 0.35));
+    }
+  }
+}
+
+// 时间进度卡片样式
+// ==================
+.tk-time-progress-card {
+  .time-progress-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  // 进度项（年/月/周）
+  .progress-item {
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+
+      .progress-percent {
+        font-weight: 600;
+        color: #0e7490;  // 更深的蓝色，提升对比度 (WCAG AA)
+
+        .dark-mode & {
+          color: #22d3ee;  // 暗色模式使用亮色
+        }
+      }
+
+      .progress-remain {
+        color: var(--vp-c-text-2, var(--text-secondary));
+      }
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--vp-c-default-soft, rgba(0, 0, 0, 0.04));
+      border-radius: 999px;
+      overflow: hidden;
+
+      .dark-mode & {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #0e7490, #0891b2);  // 更深的蓝色渐变
+        border-radius: 999px;
+        transition: width 0.3s ease;
+
+        .dark-mode & {
+          background: linear-gradient(90deg, #0891b2, #06b6d4);
+        }
+      }
+    }
+  }
+
+  // 春节倒计时
+  .spring-festival-countdown {
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background: var(--vp-c-bg-alt, #f6f6f7);
+    border: 1px solid var(--vp-c-divider, rgba(60, 60, 67, 0.12));
+    border-radius: 12px;
+    text-align: center;
+
+    .dark-mode & {
+      background: var(--vp-c-bg-elv, #15233c);
+      border-color: var(--vp-c-border, rgba(56, 189, 248, 0.35));
+    }
+
+    .countdown-label {
+      font-size: 0.85rem;
+      color: #4b5563;  // 更深的灰色，提升对比度 (was #6b7280)
+      margin-bottom: 0.5rem;
+
+      .dark-mode & {
+        color: var(--vp-c-text-2, var(--text-secondary));
+      }
+    }
+
+    .countdown-days {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0e7490;  // 更深的蓝色，提升对比度 (WCAG AA)
+      line-height: 1;
+      margin: 0.5rem 0;
+
+      .dark-mode & {
+        color: #22d3ee;  // 暗色模式使用亮色
+      }
+    }
+
+    .countdown-date {
+      font-size: 0.8rem;
+      color: #4b5563;  // 更深的灰色，提升对比度 (was #6b7280)
+
+      .dark-mode & {
+        color: var(--vp-c-text-2, var(--text-secondary));
+      }
+    }
+  }
+}

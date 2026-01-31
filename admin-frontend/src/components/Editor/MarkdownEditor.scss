@@ -1,0 +1,217 @@
+/* 所有样式包裹在 .markdown-editor 下，避免污染全局 */
+.markdown-editor {
+  /* ==================== 编辑器整体美化 ==================== */
+  .vditor {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    background: #fff;
+  }
+
+  /* 工具栏美化 */
+  .vditor-toolbar {
+    min-height: 48px;
+    display: flex !important;
+    justify-content: flex-start !important; /* 强制左对齐 */
+    flex-wrap: nowrap !important; /* 不换行 */
+    overflow-x: auto; /* 超出时滚动 */
+    background: linear-gradient(to bottom, #fafbfc 0%, #f6f8fa 100%);
+    border-bottom: 1px solid #e1e4e8;
+    padding: 8px 16px !important; /* 覆盖 Vditor 动态设置的 padding-left */
+    padding-left: 16px !important; /* 强制左边距为 16px */
+    padding-right: 16px !important;
+    gap: 4px;
+  }
+
+  /* 预览模式下也强制左对齐并重置内边距 */
+  .vditor--preview .vditor-toolbar {
+    justify-content: flex-start !important;
+    align-items: center !important;
+    padding-left: 16px !important; /* 覆盖动态计算的值 */
+    padding-right: 16px !important;
+  }
+
+  /* 工具栏滚动条美化 */
+  .vditor-toolbar::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .vditor-toolbar::-webkit-scrollbar-thumb {
+    background: #d1d5da;
+    border-radius: 2px;
+  }
+
+  .vditor-toolbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* 工具栏按钮美化 */
+  .vditor-toolbar__item {
+    margin: 0;
+    flex-shrink: 0; /* 防止按钮被压缩 */
+  }
+
+  .vditor-toolbar__item button {
+    height: 32px;
+    min-width: 32px;
+    border-radius: 6px;
+    transition: all 0.15s ease; /* 缩短动画时间 */
+    color: #586069;
+    background: transparent;
+    border: 1px solid transparent;
+  }
+
+  .vditor-toolbar__item button:hover {
+    background: #fff;
+    color: #0366d6;
+    border-color: #e1e4e8;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    /* 移除 transform，避免按钮上下移动 */
+  }
+
+  .vditor-toolbar__item button:active {
+    /* 移除 transform */
+    box-shadow: none;
+  }
+
+  /* 工具栏提示框（tooltip）美化 - 更清晰可读 */
+  .vditor-tooltipped::after {
+    background: #24292e !important;
+    color: #fff !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    padding: 6px 10px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15) !important;
+    white-space: nowrap !important;
+  }
+
+  /* 统一所有 tooltip 都在下方显示 */
+  .vditor-tooltipped::after {
+    top: 100% !important;
+    bottom: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    margin-top: 8px !important;
+    margin-bottom: 0 !important;
+    transform: translateX(-50%) !important;
+  }
+
+  /* 统一箭头都指向上方（tooltip 在下方） */
+  .vditor-tooltipped::before {
+    top: 100% !important;
+    bottom: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    margin-top: 2px !important;
+    margin-bottom: 0 !important;
+    margin-left: -5px !important;
+    border-bottom-color: #24292e !important;
+    border-top-color: transparent !important;
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+  }
+
+  /* 移除所有方向特定的样式，统一使用下方 */
+  .vditor-tooltipped--n::after,
+  .vditor-tooltipped--s::after,
+  .vditor-tooltipped--e::after,
+  .vditor-tooltipped--w::after {
+    top: 100% !important;
+    bottom: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    margin-top: 8px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .vditor-tooltipped--n::before,
+  .vditor-tooltipped--s::before,
+  .vditor-tooltipped--e::before,
+  .vditor-tooltipped--w::before {
+    top: 100% !important;
+    bottom: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    margin-top: 2px !important;
+    margin-left: -5px !important;
+    border-bottom-color: #24292e !important;
+    border-top-color: transparent !important;
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+  }
+
+  /* 工具栏分隔线美化 */
+  .vditor-toolbar__divider {
+    height: 24px;
+    margin: 4px 8px;
+    border-left: 1px solid #d1d5da;
+    opacity: 0.5;
+  }
+
+  /* 预览模式下被禁用的按钮 */
+  .vditor--preview .vditor-toolbar__item button[disabled] {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+  }
+
+  /* 预览模式下保持所有按钮占位，避免布局跳动 */
+  .vditor--preview .vditor-toolbar__item {
+    visibility: visible !important;
+  }
+
+  .vditor--preview .vditor-toolbar__item[style*="display: none"] {
+    display: flex !important;
+    visibility: hidden !important;
+    pointer-events: none;
+  }
+
+  /* 自定义按钮样式 */
+  .vp-toolbar-btn {
+    color: #586069;
+    font-weight: 500;
+  }
+
+  .vp-toolbar-btn:hover {
+    background: #fff;
+    color: #0366d6;
+    border-color: #e1e4e8;
+  }
+
+  /* 自定义按钮带 vditor-menu--disabled class 时的样式 */
+  .vp-toolbar-btn.vditor-menu--disabled {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+  }
+
+  .vp-toolbar-btn.vditor-menu--disabled:hover {
+    background: transparent !important;
+    transform: none !important;
+    color: #586069 !important;
+    border-color: transparent !important;
+  }
+
+  /* 预览模式下禁用自定义按钮 - 匹配 Vditor 的 disabled 样式 */
+  .vditor--preview .vp-toolbar-btn {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+  }
+
+  /* 让自定义按钮在预览模式下的样式和原生 vditor-menu--disabled 一致 */
+  .vditor--preview .vditor-toolbar__item:has(.vp-toolbar-btn) {
+    opacity: 0.3 !important;
+    pointer-events: none !important;
+  }
+
+  .vditor--preview .vp-toolbar-btn:hover {
+    background: transparent !important;
+    transform: none !important;
+    color: #586069 !important;
+    border-color: transparent !important;
+  }
+
+  /* 其他样式省略,保持不变... */
+}

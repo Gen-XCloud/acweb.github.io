@@ -1,0 +1,48 @@
+<div class="sidebar-content">
+  {{ partial "blogger-card.html" . }}
+
+  {{ if .Site.Data.announcement }}
+  <div class="sidebar-widget">
+    {{ partial "announcement-card.html" . }}
+  </div>
+  {{ end }}
+
+  {{ if where .Site.RegularPages "Params.featured" true }}
+  <div class="sidebar-widget">
+    {{ partial "featured-posts.html" . }}
+  </div>
+  {{ end }}
+
+  {{ if .Site.Params.category.enabled }}
+  <div class="sidebar-widget">
+    <h3 class="widget-title">分类</h3>
+    {{ partial "category-card.html" . }}
+  </div>
+  {{ end }}
+
+  <div class="sidebar-widget">
+    <h3 class="widget-title">标签云</h3>
+    {{ partial "tag-cloud.html" . }}
+  </div>
+
+  <div class="sidebar-widget">
+    {{ partial "site-stats.html" . }}
+  </div>
+
+  {{ if .Site.Params.wechatOfficial.enabled }}
+  <div class="sidebar-widget">
+    {{ partial "wechat-official-card.html" . }}
+  </div>
+  {{ end }}
+
+  <div class="sidebar-widget">
+    <h3 class="widget-title">最近文章</h3>
+    <ul class="recent-posts">
+      {{ range first 5 (where .Site.RegularPages "Type" "posts") }}
+      <li>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
+</div>

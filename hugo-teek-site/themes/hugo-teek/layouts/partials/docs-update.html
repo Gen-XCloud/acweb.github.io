@@ -1,0 +1,54 @@
+{{- $cfg := .Site.Params.articleUpdate | default dict -}}
+{{- $limit := $cfg.limit | default 3 -}}
+{{- $limit = cond (gt (int $limit) 0) (int $limit) 3 -}}
+{{- $moreURL := $cfg.moreURL | default "/archives/" -}}
+{{- $current := . -}}
+{{/*
+  性能优化：使用缓存的全站文档查询
+  - 原来每个页面都执行 where + sort（1687次）
+  - 现在使用 partialCached 全局缓存（仅1次）
+*/}}
+{{- $sorted := partialCached "docs-update-cached.html" . "global" -}}
+{{- $recommended := slice -}}
+{{- range $page := $sorted }}
+  {{- if ne $page.RelPermalink $current.RelPermalink }}
+    {{- $recommended = $recommended | append $page -}}
+  {{- end -}}
+  {{- if ge (len $recommended) $limit }}
+    {{- break -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if gt (len $recommended) 0 }}
+<div class="tk-article-update">
+  <div class="tk-article-update__title flx-align-center">
+    <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="16" height="16" aria-hidden="true">
+      <path fill="currentColor" d="M896 192h-196.8l-30.08-60.16A64 64 0 0 0 610.688 96H413.344a64 64 0 0 0-58.432 35.84L324.8 192H128a64 64 0 0 0-64 64v576a64 64 0 0 0 64 64h768a64 64 0 0 0 64-64V256a64 64 0 0 0-64-64zm0 640H128V256h200.832l44.8-89.6h276.736l44.8 89.6H896v576z"/>
+      <path fill="currentColor" d="M448 416H256v64h192v-64zm320 128H256v64h512v-64zm0 128H256v64h512v-64z"/>
+    </svg>
+    <a href="{{ $moreURL }}" class="hover-color" aria-label="更多文章">{{ $cfg.title | default "最新文章" }}</a>
+  </div>
+
+  <ul>
+    {{- range $idx, $page := $recommended }}
+      <li class="flx-center">
+        <span class="tk-article-update--num" aria-hidden="true">{{ printf "%02d" (add $idx 1) }}</span>
+        <div class="tk-article-update__content">
+          <a href="{{ $page.RelPermalink }}" class="flx-1 hover-color sle" aria-label="{{ $page.Title }}">
+            {{ $page.Title }}
+          </a>
+          {{ with $page.Date }}
+            <span class="tk-article-update__content--date">{{ .Format "2006-01-02" }}</span>
+          {{ end }}
+        </div>
+      </li>
+    {{- end }}
+    <li class="flx-center">
+      <span class="tk-article-update--num" aria-hidden="true"></span>
+      <div class="tk-article-update__content">
+        <a href="{{ $moreURL }}" class="flx-1 hover-color sle" aria-label="更多文章">{{ $cfg.moreText | default "更多文章 >" }}</a>
+      </div>
+    </li>
+  </ul>
+</div>
+{{- end }}

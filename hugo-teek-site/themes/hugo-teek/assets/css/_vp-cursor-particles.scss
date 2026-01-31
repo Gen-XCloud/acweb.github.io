@@ -1,0 +1,48 @@
+// ========================================
+// VP彩色光标粒子效果
+// VitePress Cursor Particle Effect
+// ========================================
+// 从 VitePress Theme Teek 移植
+// 鼠标移动时生成彩色星星拖尾效果
+
+/* 粒子容器 */
+#guangbiao-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  pointer-events: none; // 不阻挡鼠标事件
+  overflow: hidden;
+}
+
+/* 星星粒子样式 */
+.star {
+  position: absolute;
+  pointer-events: none;
+  font-family: Arial, sans-serif;
+
+  // 使用 ::before 生成星星字符 ✦
+  &::before {
+    content: '✦';
+    display: block;
+    text-shadow:
+      0 0 2px rgba(255, 255, 255, 0.8),
+      0 0 4px currentColor,
+      0 0 8px currentColor;
+    will-change: transform, opacity;
+  }
+
+  // 3D变换支持
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* 性能优化 */
+#guangbiao-container,
+.star {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}

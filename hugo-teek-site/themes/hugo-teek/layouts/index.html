@@ -1,0 +1,354 @@
+{{ define "main" }}
+<!-- Hero Background Configuration (Only load when enabled) -->
+{{ if .Site.Params.heroBg.enabled }}
+  {{ $heroBgData := index .Site.Data "hero-backgrounds" }}
+
+  {{ if $heroBgData }}
+    {{ if $heroBgData.images }}
+      {{ $images := $heroBgData.images }}
+      {{ if gt (len $images) 0 }}
+        <!-- 暴露静态图片列表给 JS (由 JS 随机选择和预加载) -->
+        <script>
+          window.heroBgStaticImages = [
+            {{ range $heroBgData.images }}"{{ .url }}",{{ end }}
+          ];
+        </script>
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{ if .Site.Params.heroBg.apiUrl }}
+    <script id="hero-bg-api-url" type="text/plain">{{ .Site.Params.heroBg.apiUrl }}</script>
+  {{ end }}
+  <script id="hero-bg-api-enabled" type="text/plain">{{ .Site.Params.heroBg.apiEnabled }}</script>
+  {{ if .Site.Params.heroBg.mode }}
+    <script id="hero-bg-mode" type="text/plain">{{ .Site.Params.heroBg.mode }}</script>
+  {{ end }}
+{{ end }}
+
+<div class="home-page">
+  <!-- Full Screen Hero Section -->
+  <section class="hero-section-fullscreen {{ if not .Site.Params.heroBg.enabled }}hero-static{{ end }}"
+           {{ if .Site.Params.heroBg.enabled }}
+           data-autoplay="{{ .Site.Params.heroBg.autoPlay }}"
+           data-interval="{{ .Site.Params.heroBg.interval }}"
+           {{ end }}>
+    {{/* 已移除 hero-overlay 遮罩层，使用背景模糊代替 */}}
+    <div class="hero-content">
+      <h1 class="hero-title">{{ .Site.Title }}</h1>
+      {{ $scratch := newScratch }}
+      {{ $scratch.Set "subtitleItems" (slice) }}
+      {{ with .Site.Params.heroSubtitle.items }}
+        {{ $scratch.Set "subtitleItems" . }}
+      {{ else }}
+        {{ with index .Site.Data "hero-subtitle" }}
+          {{ with .items }}
+            {{ $scratch.Set "subtitleItems" . }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+      {{ $subtitleItems := $scratch.Get "subtitleItems" }}
+      {{ $subtitleConfig := .Site.Params.heroSubtitle }}
+      {{ $typeSpeed := default 90 $subtitleConfig.typeSpeed }}
+      {{ $deleteSpeed := default 45 $subtitleConfig.deleteSpeed }}
+      {{ $hold := default 1800 $subtitleConfig.hold }}
+      {{ $nextDelay := default 600 $subtitleConfig.nextDelay }}
+      {{ $shuffle := default false $subtitleConfig.shuffle }}
+      {{ if gt (len $subtitleItems) 0 }}
+      <p class="hero-subtitle hero-subtitle--typed">
+        <span
+          data-hero-subtitle
+          data-items='{{ $subtitleItems | jsonify }}'
+          data-type-speed="{{ $typeSpeed }}"
+          data-delete-speed="{{ $deleteSpeed }}"
+          data-hold="{{ $hold }}"
+          data-next-delay="{{ $nextDelay }}"
+          data-shuffle='{{ cond $shuffle "true" "false" }}'>{{ index $subtitleItems 0 }}</span>
+        <span class="hero-subtitle__caret" data-hero-caret>|</span>
+      </p>
+      {{ else }}
+      <p class="hero-subtitle">{{ .Site.Params.description }}</p>
+      {{ end }}
+      <div class="hero-scroll-indicator">
+        <span>向下滚动</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5v14m0 0l7-7m-7 7l-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Exit Hint -->
+    <!-- <div class="hero-exit-hint">
+      按 ESC 或 F11 退出全屏
+    </div> -->
+
+    <!-- Waves Transition -->
+    <svg class="hero-waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+      <defs>
+        <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+      </defs>
+      <g class="parallax">
+        <use class="wave-layer" xlink:href="#gentle-wave" x="48" y="0" />
+        <use class="wave-layer" xlink:href="#gentle-wave" x="48" y="3" />
+        <use class="wave-layer" xlink:href="#gentle-wave" x="48" y="5" />
+        <use class="wave-layer" xlink:href="#gentle-wave" x="48" y="7" />
+      </g>
+    </svg>
+  </section>
+  </section>
+
+  <!-- Content Section -->
+  <div class="home-content-section">
+    <div class="container">
+      <div class="home-content">
+        <!-- Main Content on Left -->
+        <div class="main-column">
+          <!-- Latest Posts -->
+          <section class="posts-section">
+            <div class="post-grid"
+                 data-mobile-initial-show="{{ .Site.Params.homepage.mobileInitialShow | default 10 }}"
+                 data-mobile-load-more-step="{{ .Site.Params.homepage.mobileLoadMoreStep | default 10 }}">
+              {{ $mainSections := .Site.Params.mainSections | default (slice "docs") }}
+              {{ $pages := where .Site.RegularPages "Type" "in" $mainSections }}
+
+              {{/* 三级排序：推荐+权重 > 推荐+无权重 > 普通文章 */}}
+              {{ $featuredPages := where $pages "Params.featured" true }}
+              {{ $normalPages := where $pages "Params.featured" "!=" true }}
+
+              {{/* 推荐文章分组：有权重 vs 无权重 */}}
+              {{ $featuredWithWeight := slice }}
+              {{ $featuredNoWeight := slice }}
+              {{ range $featuredPages }}
+                {{ if isset .Params "weight" }}
+                  {{ $featuredWithWeight = $featuredWithWeight | append . }}
+                {{ else }}
+                  {{ $featuredNoWeight = $featuredNoWeight | append . }}
+                {{ end }}
+              {{ end }}
+
+              {{/* 排序 */}}
+              {{ $featuredWithWeight = sort $featuredWithWeight "Params.weight" "asc" }}
+              {{ $featuredNoWeight = sort $featuredNoWeight "Date" "desc" }}
+              {{ $normalPages = sort $normalPages "Date" "desc" }}
+
+              {{/* 合并切片 - 逐个添加元素 */}}
+              {{ $sortedPages := $featuredWithWeight }}
+              {{ range $featuredNoWeight }}
+                {{ $sortedPages = $sortedPages | append . }}
+              {{ end }}
+              {{ range $normalPages }}
+                {{ $sortedPages = $sortedPages | append . }}
+              {{ end }}
+
+              {{ $pageSize := .Site.Params.homepage.paginatePCSize | default 27 }}
+              {{ $paginator := .Paginate $sortedPages $pageSize }}
+              {{ range $paginator.Pages }}
+              {{ partial "article-card-compact.html" . }}
+              {{ end }}
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-wrapper">
+              <nav class="pagination">
+                <!-- Left Arrow -->
+                {{ if $paginator.HasPrev }}
+                <a href="{{ $paginator.Prev.URL }}" class="pagination-arrow" aria-label="上一页">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+                {{ else }}
+                <span class="pagination-arrow disabled" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                {{ end }}
+
+                <!-- Page Numbers -->
+                <div class="pagination-numbers">
+                  {{ $currentPage := $paginator.PageNumber }}
+                  {{ $totalPages := $paginator.TotalPages }}
+
+                  {{ if le $totalPages 7 }}
+                    {{/* 总页数 ≤ 7：显示所有页码 */}}
+                    {{ range $paginator.Pagers }}
+                    <a href="{{ .URL }}" class="pagination-number {{ if eq .PageNumber $currentPage }}active{{ end }}">
+                      {{ .PageNumber }}
+                    </a>
+                    {{ end }}
+                  {{ else }}
+                    {{/* 总页数 > 7：智能显示 [1] ... [当前-1] [当前] [当前+1] ... [最后] */}}
+                    {{/* 始终显示第1页 */}}
+                    <a href="{{ (index $paginator.Pagers 0).URL }}" class="pagination-number {{ if eq $currentPage 1 }}active{{ end }}">1</a>
+
+                    {{ if gt $currentPage 3 }}
+                      <span class="pagination-ellipsis">...</span>
+                    {{ end }}
+
+                    {{/* 显示当前页附近的页码 */}}
+                    {{ $start := sub $currentPage 1 }}
+                    {{ $end := add $currentPage 1 }}
+                    {{ if lt $start 2 }}{{ $start = 2 }}{{ end }}
+                    {{ if gt $end (sub $totalPages 1) }}{{ $end = sub $totalPages 1 }}{{ end }}
+
+                    {{ range $paginator.Pagers }}
+                      {{ if and (ge .PageNumber $start) (le .PageNumber $end) }}
+                      <a href="{{ .URL }}" class="pagination-number {{ if eq .PageNumber $currentPage }}active{{ end }}">
+                        {{ .PageNumber }}
+                      </a>
+                      {{ end }}
+                    {{ end }}
+
+                    {{ if lt $currentPage (sub $totalPages 2) }}
+                      <span class="pagination-ellipsis">...</span>
+                    {{ end }}
+
+                    {{/* 始终显示最后一页 */}}
+                    <a href="{{ (index $paginator.Pagers (sub $totalPages 1)).URL }}" class="pagination-number {{ if eq $currentPage $totalPages }}active{{ end }}">
+                      {{ $totalPages }}
+                    </a>
+                  {{ end }}
+                </div>
+
+                <!-- Right Arrow -->
+                {{ if $paginator.HasNext }}
+                <a href="{{ $paginator.Next.URL }}" class="pagination-arrow" aria-label="下一页">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+                {{ else }}
+                <span class="pagination-arrow disabled" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                {{ end }}
+
+                <!-- Page Info -->
+                <div class="pagination-info">
+                  <span class="pagination-goto">前往</span>
+                  <input type="number"
+                         class="pagination-input"
+                         min="1"
+                         max="{{ $paginator.TotalPages }}"
+                         value="{{ $paginator.PageNumber }}"
+                         data-total-pages="{{ $paginator.TotalPages }}"
+                         data-base-url="{{ .Paginator.First.URL }}"
+                         aria-label="页码">
+                  <button class="pagination-goto-btn" aria-label="跳转">跳转</button>
+                  <span class="pagination-total">共 {{ $paginator.TotalNumberOfElements }} 条</span>
+                </div>
+              </nav>
+            </div>
+
+            <!-- Pagination JavaScript -->
+            <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                const paginationInput = document.querySelector('.pagination-input');
+                const gotoBtn = document.querySelector('.pagination-goto-btn');
+
+                function goToPage() {
+                  if (!paginationInput) return;
+
+                  const page = parseInt(paginationInput.value);
+                  const totalPages = parseInt(paginationInput.dataset.totalPages);
+                  const baseUrl = paginationInput.dataset.baseUrl || '/';
+
+                  if (isNaN(page) || page < 1 || page > totalPages) {
+                    alert('请输入有效的页码（1-' + totalPages + '）');
+                    return;
+                  }
+
+                  // 构造目标 URL
+                  let targetUrl;
+                  if (page === 1) {
+                    // 第1页：使用 baseUrl（移除 /page/X/ 部分）
+                    targetUrl = baseUrl.replace(/\/page\/\d+\/$/, '/');
+                  } else {
+                    // 其他页：baseUrl + /page/N/
+                    const cleanBase = baseUrl.replace(/\/page\/\d+\/$/, '/');
+                    targetUrl = cleanBase + 'page/' + page + '/';
+                  }
+
+                  window.location.href = targetUrl;
+                }
+
+                // 按钮点击事件
+                if (gotoBtn) {
+                  gotoBtn.addEventListener('click', goToPage);
+                }
+
+                // 输入框按 Enter 键
+                if (paginationInput) {
+                  paginationInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                      goToPage();
+                    }
+                  });
+                }
+              });
+            </script>
+
+            <!-- 响应式虚拟分页 JavaScript -->
+            {{ $responsivePagination := resources.Get "js/responsive-pagination.js" }}
+            {{ if $responsivePagination }}
+            <script defer src="{{ $responsivePagination.RelPermalink }}"></script>
+            {{ end }}
+          </section>
+        </div>
+
+        <!-- Right Sidebar -->
+        <aside class="home-sidebar">
+          {{ partial "blogger-card.html" . }}
+
+          {{ if and (ne (.Site.Params.homeSidebar.announcement.enabled | default true) false) .Site.Data.announcement }}
+          {{ partial "announcement-card.html" . }}
+          {{ end }}
+
+          {{ if ne (.Site.Params.homeSidebar.calendar.enabled | default true) false }}
+          {{ partial "calendar-card.html" . }}
+          {{ end }}
+
+          {{ if ne (.Site.Params.homeSidebar.timeProgress.enabled | default true) false }}
+          {{ partial "time-progress-card.html" . }}
+          {{ end }}
+
+          {{ if ne (.Site.Params.homeSidebar.recentComments.enabled | default true) false }}
+          {{ partial "recent-comments-card.html" . }}
+          {{ end }}
+
+          {{ if and (ne (.Site.Params.homeSidebar.featuredPosts.enabled | default true) false) (where .Site.RegularPages "Params.featured" true) }}
+          {{ partial "featured-posts-card.html" . }}
+          {{ end }}
+
+          {{ if ne (.Site.Params.homeSidebar.categories.enabled | default true) false }}
+          {{ partial "categories-card.html" . }}
+          {{ end }}
+
+          {{ if ne (.Site.Params.homeSidebar.hotTags.enabled | default true) false }}
+          {{ partial "hot-tags-card.html" . }}
+          {{ end }}
+
+          {{ if and (ne (.Site.Params.homeSidebar.friendLinks.enabled | default true) false) .Site.Data.friendLinks }}
+          {{ partial "friend-links-card.html" . }}
+          {{ end }}
+
+          {{ if and .Site.Params.sponsors.enabled .Site.Data.sponsors }}
+          {{ partial "sponsors-card.html" . }}
+          {{ end }}
+
+          {{ if ne (.Site.Params.homeSidebar.siteInfo.enabled | default true) false }}
+          {{ partial "site-info-card.html" . }}
+          {{ end }}
+
+          {{ if .Site.Params.wechatOfficial.enabled }}
+          {{ partial "wechat-official-card.html" . }}
+          {{ end }}
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

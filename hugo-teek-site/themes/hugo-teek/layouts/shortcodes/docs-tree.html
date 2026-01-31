@@ -1,0 +1,116 @@
+{{/* 自动文档树 Shortcode */}}
+{{ $currentSection := .Page.CurrentSection }}
+
+<div class="docs-tree">
+  {{/* 子分类 */}}
+  {{ range $currentSection.Sections }}
+    {{ $title := replaceRE "^\\d+\\." "" .Title }}
+    <div class="tree-category">
+      <div class="tree-category-header">
+        <span class="tree-icon">📁</span>
+        <a href="{{ .RelPermalink }}" class="tree-title">{{ $title }}</a>
+        <span class="tree-count">({{ len .Pages }} 篇)</span>
+      </div>
+
+      {{/* 文档列表 */}}
+      {{ if .Pages }}
+        <ul class="tree-pages">
+          {{ range .Pages }}
+            <li class="tree-page-item">
+              <span class="page-icon">📄</span>
+              <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+              <span class="page-date">{{ .Date.Format "2006-01-02" }}</span>
+            </li>
+          {{ end }}
+        </ul>
+      {{ end }}
+    </div>
+  {{ end }}
+
+  {{/* 直接文档 */}}
+  {{ if $currentSection.Pages }}
+    <div class="tree-pages-direct">
+      <ul class="tree-pages">
+        {{ range $currentSection.Pages }}
+          <li class="tree-page-item">
+            <span class="page-icon">📄</span>
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+            <span class="page-date">{{ .Date.Format "2006-01-02" }}</span>
+          </li>
+        {{ end }}
+      </ul>
+    </div>
+  {{ end }}
+</div>
+
+<style>
+.docs-tree {
+  margin: 2rem 0;
+}
+
+.tree-category {
+  margin-bottom: 1.5rem;
+  border-left: 3px solid var(--color-border, #e0e0e0);
+  padding-left: 1rem;
+}
+
+.tree-category-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.tree-icon {
+  font-size: 1.2rem;
+}
+
+.tree-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--color-primary, #3b82f6);
+  text-decoration: none;
+}
+
+.tree-title:hover {
+  text-decoration: underline;
+}
+
+.tree-count {
+  color: var(--color-text-secondary, #666);
+  font-size: 0.9rem;
+}
+
+.tree-pages {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 1.5rem;
+}
+
+.tree-page-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+}
+
+.page-icon {
+  font-size: 1rem;
+}
+
+.tree-page-item a {
+  flex: 1;
+  color: var(--color-text, #333);
+  text-decoration: none;
+}
+
+.tree-page-item a:hover {
+  color: var(--color-primary, #3b82f6);
+  text-decoration: underline;
+}
+
+.page-date {
+  color: var(--color-text-secondary, #999);
+  font-size: 0.85rem;
+}
+</style>

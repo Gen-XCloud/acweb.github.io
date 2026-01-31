@@ -1,0 +1,430 @@
+.tk-aside-outline,
+.VPDocAsideOutline {
+  position: relative;
+  display: none;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--vp-c-text-2, var(--text-secondary));
+  /* 隔离 TOC，防止受内容区域影响 */
+  contain: layout style;
+}
+
+.tk-aside-outline.has-outline,
+.VPDocAsideOutline.has-outline {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.tk-aside-outline .outline-content,
+.VPDocAsideOutline .outline-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 12px 12px 12px 16px;
+  border-left: none;
+  max-height: inherit;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: transparent;
+}
+
+// ========================================
+// TOC Resize Handle (拖拽手柄)
+// ========================================
+.toc-resize-handle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  cursor: col-resize;
+  background: var(--vp-c-divider, rgba(60, 60, 67, 0.12));  // 默认显示细分割线
+  transition: background 0.2s ease, width 0.2s ease;
+  z-index: 10;
+
+  &:hover,
+  &.dragging {
+    width: 4px;
+    background: var(--vp-c-brand-1, var(--primary-color));
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 0;
+    bottom: 0;
+    width: 12px;
+  }
+}
+
+.tk-aside-outline .outline-marker,
+.VPDocAsideOutline .outline-marker {
+  position: absolute;
+  top: 32px;
+  left: -1px;
+  z-index: 0;
+  width: 2px;
+  height: 18px;
+  border-radius: 2px;
+  background-color: var(--vp-c-brand-1, var(--primary-color));
+  opacity: 0;
+  transition:
+    top 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.2s ease,
+    opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: top, opacity;
+  pointer-events: none;
+}
+
+.tk-aside-outline .outline-marker.visible,
+.VPDocAsideOutline .outline-marker.visible {
+  opacity: 1;
+}
+
+.tk-aside-outline .outline-title,
+.VPDocAsideOutline .outline-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--vp-c-text-1, var(--text-color));
+  margin-bottom: 4px;
+}
+
+.tk-aside-outline .vp-outline-list,
+.VPDocAsideOutline .vp-outline-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+.tk-aside-outline .vp-outline-item,
+.VPDocAsideOutline .vp-outline-item {
+  position: relative;
+  opacity: 1;  // 优化：直接显示，移除初始透明度
+  transform: translateX(0);  // 优化：移除初始位移
+  animation: none;  // 优化：移除动画，减少重排
+}
+
+// 优化：移除层叠延迟动画，避免多个 TOC 项导致重排
+// 性能优化：移除动画可显著减少重排和重绘
+
+.tk-aside-outline .outline-link,
+.VPDocAsideOutline .outline-link {
+  display: block;
+  padding: 0 8px 0 0; // 移除上下padding
+  color: var(--vp-c-text-2, var(--text-secondary));
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 16px; // 进一步减小line-height
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer; // 确保鼠标指针正确显示
+  user-select: none; // 防止双击选中文本
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease,
+    font-weight 0.15s ease;
+  will-change: transform, color;
+  position: relative; // 为伪元素定位做准备
+}
+
+// 悬停时显示完整文本（仅当文本被截断时）
+.tk-aside-outline .outline-link:hover::before,
+.VPDocAsideOutline .outline-link:hover::before {
+  content: attr(data-title);
+  position: absolute;
+  z-index: 1000;
+  left: 0;
+  top: 100%;
+  margin-top: 4px;
+  background: var(--vp-c-bg-soft, rgba(0, 0, 0, 0.85));
+  color: var(--vp-c-text-1, #fff);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: normal;
+  max-width: 300px;
+  word-wrap: break-word;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.tk-aside-outline .outline-link:hover::before,
+.VPDocAsideOutline .outline-link:hover::before {
+  opacity: 1;
+}
+
+// 暗色模式调整
+.dark .tk-aside-outline .outline-link:hover::before,
+.dark .VPDocAsideOutline .outline-link:hover::before {
+  background: var(--vp-c-bg-soft, rgba(255,255,255, 0.95));
+  color: var(--vp-c-text-1, #000);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.tk-aside-outline .outline-link:hover,
+.VPDocAsideOutline .outline-link:hover {
+  color: var(--vp-c-text-1, var(--text-color));
+  font-weight: 700;
+  transform: translateX(4px) scale(1.01);
+}
+
+.tk-aside-outline .outline-link.active,
+.VPDocAsideOutline .outline-link.active,
+.tk-aside-outline .VPDocOutlineLink.active,
+.VPDocAsideOutline .VPDocOutlineLink.active,
+.tk-aside-outline .toc-link.active,
+.VPDocAsideOutline .toc-link.active {
+  color: var(--vp-c-text-1, var(--text-color)); /* 使用与悬停时相同的文本颜色 */
+  font-weight: 700; /* 使用与悬停时相同的字体粗细 */
+  transform: translateX(2px);
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease,
+    font-weight 0.15s ease;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.tk-aside-outline .vp-outline-list > .vp-outline-item > .vp-outline-list,
+.VPDocAsideOutline .vp-outline-list > .vp-outline-item > .vp-outline-list {
+  margin-top: 0;
+  margin-left: 0;
+  // padding-left: 20px;
+  padding-right: 0;
+  // border-left: 1px solid rgba(156, 163, 175, 0.2);
+}
+
+.tk-aside-outline .vp-outline-list .vp-outline-list .outline-link,
+.VPDocAsideOutline .vp-outline-list .vp-outline-list .outline-link {
+  font-size: 14px;
+  line-height: 32px;
+  font-weight: 400;
+}
+
+.tk-aside-outline .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list,
+.VPDocAsideOutline .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list {
+  margin-left: 0;
+  padding-left: 20px;
+  padding-right: 0;
+  border-left: 1px solid rgba(156, 163, 175, 0.15);
+}
+
+.tk-aside-outline .vp-outline-list .vp-outline-list .vp-outline-list .outline-link,
+.VPDocAsideOutline .vp-outline-list .vp-outline-list .vp-outline-list .outline-link {
+  font-size: 14px;
+  line-height: 32px;
+  font-weight: 400;
+}
+
+.tk-aside-outline .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list,
+.VPDocAsideOutline .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list {
+  margin-left: 0;
+  padding-left: 20px;
+  padding-right: 0;
+  border-left: 1px solid rgba(156, 163, 175, 0.1);
+}
+
+// ========================================
+// 滚动条样式已移除，统一使用 .aside-container 的隐藏滚动条设置
+// 避免与父容器样式冲突导致滚动条闪烁
+// ========================================
+
+.tk-aside-outline--docs .outline-content,
+.VPDocAsideOutline.tk-aside-outline--docs .outline-content {
+  padding: 0;
+  padding-left: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+  max-height: 100%;
+}
+
+.tk-aside-outline--docs .outline-title,
+.VPDocAsideOutline.tk-aside-outline--docs .outline-title {
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 32px;
+}
+
+.tk-aside-outline--docs .outline-link,
+.VPDocAsideOutline.tk-aside-outline--docs .outline-link {
+  line-height: 32px;
+}
+
+.tk-aside-outline--post .outline-content,
+.VPDocAsideOutline.tk-aside-outline--post .outline-content {
+  border-left-style: none;
+  padding: 16px 12px 16px 20px;
+}
+
+.tk-aside-outline--post .outline-title,
+.VPDocAsideOutline.tk-aside-outline--post .outline-title {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.tk-aside-outline--post .outline-link,
+.VPDocAsideOutline.tk-aside-outline--post .outline-link {
+  font-size: 0.875rem;
+  line-height: 1.75;
+}
+
+.tk-aside-outline--post .vp-outline-list > .vp-outline-item > .vp-outline-list,
+.VPDocAsideOutline.tk-aside-outline--post .vp-outline-list > .vp-outline-item > .vp-outline-list {
+  margin-left: 0;
+  padding-left: 20px;
+  padding-right: 0;
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-left-color: rgba(156, 163, 175, 0.2);
+}
+
+.tk-aside-outline--post .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list,
+.VPDocAsideOutline.tk-aside-outline--post .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list {
+  margin-left: 0;
+  padding-left: 20px;
+  padding-right: 0;
+  border-left-color: rgba(156, 163, 175, 0.15);
+}
+
+.tk-aside-outline--post .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list,
+.VPDocAsideOutline.tk-aside-outline--post .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list {
+  margin-left: 0;
+  padding-left: 20px;
+  padding-right: 0;
+  border-left-color: rgba(156, 163, 175, 0.1);
+}
+
+.dark .tk-aside-outline--post .vp-outline-list > .vp-outline-item > .vp-outline-list,
+.dark .VPDocAsideOutline.tk-aside-outline--post .vp-outline-list > .vp-outline-item > .vp-outline-list {
+  border-left-color: rgba(156, 163, 175, 0.3);
+}
+
+.dark .tk-aside-outline--post .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list,
+.dark .VPDocAsideOutline.tk-aside-outline--post .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list {
+  border-left-color: rgba(156, 163, 175, 0.25);
+}
+
+.dark .tk-aside-outline--post .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list,
+.dark .VPDocAsideOutline.tk-aside-outline--post .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list > .vp-outline-item > .vp-outline-list {
+  border-left-color: rgba(156, 163, 175, 0.2);
+}
+
+
+
+// ========================================
+// Inline TOC (内嵌目录) - 简洁样式
+// ========================================
+.inline-toc {
+  margin: 48px 0 2rem;
+  padding: 1.5rem 1.5rem 1.2rem; // 增加顶部内边距
+  background: transparent;
+  border: none; // 移除完整边框
+  border-top: 1px solid var(--vp-c-divider); // 顶部分割线
+  border-bottom: 1px solid var(--vp-c-divider); // 底部分割线
+  border-radius: 0; // 移除圆角，与标题分割线风格一致
+
+  .inline-toc-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #e91e63; // 粉色标题
+    margin-bottom: 0.8rem;
+  }
+
+  .inline-toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .inline-toc-item {
+    margin: 0;
+    padding: 0;
+    line-height: 1.8;
+  }
+
+  .inline-toc-link {
+    display: block;
+    color: var(--vp-c-brand-1, var(--primary-color));
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 2px 0;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.7;
+      text-decoration: underline;
+    }
+
+    &:before {
+      content: '• ';
+      margin-right: 6px;
+    }
+  }
+
+  // 不同层级的缩进
+  .inline-toc-level-2 .inline-toc-link {
+    padding-left: 0;
+  }
+
+  .inline-toc-level-3 .inline-toc-link {
+    padding-left: 1em;
+    font-size: 0.9rem;
+  }
+
+  .inline-toc-level-4 .inline-toc-link {
+    padding-left: 2em;
+    font-size: 0.85rem;
+  }
+}
+
+// 暗色模式
+.dark-mode .inline-toc {
+  // 暗色模式下使用相同的分割线颜色
+}
+
+// 响应式
+@media (max-width: 768px) {
+  .inline-toc {
+    padding: 1rem;
+    margin: 1.5rem 0;
+
+    .inline-toc-title {
+      font-size: 1rem;
+    }
+
+    .inline-toc-link {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// ========================================
+// 修复 TOC 滚动问题
+// ========================================
+.VPDoc .VPDocAsideOutline,
+.VPSidebar .group {
+  overflow-y: auto;
+  scrollbar-width: none;  /* Firefox - 隐藏滚动条 */
+}
+
+.VPDoc .VPDocAsideOutline::-webkit-scrollbar,
+.VPSidebar .group::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, Edge - 隐藏滚动条 */
+}

@@ -1,0 +1,114 @@
+// Light mode colors - Balanced Cyberpunk
+:root {
+  --primary-color: #0e7490;      // 深青色主色调 (更高对比度，满足 WCAG AA 标准)
+  --secondary-color: #06b6d4;    // 亮青色次要色
+  --accent-color: #ec4899;       // 粉色强调色
+  --text-color: #1f2937;
+  --text-secondary: #6b7280;
+  --bg-color: #f9fafb;
+  --card-bg: #ffffff;
+  --header-bg: #ffffff;
+  --footer-bg: #f9fafb;
+  --border-color: #e5e7eb;
+  --tag-bg: #ecfeff;             // 淡青色标签背景
+  --code-bg: #e8f5f5;            // 浅青色/薄荷色背景（编辑器风格）
+
+  // 赛博朋克渐变色
+  --gradient-primary: linear-gradient(135deg, #0e7490 0%, #06b6d4 100%);
+  --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
+  --gradient-cyber: linear-gradient(120deg, #0e7490 0%, #06b6d4 50%, #22d3ee 100%);
+
+  // VitePress compatible variables
+  --vp-nav-height: 64px;
+  --vp-layout-max-width: 1440px; // 默认最大宽度
+  --vp-c-divider: rgba(60, 60, 67, 0.12);
+  --vp-c-gutter: rgba(0, 0, 0, 0.04);
+  --vp-nav-bg-color: rgba(255, 255, 255, 0.98);
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-alt: #f6f6f7;
+  --vp-c-bg-elv: #ffffff;
+  --vp-c-text-1: #1f2937;
+  --vp-c-text-2: #6b7280;
+  --vp-sidebar-width: 280px;
+  --vp-sidebar-bg-color: transparent;
+
+  // Teek theme variable aliases (tk- prefix for VitePress Teek compatibility)
+  --tk-bg-color: var(--bg-color);
+  --tk-line-color: var(--border-color);
+  --tk-theme-color: var(--primary-color);
+  --tk-text-color: var(--text-color);
+  --tk-fill-color: var(--tag-bg);
+  --tk-fill-color-light: rgba(14, 116, 144, 0.08);
+  --tk-transition-duration: 0.3s;
+  --tk-layout-full-width-max-width: 1440px; // 默认全宽布局最大宽度
+  --tk-layout-page-max-width: 100%; // 默认页面最大宽度
+  --tk-layout-doc-max-width: 100%; // 默认文档内容最大宽度（保持良好阅读体验）
+  --tk-sidebar-trigger-doc-offset: 0px;
+  --vp-c-brand-1: #0e7490;
+  --vp-c-brand-2: #06b6d4;
+  --vp-c-border: #c2c2c4;
+  --vp-c-default-soft: rgba(0, 0, 0, 0.04);
+  --vp-c-neutral-inverse: #ffffff;
+  --vp-input-border-color: #c2c2c4;
+  --vp-input-switch-bg-color: rgba(0, 0, 0, 0.04);
+  --vp-font-family-mono: 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
+  --vp-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --vp-shadow-2: 0 3px 12px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.07);
+  --vp-shadow-3: 0 12px 32px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+// Dark mode colors - Balanced Cyberpunk
+.dark-mode {
+  --primary-color: #22d3ee;      // 亮青色主色调
+  --secondary-color: #0891b2;    // 深青色次要色
+  --accent-color: #f472b6;       // 粉色强调色
+  --text-color: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --bg-color: #0f172a;           // 深蓝黑色背景
+  --card-bg: #1e293b;            // 卡片背景
+  --header-bg: #1e293b;
+  --footer-bg: #0f172a;
+  --border-color: #334155;
+  --tag-bg: #164e63;             // 深青色标签背景
+  --code-bg: #262727;            // 暗色模式代码块背景
+
+  // 深色模式赛博朋克渐变
+  --gradient-primary: linear-gradient(135deg, rgba(34, 211, 238, 0.75) 0%, rgba(6, 182, 212, 0.75) 100%);
+  --gradient-secondary: linear-gradient(135deg, rgba(6, 182, 212, 0.8) 0%, rgba(8, 145, 178, 0.8) 100%);
+  --gradient-cyber: linear-gradient(120deg, rgba(34, 211, 238, 0.7) 0%, rgba(6, 182, 212, 0.7) 50%, rgba(8, 145, 178, 0.7) 100%);
+
+  // VitePress compatible variables (dark mode)
+  --vp-c-divider: rgba(148, 163, 184, 0.25);
+  --vp-c-gutter: rgba(255, 255, 255, 0.05);
+  --vp-nav-bg-color: rgba(10, 15, 25, 0.85);
+  --vp-c-bg: #0f182a;
+  --vp-c-bg-alt: #101c31;
+  --vp-c-bg-elv: #15233c;
+  --vp-c-text-1: #e5f0ff;
+  --vp-c-text-2: #9fb4d0;
+  --vp-sidebar-width: 280px;
+
+  // Teek theme variable aliases (dark mode)
+  --tk-bg-color: var(--bg-color);
+  --tk-line-color: var(--border-color);
+  --tk-theme-color: var(--primary-color);
+  --tk-text-color: var(--text-color);
+  --tk-fill-color: var(--tag-bg);
+  --tk-fill-color-light: rgba(34, 211, 238, 0.15);
+  --tk-transition-duration: 0.3s;
+  --tk-layout-full-width-max-width: 1440px; // 默认全宽布局最大宽度
+  --tk-layout-page-max-width: 100%; // 默认页面最大宽度
+  --tk-layout-doc-max-width: 100%; // 默认文档内容最大宽度（保持良好阅读体验）
+  --tk-sidebar-trigger-doc-offset: 0px;
+  --vp-sidebar-bg-color: transparent;
+  --vp-c-brand-1: #22d3ee;
+  --vp-c-brand-2: #38bdf8;
+  --vp-c-border: rgba(56, 189, 248, 0.35);
+  --vp-c-default-soft: rgba(56, 189, 248, 0.12);
+  --vp-c-neutral-inverse: #020617;
+  --vp-input-border-color: rgba(148, 163, 184, 0.25);
+  --vp-input-switch-bg-color: rgba(56, 189, 248, 0.12);
+  --vp-shadow-1: 0 6px 16px rgba(8, 18, 38, 0.4);
+  --vp-shadow-2: 0 12px 28px rgba(8, 18, 38, 0.45);
+  --vp-shadow-3: 0 18px 40px rgba(8, 18, 38, 0.5);
+}

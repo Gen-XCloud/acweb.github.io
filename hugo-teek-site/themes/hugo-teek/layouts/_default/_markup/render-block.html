@@ -1,0 +1,49 @@
+{{- $classAttr := .Attributes.class | default "" -}}
+{{- $idAttr := .Attributes.id | default "" -}}
+{{- $info := cond (ne $classAttr "") $classAttr $idAttr -}}
+{{- $parts := split (trim $info " ") " " -}}
+{{- $type := lower (index $parts 0 | default "") -}}
+{{- $titleAttr := .Attributes.title | default "" -}}
+
+{{- $definitions := dict
+  "center" (dict "classes" (slice "tk-center-container"))
+  "right" (dict "classes" (slice "tk-right-container"))
+  "note" (dict "classes" (slice "custom-block" "note") "title" "NOTE")
+  "tip" (dict "classes" (slice "custom-block" "tip") "title" "提示")
+  "info" (dict "classes" (slice "custom-block" "info") "title" "信息")
+  "warning" (dict "classes" (slice "custom-block" "warning") "title" "警告")
+  "danger" (dict "classes" (slice "custom-block" "danger") "title" "危险")
+  "important" (dict "classes" (slice "custom-block" "important") "title" "IMPORTANT")
+  "caution" (dict "classes" (slice "custom-block" "caution") "title" "CAUTION")
+  "details" (dict "classes" (slice "custom-block" "details") "title" "详情")
+-}}
+
+{{- $definition := index $definitions $type -}}
+{{- $classes := slice -}}
+{{- if $definition -}}
+  {{- $classes = $classes | append $type -}}
+  {{- range $definition.classes }}{{ $classes = $classes | append . }}{{ end -}}
+{{- else -}}
+  {{- $classes = $classes | append (cond (ne $type "") $type "tk-container") -}}
+{{- end -}}
+
+{{- $title := $titleAttr -}}
+{{- if and (not $title) $definition -}}
+  {{- $title = $definition.title -}}
+{{- end -}}
+
+{{- if and (in $classes "custom-block") (not $title) -}}
+  {{- $classes = $classes | append "no-title" -}}
+{{- end -}}
+
+{{- $uniqueClasses := uniq $classes -}}
+<div class="{{ delimit $uniqueClasses " " }}" {{ if in $classes "details" }}data-collapsed="true"{{ end }}>
+  {{- if and $title (in $classes "custom-block") -}}
+    <p class="title custom-block-title">{{ $title | markdownify }}</p>
+  {{- end -}}
+  {{- if in $classes "details" -}}
+    <div class="custom-block-content">{{- .Inner -}}</div>
+  {{- else -}}
+    {{- .Inner -}}
+  {{- end -}}
+</div>

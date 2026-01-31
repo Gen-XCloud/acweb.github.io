@@ -1,0 +1,21 @@
+@import 'variables';
+
+// ========================================
+// 方案3: 冷色调（淡蓝/深蓝）
+// ========================================
+
+:root[data-color-scheme="scheme3"]:not([data-theme="dark"]) {
+  --bg-primary: #{$scheme-cool-light-bg};
+  --bg-secondary: #{$scheme-cool-light-bg-secondary};
+  --text-primary: #{$scheme-cool-light-text};
+  --text-secondary: #{$scheme-cool-light-text-secondary};
+  --border-color: #{$scheme-cool-light-border};
+}
+
+:root[data-color-scheme="scheme3"][data-theme="dark"] {
+  --bg-primary: #{$scheme-cool-dark-bg};
+  --bg-secondary: #{$scheme-cool-dark-bg-secondary};
+  --text-primary: #{$scheme-cool-dark-text};
+  --text-secondary: #{$scheme-cool-dark-text-secondary};
+  --border-color: #{$scheme-cool-dark-border};
+}

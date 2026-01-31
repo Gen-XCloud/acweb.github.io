@@ -1,0 +1,36 @@
+{{ if .Site.Params.appreciation.enabled }}
+<div class="sponsor-modal" id="sponsorModal">
+  <div class="sponsor-modal-overlay"></div>
+  <div class="sponsor-modal-content">
+    <!-- 关闭按钮 -->
+    <button class="sponsor-modal-close" id="closeSponsorModal" aria-label="关闭">
+      ×
+    </button>
+
+    <!-- 标题 -->
+    <h3 class="sponsor-modal-title">赞赏博主</h3>
+
+    <!-- 感谢文字 -->
+    <p class="sponsor-modal-message">🙏 感谢您愿予我前进的力量</p>
+
+    <!-- 二维码区域 -->
+    <div class="sponsor-qrcodes">
+      <!-- 微信 -->
+      {{ if .Site.Params.appreciation.wechatQR }}
+      <div class="qrcode-item">
+        <img src="{{ .Site.Params.appreciation.wechatQR }}" alt="微信赞赏码" loading="lazy">
+        <div class="qrcode-label">微信</div>
+      </div>
+      {{ end }}
+
+      <!-- 支付宝 -->
+      {{ if .Site.Params.appreciation.alipayQR }}
+      <div class="qrcode-item">
+        <img src="{{ .Site.Params.appreciation.alipayQR }}" alt="支付宝赞赏码" loading="lazy">
+        <div class="qrcode-label">支付宝</div>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+{{ end }}

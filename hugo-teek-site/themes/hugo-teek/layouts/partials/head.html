@@ -1,0 +1,350 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="color-scheme" content="light dark">
+
+<script>
+  // 主题初始化：在页面渲染前设置，避免闪烁
+  (function() {
+    try {
+      var storedTheme = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var isDark = storedTheme === 'dark' || (!storedTheme && prefersDark);
+
+      if (isDark) {
+        document.documentElement.classList.add('dark-mode');
+        // 将暗色模式状态保存到全局变量，供 body 标签使用
+        window.__INITIAL_THEME__ = 'dark';
+      } else {
+        window.__INITIAL_THEME__ = 'light';
+      }
+    } catch (err) {
+      // Ignore access issues (e.g. Safari private mode)
+      window.__INITIAL_THEME__ = 'light';
+    }
+  })();
+
+  // 公众号解锁状态检查：在页面渲染前检查，避免闪烁
+  (function() {
+    try {
+      // 规范化URL（去掉末尾斜杠，统一比对）
+      function normalizeUrl(url) {
+        return url.replace(/\/$/, '').toLowerCase();
+      }
+
+      var currentUrl = normalizeUrl(window.location.href);
+      var unlockedArticles = JSON.parse(localStorage.getItem('unlockedArticles') || '[]');
+
+      // 检查当前页面是否已解锁
+      var isUnlocked = unlockedArticles.some(function(article) {
+        return normalizeUrl(article.permalink) === currentUrl;
+      });
+
+      // 如果已解锁，添加标记class到html元素
+      if (isUnlocked) {
+        document.documentElement.classList.add('wechat-unlocked');
+        console.log('[WechatUnlock] 页面已解锁（从缓存）');
+      }
+    } catch (err) {
+      // localStorage访问失败时忽略（如Safari隐私模式）
+      console.error('[WechatUnlock] 检查失败:', err);
+    }
+
+    // 物理删除未解锁的内容（DOM级别保护）
+    // 在DOMContentLoaded时执行，确保DOM已加载
+    function removeLockedContent() {
+      // 如果已解锁，不删除内容
+      if (document.documentElement.classList.contains('wechat-unlocked')) {
+        return;
+      }
+
+      var gate = document.querySelector('.wechat-unlock-gate');
+      if (!gate) return;
+
+      // 删除解锁门之后的所有兄弟元素
+      var next = gate.nextElementSibling;
+      while (next) {
+        var toRemove = next;
+        next = next.nextElementSibling;
+        toRemove.remove();
+      }
+
+      console.log('[WechatUnlock] 已移除锁定内容的DOM节点');
+    }
+
+    // 立即执行或在DOM加载后执行
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', removeLockedContent);
+    } else {
+      // 如果脚本在body中执行，DOM可能已经加载
+      removeLockedContent();
+    }
+  })();
+</script>
+
+<title>{{ if .IsHome }}{{ .Site.Title }} | {{ .Site.Params.blogger.slogan }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}</title>
+
+<meta name="description" content="{{ if and .Description (ne .Description "") }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+{{ $keywords := (.Keywords | default (.Site.Params.keywords | default (slice))) }}
+{{ if gt (len $keywords) 0 }}
+<meta name="keywords" content="{{ delimit $keywords ", " }}">
+{{ end }}
+<meta name="author" content="{{ .Site.Params.author.name }}">
+
+<!-- Open Graph -->
+<meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }} | {{ .Site.Params.blogger.slogan }}{{ else }}{{ .Title }}{{ end }}">
+<meta property="og:description" content="{{ if and .Description (ne .Description "") }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+{{ if .Params.coverImg }}
+<meta property="og:image" content="{{ .Params.coverImg | absURL }}">
+{{ end }}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }} | {{ .Site.Params.blogger.slogan }}{{ else }}{{ .Title }}{{ end }}">
+<meta name="twitter:description" content="{{ if and .Description (ne .Description "") }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+
+<!-- Favicon - 使用用户头像 -->
+{{ if .Site.Params.blogger.avatar }}
+<link rel="icon" type="image/webp" href="{{ .Site.Params.blogger.avatar }}">
+<link rel="apple-touch-icon" href="{{ .Site.Params.blogger.avatar }}">
+{{ else }}
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+{{ end }}
+
+<!-- Performance: 预加载关键字体 (Inter 拉丁字符) -->
+<!-- 已禁用：字体文件不存在，style.css 会自动加载，降级到系统字体 -->
+<!-- <link rel="preload" as="font" type="font/woff2" href="/assets/inter-roman-latin.Di8DUHzh.woff2" crossorigin> -->
+
+<!-- 🆕 Performance: Swup CDN 预连接 (全站 SPA 优化) -->
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="dns-prefetch" href="https://unpkg.com">
+
+<!-- Performance: 预连接第三方域名 -->
+{{ if .Site.Params.analytics.busuanzi.enabled }}
+{{ $busuanziUrl := .Site.Params.analytics.busuanzi.url | default "https://busuanzi-eo.xxdevops.cn/busuanzi.eo.js" }}
+{{ $busuanziDomain := replaceRE "^(https?://[^/]+).*$" "$1" $busuanziUrl }}
+<link rel="preconnect" href="{{ $busuanziDomain }}" crossorigin>
+{{ end }}
+{{ if .Site.Params.analytics.umami.enabled }}
+<link rel="preconnect" href="{{ .Site.Params.analytics.umami.url }}" crossorigin>
+{{ end }}
+{{ if .Site.Params.comment.twikoo.enabled }}
+<link rel="preconnect" href="{{ .Site.Params.comment.twikoo.envId }}" crossorigin>
+{{ end }}
+
+<!-- Critical CSS - 内联首屏关键样式，消除FOUC闪烁 -->
+{{ partial "critical.html" . }}
+
+<!-- Main Styles - 同步加载确保首次绘制正确 -->
+{{ $style := resources.Get "css/main.scss" }}
+{{ if $style }}
+  {{ $style = $style | css.Sass | resources.Minify | resources.Fingerprint }}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+{{ end }}
+
+<!-- 文档库专用样式 - VitePress Teek Theme + Simple Sidebar（异步加载）-->
+{{ $isDocs := .Scratch.Get "isDocs" | default false }}
+{{ if $isDocs }}
+  {{ $base := resources.Get "css/teek/style.css" }}
+  {{ $custom := resources.Get "css/vitepress-teek-docs.scss" | css.Sass | resources.Minify }}
+  {{ $simpleSidebar := resources.Get "css/simple-sidebar.scss" | css.Sass | resources.Minify }}
+  {{ $docsStyle := slice $base $custom $simpleSidebar | resources.Concat "css/vitepress-teek-docs.css" | resources.Minify | resources.Fingerprint }}
+  <link rel="preload" href="{{ $docsStyle.RelPermalink }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="{{ $docsStyle.RelPermalink }}"></noscript>
+{{ end }}
+
+<!-- RSS -->
+{{ with .OutputFormats.Get "RSS" }}
+<link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ $.Site.Title }}">
+{{ end }}
+
+<!-- Lunar Calendar Library (for calendar widget) -->
+{{ if .IsHome }}
+<script src="/libs/lunar.min.js" defer></script>
+{{ end }}
+
+<!-- Friend Links Page Icon Font -->
+{{ if eq .Type "friends" }}
+<link rel="stylesheet" href="https://cdn.ksah.cn/fonts/icomoon/font.css">
+{{ end }}
+
+<!-- Analytics -->
+{{ if .Site.Params.analytics.umami.enabled }}
+<script async defer
+  data-website-id="{{ .Site.Params.analytics.umami.websiteId }}"
+  src="{{ .Site.Params.analytics.umami.url }}/script.js">
+</script>
+{{ end }}
+
+<!-- 移动端卡片宽度强制修复 - 内联样式最高优先级 -->
+<style>
+@media screen and (max-width: 768px) {
+  .article-card-compact {
+    width: 100% ;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex: none !important;
+    box-sizing: border-box !important;
+  }
+
+  .post-grid {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    gap: 0.75rem !important;
+  }
+
+  .home-content-section .container {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+  }
+
+  .home-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .main-column {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* 防止任何元素超出屏幕 */
+  html, body {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  .home-page {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+}
+
+/* ========================================
+   文档页面布局强制修复 - 覆盖 style.css 中的问题样式
+   ======================================== */
+
+/* 移除父容器的 padding-left，让容器贴近浏览器左侧边框 */
+.VPContent.has-sidebar {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* 移除文档容器的最大宽度限制、居中对齐和左右边距 */
+.VPDoc.has-sidebar .container {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 确保所有屏幕尺寸都应用 */
+@media (min-width: 960px) {
+  .VPContent.has-sidebar {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .VPContent.has-sidebar {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .VPDoc.has-sidebar .container {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .VPContent.has-sidebar {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .VPDoc.has-sidebar .container {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+@media (min-width: 1920px) {
+  .VPContent.has-sidebar {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .VPDoc.has-sidebar .container {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+</style>
+
+<!-- Service Worker Registration for Search Index Caching -->
+<script>
+// 注册 Service Worker 实现搜索索引持久化缓存
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js', { scope: '/' })
+      .then(function(registration) {
+        console.log('[FlexSearch] ✅ Service Worker 注册成功');
+
+        // 监听索引更新通知
+        navigator.serviceWorker.addEventListener('message', function(event) {
+          if (event.data.type === 'INDEX_UPDATE_AVAILABLE') {
+            console.log('[FlexSearch] 🆕 搜索索引已更新，新版本:', event.data.version);
+            // 可选：显示通知提示用户刷新
+            // 或者：自动重新加载索引
+          }
+        });
+
+        // 检查是否有等待激活的 SW
+        if (registration.waiting) {
+          console.log('[FlexSearch] ⏳ 有新版本 Service Worker 等待激活');
+        }
+
+        // 监听 SW 更新
+        registration.addEventListener('updatefound', function() {
+          const newWorker = registration.installing;
+          console.log('[FlexSearch] 🔄 检测到 Service Worker 更新');
+
+          newWorker.addEventListener('statechange', function() {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('[FlexSearch] ✅ 新版本 Service Worker 已安装');
+            }
+          });
+        });
+      })
+      .catch(function(err) {
+        console.warn('[FlexSearch] ⚠️ Service Worker 注册失败:', err);
+      });
+  });
+} else if ('serviceWorker' in navigator) {
+  console.log('[FlexSearch] ℹ️ Service Worker 仅在 HTTPS 下工作（localhost 除外）');
+}
+</script>
+
+

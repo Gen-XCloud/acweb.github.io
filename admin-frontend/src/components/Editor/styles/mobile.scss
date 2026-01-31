@@ -1,0 +1,619 @@
+// ================================================
+// 移动端适配 - 触摸友好的响应式设计
+// ================================================
+// 断点说明:
+// - < 480px: 小屏手机
+// - < 768px: 移动端
+// - < 1024px: 平板
+// ================================================
+
+/* ==================== 移动端基础优化 (< 768px) ==================== */
+@media (max-width: 768px) {
+  /* 编辑器整体 */
+  .vditor {
+    border-radius: var(--editor-radius-md); // 减小圆角
+  }
+
+  /* ==================== 工具栏优化 ==================== */
+  .vditor-toolbar {
+    min-height: 44px; // 增加高度以适配触摸
+    padding: var(--editor-spacing-xs) var(--editor-spacing-sm) !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap !important;
+    gap: 2px;
+    -webkit-overflow-scrolling: touch; // iOS 平滑滚动
+
+    // 移动端滚动条隐藏
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    scrollbar-width: none; // Firefox
+  }
+
+  /* 工具栏按钮 */
+  .vditor-toolbar__item button {
+    height: 36px;
+    min-width: 36px;
+    padding: 0 var(--editor-spacing-xs);
+    touch-action: manipulation; // 优化触摸响应
+    -webkit-tap-highlight-color: transparent; // 移除点击高亮
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  /* VitePress 自定义按钮 */
+  .vp-toolbar-btn {
+    font-size: 11px;
+    padding: 0 6px !important;
+    white-space: nowrap;
+  }
+
+  /* 工具栏分隔线 */
+  .vditor-toolbar__divider {
+    height: 20px;
+    margin: 0 var(--editor-spacing-xs);
+  }
+
+  /* ==================== 编辑区域优化 ==================== */
+  .vditor-ir {
+    padding: var(--editor-spacing-md);
+    font-size: 15px;
+    line-height: 1.7;
+
+    // 标题大小调整
+    h1 {
+      font-size: 1.75em;
+    }
+
+    h2 {
+      font-size: 1.4em;
+    }
+
+    h3 {
+      font-size: 1.2em;
+    }
+
+    h4, h5, h6 {
+      font-size: 1.1em;
+    }
+
+    // 段落间距
+    p {
+      margin: 0.7em 0;
+    }
+
+    // 列表优化
+    ul, ol {
+      padding-left: 1.5em;
+    }
+
+    li {
+      margin: 0.3em 0;
+    }
+
+    // 代码块
+    pre {
+      padding: var(--editor-spacing-sm);
+      font-size: 13px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    // 表格横向滚动
+    table {
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      max-width: 100%;
+    }
+
+    th, td {
+      padding: var(--editor-spacing-xs) var(--editor-spacing-sm);
+      font-size: 14px;
+    }
+
+    // 图片优化
+    img {
+      max-width: 100%;
+      height: auto;
+      margin: 0.8em 0;
+    }
+  }
+
+  /* ==================== 预览区域优化 ==================== */
+  .vditor-preview__content {
+    padding: var(--editor-spacing-md);
+    font-size: 15px;
+
+    // 同步编辑区的样式
+    h1 { font-size: 1.75em; }
+    h2 { font-size: 1.4em; }
+    h3 { font-size: 1.2em; }
+    h4, h5, h6 { font-size: 1.1em; }
+
+    p {
+      margin: 0.7em 0;
+    }
+
+    ul, ol {
+      padding-left: 1.5em;
+    }
+
+    li {
+      margin: 0.3em 0;
+    }
+
+    pre {
+      padding: var(--editor-spacing-sm);
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: var(--editor-spacing-xs) var(--editor-spacing-sm);
+      font-size: 14px;
+    }
+
+    img {
+      margin: 0.8em 0;
+    }
+  }
+
+  /* ==================== VitePress 容器优化 ==================== */
+  .vp-container {
+    margin: 1em 0;
+    padding: var(--editor-spacing-sm);
+    padding-left: calc(var(--editor-spacing-sm) + 28px);
+
+    &::before {
+      font-size: 18px;
+      top: var(--editor-spacing-sm);
+      left: var(--editor-spacing-sm);
+    }
+
+    .vp-container-title {
+      font-size: 0.9em;
+      margin-bottom: var(--editor-spacing-xs);
+    }
+
+    p {
+      font-size: 14px;
+    }
+
+    pre {
+      margin: 0.6em 0;
+      padding: var(--editor-spacing-xs);
+      font-size: 12px;
+    }
+
+    ul, ol {
+      padding-left: 1.2em;
+    }
+  }
+
+  /* ==================== 微信解锁优化 ==================== */
+  .wechat-unlock-preview {
+    padding: var(--editor-spacing-md);
+
+    .preview-meta {
+      flex-direction: column;
+      gap: var(--editor-spacing-sm);
+      text-align: center;
+
+      .meta-badge {
+        font-size: 12px;
+        padding: 3px 10px;
+      }
+
+      .meta-info {
+        font-size: 12px;
+
+        code {
+          font-size: 11px;
+          padding: 2px 6px;
+        }
+      }
+    }
+
+    .unlock-gate-preview {
+      padding: var(--editor-spacing-lg) var(--editor-spacing-sm);
+
+      &::before {
+        width: 80px;
+        height: 80px;
+      }
+    }
+
+    .unlock-button-preview {
+      padding: 10px 24px;
+      font-size: 14px;
+
+      .button-icon-lock {
+        width: 12px;
+        height: 12px;
+      }
+    }
+
+    .preview-hint {
+      font-size: 12px;
+    }
+  }
+
+  /* ==================== 目录优化 ==================== */
+  .vditor-outline {
+    padding: var(--editor-spacing-sm);
+    font-size: 13px;
+
+    &__title {
+      font-size: 14px;
+      margin-bottom: var(--editor-spacing-sm);
+    }
+
+    &__item {
+      padding: 3px 6px;
+      font-size: 13px;
+    }
+  }
+
+  /* ==================== Tooltip 优化 ==================== */
+  .vditor-tooltipped::after {
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+  }
+
+  /* ==================== 下拉菜单优化 ==================== */
+  .vditor-panel {
+    max-width: 90vw;
+
+    &__item button {
+      padding: var(--editor-spacing-xs) var(--editor-spacing-sm);
+      font-size: 14px;
+    }
+  }
+}
+
+/* ==================== 小屏手机优化 (< 480px) ==================== */
+@media (max-width: 480px) {
+  /* 工具栏按钮 */
+  .vditor-toolbar__item button {
+    height: 40px; // 进一步增大触摸目标
+    min-width: 40px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  /* VitePress 按钮文字缩短 */
+  .vp-toolbar-btn {
+    font-size: 10px;
+    padding: 0 4px !important;
+  }
+
+  /* 编辑区域 */
+  .vditor-ir {
+    padding: var(--editor-spacing-sm);
+    font-size: 14px;
+
+    h1 {
+      font-size: 1.6em;
+    }
+
+    h2 {
+      font-size: 1.3em;
+    }
+
+    h3 {
+      font-size: 1.15em;
+    }
+
+    h4, h5, h6 {
+      font-size: 1em;
+    }
+
+    pre {
+      padding: var(--editor-spacing-xs);
+      font-size: 12px;
+    }
+
+    th, td {
+      padding: 4px 6px;
+      font-size: 13px;
+    }
+  }
+
+  /* 预览区域 */
+  .vditor-preview__content {
+    padding: var(--editor-spacing-sm);
+    font-size: 14px;
+
+    h1 { font-size: 1.6em; }
+    h2 { font-size: 1.3em; }
+    h3 { font-size: 1.15em; }
+    h4, h5, h6 { font-size: 1em; }
+
+    pre {
+      font-size: 12px;
+    }
+
+    th, td {
+      padding: 4px 6px;
+      font-size: 13px;
+    }
+  }
+
+  /* VitePress 容器 */
+  .vp-container {
+    padding: var(--editor-spacing-xs);
+    padding-left: calc(var(--editor-spacing-xs) + 24px);
+
+    &::before {
+      font-size: 16px;
+      top: var(--editor-spacing-xs);
+      left: var(--editor-spacing-xs);
+    }
+
+    p {
+      font-size: 13px;
+    }
+
+    pre {
+      font-size: 11px;
+    }
+  }
+
+  /* 微信解锁 */
+  .wechat-unlock-preview {
+    padding: var(--editor-spacing-sm);
+
+    .preview-meta {
+      .meta-badge {
+        font-size: 11px;
+        padding: 2px 8px;
+      }
+
+      .meta-info {
+        font-size: 11px;
+
+        code {
+          font-size: 10px;
+        }
+      }
+    }
+
+    .unlock-button-preview {
+      padding: 8px 20px;
+      font-size: 13px;
+
+      .button-icon-lock {
+        width: 11px;
+        height: 11px;
+      }
+    }
+
+    .preview-hint {
+      font-size: 11px;
+    }
+  }
+}
+
+/* ==================== 平板横屏优化 (768px - 1024px) ==================== */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* 编辑区域 */
+  .vditor-ir {
+    padding: var(--editor-spacing-lg);
+    font-size: 15px;
+  }
+
+  /* 预览区域 */
+  .vditor-preview__content {
+    padding: var(--editor-spacing-lg);
+    font-size: 15px;
+  }
+
+  /* 工具栏按钮 */
+  .vditor-toolbar__item button {
+    height: 34px;
+    min-width: 34px;
+  }
+}
+
+/* ==================== 触摸设备优化 ==================== */
+@media (hover: none) and (pointer: coarse) {
+  /* 所有可交互元素增大触摸区域 */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* 移除悬停效果 */
+  .vditor-toolbar__item button:hover {
+    background: var(--editor-toolbar-btn-bg);
+    box-shadow: none;
+  }
+
+  .vp-container:hover {
+    transform: none;
+  }
+
+  .wechat-unlock-preview:hover {
+    border-color: #adb5bd;
+  }
+
+  /* 使用活动状态代替悬停 */
+  .vditor-toolbar__item button:active {
+    background: var(--editor-toolbar-btn-active);
+  }
+
+  .vp-container:active {
+    transform: scale(0.98);
+  }
+
+  /* 禁用 Tooltip（触摸设备不需要） */
+  .vditor-tooltipped::after,
+  .vditor-tooltipped::before {
+    display: none !important;
+  }
+}
+
+/* ==================== 移动端模态框优化 ==================== */
+@media (max-width: 768px) {
+  .vditor-panel,
+  .vditor-hint {
+    max-width: 90vw;
+    max-height: 70vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ==================== 移动端表格优化 ==================== */
+@media (max-width: 768px) {
+  .vditor-ir table,
+  .vditor-preview__content table {
+    font-size: 13px;
+
+    // 表格滚动提示
+    &::after {
+      content: '👉 向右滑动查看更多';
+      display: block;
+      text-align: center;
+      font-size: 11px;
+      color: var(--editor-text-tertiary);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    // 滚动后隐藏提示
+    &:not(:hover)::after {
+      opacity: 0.7;
+    }
+  }
+}
+
+/* ==================== 移动端代码块优化 ==================== */
+@media (max-width: 768px) {
+  .vditor-ir pre,
+  .vditor-preview__content pre {
+    // 代码块滚动提示
+    &::after {
+      content: '👉 向右滑动查看更多';
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      font-size: 10px;
+      color: var(--editor-text-tertiary);
+      background: var(--editor-bg);
+      padding: 2px 6px;
+      border-radius: 3px;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    // 滚动时隐藏提示
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+  }
+}
+
+/* ==================== 移动端全屏模式优化 ==================== */
+@media (max-width: 768px) {
+  .vditor--fullscreen {
+    .vditor-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--editor-toolbar-bg);
+      box-shadow: var(--editor-shadow-md);
+    }
+
+    .vditor-ir,
+    .vditor-preview__content {
+      height: calc(100vh - 44px) !important;
+      max-height: calc(100vh - 44px) !important;
+    }
+  }
+}
+
+/* ==================== 横屏模式优化 ==================== */
+@media (max-width: 768px) and (orientation: landscape) {
+  .vditor-toolbar {
+    min-height: 40px;
+
+    &__item button {
+      height: 32px;
+      min-width: 32px;
+    }
+  }
+
+  .vditor-ir,
+  .vditor-preview__content {
+    padding: var(--editor-spacing-sm) var(--editor-spacing-md);
+  }
+}
+
+/* ==================== iOS 安全区域适配 ==================== */
+@supports (padding: max(0px)) {
+  @media (max-width: 768px) {
+    .vditor {
+      padding-left: max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+    }
+
+    .vditor--fullscreen {
+      padding-top: max(0px, env(safe-area-inset-top));
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
+  }
+}
+
+/* ==================== 移动端性能优化 ==================== */
+@media (max-width: 768px) {
+  /* 禁用复杂动画 */
+  .vp-container,
+  .wechat-unlock-preview,
+  img {
+    &:hover {
+      transform: none;
+      box-shadow: var(--editor-shadow-sm);
+    }
+  }
+
+  /* 简化过渡效果 */
+  * {
+    transition-duration: 0.15s !important;
+  }
+
+  /* 禁用阴影动画 */
+  .vditor-toolbar__item button:hover {
+    box-shadow: none;
+  }
+}
+
+/* ==================== 打印时移除移动端样式 ==================== */
+@media print {
+  .vditor-toolbar {
+    overflow-x: visible !important;
+  }
+
+  .vditor-ir,
+  .vditor-preview__content {
+    padding: 0 !important;
+    font-size: 12pt !important;
+  }
+
+  table::after,
+  pre::after {
+    display: none !important;
+  }
+}

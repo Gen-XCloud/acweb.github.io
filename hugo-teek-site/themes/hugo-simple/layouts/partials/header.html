@@ -1,0 +1,48 @@
+<header class="site-header header-visible">
+    <div class="container">
+        <div class="header-content">
+            <!-- 左侧导航 -->
+            <div class="nav-left">
+                <a href="{{ .Site.BaseURL }}" class="site-brand">{{ .Site.Title }}</a>
+
+                <nav class="site-nav">
+                    {{ range .Site.Menus.main }}
+                        {{ if .HasChildren }}
+                        <!-- 有子菜单的下拉菜单 -->
+                        <div class="dropdown">
+                            <a href="{{ .URL }}" class="nav-link dropdown-toggle">{{ .Name }} ▼</a>
+                            <div class="dropdown-menu">
+                                {{ range .Children }}
+                                <a href="{{ .URL }}" class="dropdown-item">{{ .Name }}</a>
+                                {{ end }}
+                            </div>
+                        </div>
+                        {{ else }}
+                        <!-- 普通菜单项 -->
+                        <a href="{{ .URL }}" class="nav-link">{{ .Name }}</a>
+                        {{ end }}
+                    {{ end }}
+                </nav>
+            </div>
+
+            <!-- 右侧工具栏 -->
+            <div class="nav-right">
+                <!-- 搜索框 -->
+                <div class="search-box">
+                    <input type="text" placeholder="搜索..." class="search-input" id="search-input">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </div>
+
+                <!-- 微信头像 -->
+                {{ if .Site.Params.avatarImage }}
+                <a href="{{ .Site.Params.avatarLink | default "/about/" }}" class="avatar-link">
+                    <img src="{{ .Site.Params.avatarImage }}" alt="Avatar" class="header-avatar">
+                </a>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+</header>

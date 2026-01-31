@@ -1,0 +1,93 @@
+// ========================================
+// VP彩色滚动条样式
+// VitePress Colorful Scrollbar Effect
+// ========================================
+// 来源: vitepress-theme-teek scrollbar-2.scss
+
+/* 全局滚动条样式 */
+::-webkit-scrollbar {
+  width: 0.35rem;
+  height: 0.35rem;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 2em;
+  background: transparent;
+}
+
+@keyframes scrollbar-glow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* 滚动条滑块样式 - 亮色模式 */
+html:not(.dark-mode) ::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    120deg,
+    #0026ff,
+    #00e1ffe6,
+    #ff50a0,
+    #00e1ffe6,
+    #7864ff,
+    #0026ff
+  );
+  background-size: 200% 200%;
+  animation: scrollbar-glow 3s linear infinite alternate;
+  border-radius: 2em;
+  background-clip: padding-box;
+}
+
+/* 悬停 - 亮色模式 */
+html:not(.dark-mode) ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    120deg,
+    #ff00f2e6,
+    #1100ffe6,
+    #ff50a0e6,
+    #ff00f2e6,
+    #a078ffe6,
+    #00ffb4e6
+  );
+  background-size: 200% 200%;
+  animation: scrollbar-glow 2s linear infinite alternate;
+  border-radius: 2em;
+  background-clip: padding-box;
+}
+
+/* 滚动条滑块样式 - 暗色模式 */
+html.dark-mode ::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    120deg,
+    #00ffb4,
+    #ffffffb3,
+    #ff50a0,
+    #ffffffb3,
+    #7864ff,
+    #00ffb4
+  );
+  background-size: 200% 200%;
+  animation: scrollbar-glow 3s linear infinite alternate;
+  border-radius: 2em;
+  background-clip: padding-box;
+}
+
+/* 悬停 - 暗色模式 */
+html.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    120deg,
+    #00ffb4e6,
+    #ffffffe6,
+    #ff50a0e6,
+    #ffffffe6,
+    #a078ffe6,
+    #00ffb4e6
+  );
+  background-size: 200% 200%;
+  animation: scrollbar-glow 2s linear infinite alternate;
+  border-radius: 2em;
+  background-clip: padding-box;
+}

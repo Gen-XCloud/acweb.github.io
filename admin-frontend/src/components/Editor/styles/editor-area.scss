@@ -1,0 +1,307 @@
+// ================================================
+// 编辑区域样式 - Notion/Typora 舒适阅读体验
+// ================================================
+
+/* ==================== 编辑器容器 ==================== */
+.vditor-ir {
+  font-family: var(--editor-font-family);
+  font-size: var(--editor-font-size-base);
+  line-height: var(--editor-line-height-base); // 1.75倍行高
+  color: var(--editor-text);
+  padding: var(--editor-spacing-lg) var(--editor-spacing-xl);
+  background: var(--editor-area-bg);
+  min-height: 400px;
+  caret-color: var(--editor-cursor);
+
+  // 选中文本效果
+  ::selection {
+    background: var(--editor-selection);
+  }
+
+  // Placeholder样式
+  &__preview::before {
+    color: var(--editor-placeholder) !important;
+  }
+}
+
+/* ==================== Notion风格标题层级 ==================== */
+.vditor-ir {
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: var(--editor-line-height-tight);
+    margin: 1.5em 0 0.5em 0;
+    color: var(--editor-text);
+  }
+
+  h1 {
+    font-size: 2em;
+    font-weight: 700;
+    margin-top: 0;
+  }
+
+  h2 {
+    font-size: 1.5em;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid var(--editor-toolbar-border);
+  }
+
+  h3 {
+    font-size: 1.25em;
+  }
+
+  h4 {
+    font-size: 1.125em;
+  }
+
+  h5, h6 {
+    font-size: 1em;
+    color: var(--editor-text-secondary);
+  }
+}
+
+/* ==================== 段落与文本 ==================== */
+.vditor-ir {
+  p {
+    margin: 0.8em 0;
+    line-height: inherit;
+  }
+
+  strong, b {
+    font-weight: 600;
+    color: var(--editor-text);
+  }
+
+  em, i {
+    font-style: italic;
+    color: var(--editor-text-secondary);
+  }
+
+  del, s {
+    text-decoration: line-through;
+    color: var(--editor-text-tertiary);
+  }
+}
+
+/* ==================== 行内代码 ==================== */
+.vditor-ir {
+  code:not(.hljs) {
+    background: var(--editor-inline-code-bg);
+    color: var(--editor-inline-code-text);
+    padding: 2px 6px;
+    border-radius: var(--editor-radius-sm);
+    font-family: var(--editor-font-mono);
+    font-size: 0.9em;
+    font-weight: 500;
+    border: 1px solid var(--editor-code-border);
+  }
+}
+
+/* ==================== 代码块 ==================== */
+.vditor-ir {
+  pre {
+    margin: 1em 0;
+    padding: var(--editor-spacing-md);
+    background: var(--editor-code-bg);
+    border: 1px solid var(--editor-code-border);
+    border-radius: var(--editor-radius-md);
+    overflow-x: auto;
+    font-family: var(--editor-font-mono);
+    font-size: 14px;
+    line-height: 1.6;
+
+    code {
+      background: transparent;
+      border: none;
+      padding: 0;
+      color: var(--editor-code-text);
+      font-size: inherit;
+    }
+  }
+
+  // 代码块滚动条美化
+  pre::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  pre::-webkit-scrollbar-thumb {
+    background: var(--editor-toolbar-border);
+    border-radius: 4px;
+  }
+
+  pre::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/* ==================== 列表样式 ==================== */
+.vditor-ir {
+  ul, ol {
+    margin: 0.8em 0;
+    padding-left: 2em;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  li {
+    margin: 0.4em 0;
+    line-height: inherit;
+    color: var(--editor-text);
+
+    // 嵌套列表间距
+    > ul, > ol {
+      margin: 0.3em 0;
+    }
+  }
+
+  // 任务列表
+  li[data-marker="x"],
+  li[data-marker="X"] {
+    list-style: none;
+    position: relative;
+
+    &::before {
+      content: '✓';
+      position: absolute;
+      left: -1.5em;
+      color: var(--vp-tip-border);
+      font-weight: 600;
+    }
+  }
+
+  li[data-marker=" "] {
+    list-style: none;
+    position: relative;
+
+    &::before {
+      content: '○';
+      position: absolute;
+      left: -1.5em;
+      color: var(--editor-text-tertiary);
+    }
+  }
+}
+
+/* ==================== 引用块 ==================== */
+.vditor-ir {
+  blockquote {
+    margin: 1em 0;
+    padding: var(--editor-spacing-sm) var(--editor-spacing-md);
+    background: var(--editor-blockquote-bg);
+    border-left: 4px solid var(--editor-blockquote-border);
+    border-radius: var(--editor-radius-sm);
+    color: var(--editor-blockquote-text);
+    font-style: italic;
+
+    p {
+      margin: 0.5em 0;
+    }
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+/* ==================== 分隔线 ==================== */
+.vditor-ir {
+  hr {
+    margin: 2em 0;
+    border: none;
+    border-top: 2px solid var(--editor-toolbar-border);
+    opacity: 0.5;
+  }
+}
+
+/* ==================== 链接样式 ==================== */
+.vditor-ir {
+  a {
+    color: var(--editor-link);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all var(--editor-transition-fast);
+
+    &:hover {
+      color: var(--editor-link-hover);
+      border-bottom-color: var(--editor-link-hover);
+    }
+  }
+}
+
+/* ==================== 表格样式 ==================== */
+.vditor-ir {
+  table {
+    width: 100%;
+    margin: 1em 0;
+    border-collapse: collapse;
+    border: 1px solid var(--editor-table-border);
+    border-radius: var(--editor-radius-md);
+    overflow: hidden;
+  }
+
+  thead {
+    background: var(--editor-table-header-bg);
+  }
+
+  th {
+    padding: var(--editor-spacing-sm) var(--editor-spacing-md);
+    text-align: left;
+    font-weight: 600;
+    color: var(--editor-text);
+    border-bottom: 2px solid var(--editor-table-border);
+  }
+
+  td {
+    padding: var(--editor-spacing-sm) var(--editor-spacing-md);
+    border-bottom: 1px solid var(--editor-table-border);
+    color: var(--editor-text);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: var(--editor-table-row-hover);
+  }
+
+  // 表格内的代码
+  td code, th code {
+    font-size: 0.85em;
+  }
+}
+
+/* ==================== 图片样式 ==================== */
+.vditor-ir {
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--editor-radius-md);
+    margin: 1em 0;
+    box-shadow: var(--editor-shadow-sm);
+  }
+}
+
+/* ==================== 光标闪烁动画 ==================== */
+.vditor-ir {
+  .vditor-ir__marker--pre,
+  .vditor-ir__marker--link {
+    color: var(--editor-text-tertiary);
+  }
+}
+
+/* ==================== 空内容提示 ==================== */
+.vditor-ir:empty::before {
+  content: attr(placeholder);
+  color: var(--editor-placeholder);
+  pointer-events: none;
+}

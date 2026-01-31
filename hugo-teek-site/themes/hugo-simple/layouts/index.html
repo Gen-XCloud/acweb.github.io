@@ -1,0 +1,63 @@
+{{ define "main" }}
+
+{{ partial "hero.html" . }}
+
+<div class="container">
+    <div class="article-list">
+        {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" (slice "docs" "posts")) 10 }}
+
+        {{ range $index, $page := $paginator.Pages }}
+        {{ $coverImg := .Params.coverImg | default .Site.Params.defaultCoverImage }}
+        <article class="article-card">
+            <img src="{{ $coverImg }}"
+                 alt="{{ .Title }}"
+                 class="article-image"
+                 {{ if gt $index 2 }}loading="lazy"{{ end }}>
+            <a href="{{ .RelPermalink }}" class="card-link">
+                <div class="article-content">
+                    <h2 class="card-title">{{ .Title }}</h2>
+                    <div class="card-meta">
+                        <span class="meta-date">{{ .Date.Format "2006-01-02" }}</span>
+                        {{ if .Params.categories }}
+                        <span class="meta-separator">·</span>
+                        <span class="meta-category">{{ index .Params.categories 0 }}</span>
+                        {{ end }}
+                    </div>
+                    {{ $description := "" }}
+                    {{ if .Description }}
+                      {{ $description = .Description }}
+                    {{ else if .Plain }}
+                      {{ $description = .Plain | truncate 100 }}
+                    {{ end }}
+                    {{ if $description }}
+                    <p class="article-excerpt">{{ $description }}</p>
+                    {{ end }}
+                    {{ if .Params.tags }}
+                    <div class="article-tags">
+                        {{ range first 3 .Params.tags }}
+                        <span class="article-tag">{{ . }}</span>
+                        {{ end }}
+                    </div>
+                    {{ end }}
+                </div>
+            </a>
+        </article>
+        {{ end }}
+
+        {{ if gt $paginator.TotalPages 1 }}
+        <div class="pagination">
+            {{ if $paginator.HasPrev }}
+            <a href="{{ $paginator.Prev.URL }}" class="pagination-btn pagination-prev">← 上一页</a>
+            {{ end }}
+
+            <span class="pagination-info">{{ $paginator.PageNumber }} / {{ $paginator.TotalPages }}</span>
+
+            {{ if $paginator.HasNext }}
+            <a href="{{ $paginator.Next.URL }}" class="pagination-btn pagination-next">下一页 →</a>
+            {{ end }}
+        </div>
+        {{ end }}
+    </div>
+</div>
+
+{{ end }}

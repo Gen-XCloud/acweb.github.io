@@ -1,0 +1,31 @@
+{{- $rawText := .Text -}}
+{{- $trimmedText := $rawText | replaceRE "\r\n" "\n" | trim "\n" -}}
+{{- $lines := split $trimmedText "\n" -}}
+{{- $first := index $lines 0 | default "" -}}
+{{- $definitions := dict
+    "[!TIP]"       (dict "class" "tip"       "title" "提示")
+    "[!NOTE]"      (dict "class" "info"      "title" "提示")
+    "[!INFO]"      (dict "class" "info"      "title" "信息")
+    "[!WARNING]"   (dict "class" "warning"   "title" "警告")
+    "[!CAUTION]"   (dict "class" "warning"   "title" "注意")
+    "[!DANGER]"    (dict "class" "danger"    "title" "危险")
+    "[!SUCCESS]"   (dict "class" "tip"       "title" "成功")
+    "[!IMPORTANT]" (dict "class" "important" "title" "重要")
+    "[!DETAILS]"   (dict "class" "details"   "title" "详情")
+  -}}
+{{- $match := index $definitions $first -}}
+{{- if $match -}}
+  {{- $body := delimit (slice $lines 1) "\n" -}}
+  <div class="custom-block {{ $match.class }}" {{ if eq $match.class "details" }}data-collapsed="true"{{ end }}>
+    <p class="custom-block-title">{{ $match.title }}</p>
+    {{- if eq $match.class "details" -}}
+      <div class="custom-block-content">{{ $body | markdownify }}</div>
+    {{- else -}}
+      {{ $body | markdownify }}
+    {{- end -}}
+  </div>
+{{- else -}}
+  <blockquote class="tk-blockquote">
+    {{ $rawText | safeHTML }}
+  </blockquote>
+{{- end -}}

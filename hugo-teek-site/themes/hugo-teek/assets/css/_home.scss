@@ -1,0 +1,841 @@
+// ========================================
+// Home Page Styles
+// ========================================
+// Home page
+.home-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden; // 中文注释：防止整个页面横向溢出（保持不变，只防止页面级别的溢出）
+  box-sizing: border-box;
+  position: relative; // 中文注释：建立定位上下文
+
+  // Full Screen Hero Section
+  .hero-section-fullscreen {
+    position: relative;
+    width: 100vw;
+    min-height: 100vh;  // CLS 优化：确保容器始终撑满视口，防止布局跳动
+    height: 100vh;
+    // 完全撑满视口,从屏幕顶部开始(Header是fixed覆盖在上面)
+    margin: 0;
+    padding: 0;
+    padding-top: calc(var(--vp-nav-height, 64px) + 32px); // 确保内容不被导航遮挡
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+
+    // 双层背景实现交叉淡入淡出
+    // 背景层1 - 清晰背景 + 呼吸动画  首页默认背景图片的设计
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: var(--hero-bg-image-1, none); // 默认为空，等待 JS 加载真实壁纸，避免闪烁
+      background-size: cover;
+      background-position: center;
+      opacity: var(--hero-bg-opacity-1, 1);
+      z-index: 0;
+      transition: opacity 3.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+      // 性能优化
+      will-change: opacity;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+
+      // ✨ 呼吸动画（延迟 2 秒启动，避免首屏卡顿）
+      animation: hero-breathing 8s ease-in-out 2s infinite;
+    }
+
+    // 背景层2 - 清晰背景 + 呼吸动画
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: var(--hero-bg-image-2, none);
+      background-size: cover;
+      background-position: center;
+      opacity: var(--hero-bg-opacity-2, 0);
+      z-index: 0;
+      transition: opacity 3.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+      // 性能优化
+      will-change: opacity;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+
+      // ✨ 呼吸动画（延迟 2 秒启动，避免首屏卡顿）
+      animation: hero-breathing 8s ease-in-out 2s infinite;
+    }
+
+    // 🔄 Loading 状态：加载中显示占位渐变背景
+    &.hero-loading {
+      &::before,
+      &::after {
+        opacity: 0 !important;  // 隐藏背景图层
+      }
+
+      // 显示占位渐变（无过渡，立即显示）
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+
+    // ❌ 已移除 .hero-overlay（通过增强文字阴影确保可读性）
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: white;
+      padding: 2rem;
+      // 移除入场动画，让首屏立即显示
+      // animation: fadeInUp 1s ease-out;
+
+      // 顶部渐变遮罩 - 确保导航栏可读
+      &::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 120px;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.5) 0%,
+          rgba(0, 0, 0, 0.3) 50%,
+          transparent 100%
+        );
+        z-index: 999;
+        pointer-events: none;
+      }
+
+      .hero-title {
+        font-size: clamp(3rem, 8vw, 5.5rem);
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        letter-spacing: 1px;
+        line-height: 1.2;
+        // 纯白色标题,更清晰
+        color: #ffffff;
+        text-shadow:
+          0 0 30px rgba(147, 51, 234, 0.6),
+          0 0 60px rgba(6, 182, 212, 0.4),
+          0 4px 20px rgba(0, 0, 0, 0.5);
+        filter: brightness(1.1);
+      }
+
+      .hero-subtitle {
+        font-size: clamp(1.1rem, 3vw, 1.6rem);
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 3rem;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.6);
+        font-weight: 400;
+        letter-spacing: 1.5px;
+
+        &.hero-subtitle--typed {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.4rem 0.9rem;
+          border-radius: 999px;
+          min-height: 2.2em;
+          min-width: 2ch; // 确保只有光标时背景框有合适大小
+          letter-spacing: 1.1px;
+          background: rgba(59, 130, 246, 0.03);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          box-shadow:
+            0 8px 32px rgba(31, 135, 248, 0.03),
+            0 4px 16px rgba(59, 130, 246, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            inset 0 -1px 0 rgba(59, 130, 246, 0.08);
+          border: 1px solid rgba(147, 197, 253, 0.1);
+          overflow: hidden;
+          width: fit-content; // 确保容器宽度完全由内容决定
+
+          @media (max-width: 768px) {
+            // min-width: 280px; // 移除移动端最小宽度，允许根据内容动态调整
+          }
+
+          @media (max-width: 480px) {
+            // min-width: 240px; // 移除小屏幕最小宽度，允许根据内容动态调整
+          }
+
+          // 性能优化：移除扫光效果动画，减少 GPU 占用
+          // &::after {
+          //   content: "";
+          //   position: absolute;
+          //   inset: -30%;
+          //   background: linear-gradient(120deg, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 80%);
+          //   transform: translateX(-120%) skewX(-15deg);
+          //   animation: heroSubtitleSweep 6.2s ease-in-out infinite;
+          //   mix-blend-mode: screen;
+          // }
+        }
+
+        [data-hero-subtitle] {
+          display: inline-flex;
+          min-width: 0; // 移除最小宽度，允许完全收缩
+          width: auto; // 自动宽度
+          white-space: nowrap;
+          font-weight: 500;
+          text-align: center;
+          align-items: center;
+          justify-content: center;
+          color: #ffffff;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-subtitle__caret {
+          display: none;
+          font-weight: 600;
+          background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: heroCaretBlink 1.1s steps(2, start) infinite;
+          align-self: center; // 确保光标垂直居中
+          line-height: 1;
+          vertical-align: middle;
+          margin: 0 auto; // 确保水平居中
+        }
+      }
+
+      .hero-scroll-indicator {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        opacity: 0.8;
+        animation: bounce 2s infinite;
+        cursor: pointer;
+        transition: opacity 0.3s;
+
+        &:hover {
+          opacity: 1;
+        }
+
+        span {
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+
+        svg {
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+
+  // 静态模式（禁用动态壁纸时）
+  .hero-section-fullscreen.hero-static {
+    // 禁用双层背景的动画和切换效果
+    &::before,
+    &::after {
+      animation: none !important;  // 禁用呼吸动画
+      transition: none !important;  // 禁用切换动画
+    }
+
+    // 固定使用第一层背景
+    &::before {
+      opacity: 1 !important;
+    }
+
+    // 隐藏第二层背景
+    &::after {
+      opacity: 0 !important;
+      display: none;
+    }
+  }
+
+  // Content Section
+  .home-content-section {
+    position: relative;
+    background: var(--bg-color);
+    padding: 4rem 1rem;  // 增加左右内边距
+    z-index: 1;  // Ensure content is above hero section
+    width: 100%;
+    max-width: 100%;
+    overflow: visible; // 中文注释：允许卡片光晕显示
+    box-sizing: border-box;
+
+    // 中文注释：为所有子容器添加防溢出
+    > * {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    // 大屏幕增加更多留白
+    @media (min-width: 1440px) {
+      padding: 4rem 2rem;
+    }
+
+    @media (min-width: 1920px) {
+      padding: 4rem 3rem;
+    }
+
+    // ========================================
+    // VitePress标准移动端样式（对称留白）
+    // ========================================
+    @media (max-width: 768px) {
+      padding: 2rem 8px; // 上下2rem，左右8px，控制首页文章卡片左右间距、内容卡片左右间距
+      overflow: visible; // 允许卡片光晕显示
+
+      > .container {
+        padding: 0; // 容器不添加额外padding
+        width: 100%;
+        max-width: 100%;
+        margin: 0; // 确保居中对齐
+      }
+    }
+
+    // 极小屏幕优化
+    @media (max-width: 480px) {
+      padding: 1.5rem 8px; // 更小的屏幕，左右8px，控制首页文章卡片左右间距、内容卡片左右间距
+    }
+  }
+
+  .home-content {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 2rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    position: relative; // 中文注释：建立定位上下文
+    overflow: visible; // 中文注释：允许 box-shadow 光晕显示
+
+    .home-sidebar {
+      order: 1;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow: visible; // 中文注释：允许侧边栏卡片光晕显示
+    }
+
+    .main-column {
+      order: 2;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow: visible; // 中文注释：允许文章卡片光晕显示
+    }
+
+    // 大屏幕优化 - 增加侧边栏宽度
+    @media (min-width: 1440px) {
+      grid-template-columns: 340px 1fr;
+      gap: 2.5rem;
+    }
+
+    @media (min-width: 1920px) {
+      grid-template-columns: 360px 1fr;
+      gap: 3rem;
+    }
+
+    // 中等屏幕
+    @media (max-width: 1024px) {
+      grid-template-columns: 280px 1fr;
+      gap: 1.5rem;
+    }
+
+    // ========================================
+    // VitePress标准移动端布局（单列堆叠）
+    // ========================================
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr; // 单列布局
+      gap: 2rem; // 文章列表和侧边栏之间的间距
+      padding: 0;
+
+      .home-sidebar {
+        order: 2; // 侧边栏在下方
+        width: 100%;
+        margin: 0; // 完全对称，不使用auto
+        padding: 0;
+      }
+
+      .main-column {
+        order: 1; // 主内容在上方
+        width: 100%;
+        margin: 0; // 完全对称，不使用auto
+        padding: 0;
+      }
+    }
+  }
+
+  // ========================================
+  // .post-grid 网格定义已移至 _article-cards-unified.scss
+  // 避免重复定义导致的样式冲突
+  // ========================================
+
+  .section-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .title-icon {
+      font-size: 1.5rem;
+    }
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+
+    &:hover {
+      background: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    }
+  }
+
+  .view-more {
+    text-align: center;
+    margin-top: 2rem;
+  }
+}
+
+// Animations
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes heroCaretBlink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes heroGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes heroSubtitleSweep {
+  0%, 10% {
+    transform: translateX(-120%) skewX(-15deg);
+    opacity: 0;
+  }
+  25%, 35% {
+    transform: translateX(15%) skewX(-15deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(120%) skewX(-15deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(120%) skewX(-15deg);
+    opacity: 0;
+  }
+}
+
+// Hero 背景呼吸动画 - 清晰背景 + 轻微缩放
+@keyframes hero-breathing {
+  0%, 100% {
+    transform: scale(1) translateZ(0);
+  }
+  50% {
+    transform: scale(1.05) translateZ(0);  // 5% 缩放（桌面端）
+  }
+}
+
+// 移动端优化：减少呼吸动画幅度（性能优化）
+@media (max-width: 768px) {
+  @keyframes hero-breathing {
+    0%, 100% {
+      transform: scale(1) translateZ(0);
+    }
+    50% {
+      transform: scale(1.02) translateZ(0);  // 2% 缩放（移动端减半）
+    }
+  }
+}
+
+// 无障碍支持：用户设置"减少动画"时自动禁用
+@media (prefers-reduced-motion: reduce) {
+  .hero-section-fullscreen {
+    &::before,
+    &::after {
+      animation: none !important;
+    }
+  }
+}
+
+// 波浪过渡效果 CSS 变量
+:root {
+  --wave-fill-color-1: hsla(0, 0%, 99%, 0.7);
+  --wave-fill-color-2: hsla(0, 0%, 99%, 0.5);
+  --wave-fill-color-3: hsla(0, 0%, 99%, 0.3);
+  --wave-fill-color-4: var(--bg-color);
+}
+
+.dark-mode {
+  --wave-fill-color-1: rgba(15, 23, 42, 0.85);
+  --wave-fill-color-2: rgba(15, 23, 42, 0.65);
+  --wave-fill-color-3: rgba(15, 23, 42, 0.45);
+  --wave-fill-color-4: var(--bg-color);
+}
+
+// 波浪SVG容器
+.hero-waves {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 12vh;
+  max-height: 150px;
+  min-height: 50px;
+  margin-bottom: -1px;  // 消除底部可能的间隙
+  z-index: 3;  // 在内容和遮罩之上
+  pointer-events: none;  // 不阻挡鼠标事件
+
+  // 波浪层动画 - 性能优化：减少到2层
+  .parallax {
+    .wave-layer {
+      animation: wave-move 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+    }
+
+    .wave-layer:nth-child(1) {
+      animation-delay: -2s;
+      animation-duration: 7s;
+      fill: var(--wave-fill-color-1);
+    }
+
+    .wave-layer:nth-child(2) {
+      animation-delay: -3s;
+      animation-duration: 10s;
+      fill: var(--wave-fill-color-4);  // 使用最终背景色
+    }
+
+    // 性能优化：禁用第3、4层波浪，减少重绘次数
+    .wave-layer:nth-child(3),
+    .wave-layer:nth-child(4) {
+      display: none;
+    }
+  }
+}
+
+// 波浪移动动画
+@keyframes wave-move {
+  0% {
+    transform: translate3d(-90px, 0, 0);
+  }
+  100% {
+    transform: translate3d(85px, 0, 0);
+  }
+}
+
+// ========================================
+// 响应式虚拟分页样式
+// ========================================
+
+// 被分页隐藏的文章
+.article-card-compact.hidden-by-pagination {
+  display: none !important;
+}
+
+// 淡入动画
+.article-card-compact.fade-in-article {
+  animation: fadeInArticle 0.3s ease-out forwards;
+}
+
+@keyframes fadeInArticle {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// "加载更多"按钮容器
+.load-more-wrapper {
+  display: none; // 默认隐藏，由JS控制
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+
+  .load-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
+
+    &:hover {
+      background: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(8, 145, 178, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    .load-more-text {
+      font-weight: 600;
+    }
+
+    .load-more-count {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+  }
+
+  .load-more-tip {
+    display: none;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    padding: 0.75rem;
+  }
+}
+
+// 移动端样式优化
+@media (max-width: 768px) {
+  .load-more-wrapper {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    .load-more-btn {
+      padding: 0.75rem 1.75rem;
+      font-size: 0.9rem;
+      box-shadow: 0 3px 10px rgba(8, 145, 178, 0.25);
+    }
+  }
+}
+
+// ========================================
+// F11 全屏屏保模式样式
+// ========================================
+
+// 退出提示
+.hero-exit-hint {
+  display: none;
+  position: absolute;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  padding: 0.75rem 1.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  animation: fadeInDown 0.5s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+// 全屏模式状态
+body.hero-fullscreen-mode {
+  cursor: none !important;  // 隐藏光标
+
+  // 所有元素都隐藏光标
+  * {
+    cursor: none !important;
+  }
+
+  // 隐藏导航栏
+  .VPNavBar {
+    display: none !important;
+  }
+
+  // 隐藏滚动指示器
+  .hero-scroll-indicator {
+    display: none !important;
+  }
+
+  // 隐藏博客名
+  .hero-title {
+    display: none !important;
+  }
+
+  // 隐藏打字机副标题
+  .hero-subtitle {
+    display: none !important;
+  }
+
+  // 显示退出提示
+  .hero-exit-hint {
+    display: block !important;
+  }
+
+  // Hero区域全屏显示
+  .hero-section-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    z-index: 9999;
+    cursor: none !important;  // 确保Hero区域也隐藏光标
+
+    // 标题和副标题居中
+    .hero-content {
+      padding-top: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+  }
+
+  // 正文区域正常显示（保持滚动能力）
+  .home-content-section {
+    margin-top: 100vh;  // 保持在Hero之下
+  }
+}
+
+// ========================================
+// 全屏壁纸模式（F11 全屏时只显示壁纸）
+// ========================================
+.wallpaper-fullscreen-mode {
+  // 隐藏所有内容，只保留背景壁纸
+  overflow: hidden;
+
+  // 隐藏导航栏
+  .VPNavBar {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.3s ease;
+  }
+
+  // 隐藏 Hero 区域的所有文字和按钮内容
+  .hero-content {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.3s ease;
+  }
+
+  // 隐藏滚动提示
+  .hero-scroll-hint {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  // 隐藏波浪效果，展示完整壁纸
+  .hero-waves {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.3s ease;
+  }
+
+  // 隐藏文章列表区域
+  .home-content-section {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.3s ease;
+  }
+
+  // 隐藏侧边栏
+  .home-sidebar {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.3s ease;
+  }
+
+  // 隐藏页脚
+  .VPFooter {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.3s ease;
+  }
+
+  // Hero 区域全屏显示
+  .hero-section-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    z-index: 9999;
+    cursor: none !important; // 隐藏光标获得更纯净的壁纸效果
+  }
+
+  // 保持背景图片的呼吸动画
+  .hero-section-fullscreen::before,
+  .hero-section-fullscreen::after {
+    animation: hero-breathing 8s ease-in-out 2s infinite !important;
+  }
+}
+

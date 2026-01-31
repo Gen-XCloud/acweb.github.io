@@ -1,0 +1,53 @@
+{{ $cfg := .Site.Params.docCopyright }}
+{{ $enabled := ne (default true $cfg.enabled) false }}
+{{ $show := ne (default true .Params.copyright) false }}
+{{ if and $enabled $show }}
+  {{ $authorName := default (.Site.Params.author.name | default .Site.Author.name) $cfg.authorName }}
+  {{ $authorUrl := default (.Site.Params.author.link | default .Site.Author.link) $cfg.authorUrl }}
+  {{ $siteName := default .Site.Title $cfg.siteName }}
+  {{ $siteUrl := default .Site.BaseURL $cfg.siteUrl }}
+  {{ $licenseName := default "CC BY-NC-SA 4.0" $cfg.licenseName }}
+  {{ $licenseUrl := default "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" $cfg.licenseUrl }}
+  <div class="doc-copyright">
+    <div class="doc-copyright-card">
+      <span class="doc-copyright-symbol">📡</span>
+      <div class="doc-copyright-content">
+        <div class="doc-copyright-item">
+          <span class="doc-copyright-meta">
+            <span class="meta-icon">👤</span>
+            <span class="meta-text">作者</span>:
+          </span>
+          <span class="doc-copyright-info">
+            {{ if $authorUrl }}
+              <a href="{{ $authorUrl }}" target="_blank" rel="noopener">{{ $authorName }}</a>
+            {{ else }}
+              {{ $authorName }}
+            {{ end }}
+          </span>
+        </div>
+        <div class="doc-copyright-item">
+          <span class="doc-copyright-meta">
+            <span class="meta-icon">🔗</span>
+            <span class="meta-text">链接</span>:
+          </span>
+          <span class="doc-copyright-info">
+            {{ $url := cond (isset .Params "url") (.Params.url | absURL) (.Permalink | replaceRE `/$` ``) }}
+            <a href="{{ $url }}" target="_blank" rel="noopener">{{ $url }}</a>
+          </span>
+        </div>
+        <div class="doc-copyright-item">
+          <span class="doc-copyright-meta">
+            <span class="meta-icon">🌐</span>
+            <span class="meta-text">版权</span>:
+          </span>
+          <span class="doc-copyright-info">
+            本站文章除特别声明外，均采用
+            <a href="{{ $licenseUrl }}" target="_blank" rel="noopener">{{ $licenseName }}</a>
+            协议，转载请注明来自
+            <a href="{{ $siteUrl }}" target="_blank" rel="noopener">{{ $siteName }}</a>！
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+{{ end }}

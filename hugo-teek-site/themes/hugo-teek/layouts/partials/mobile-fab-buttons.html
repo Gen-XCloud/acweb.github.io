@@ -1,0 +1,32 @@
+{{/* Mobile Floating Action Buttons (FAB) - 仅在移动端显示 */}}
+<div class="mobile-fab-container">
+  {{/* 左下角 - 文档树/目录按钮 */}}
+  <button class="mobile-fab mobile-fab-menu collapsed" id="mobile-menu-btn" aria-label="打开文档目录" title="文档目录">
+    <svg class="fab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+    <span class="fab-label">目录</span>
+  </button>
+
+  {{/* 右下角 - 本页大纲/TOC按钮 */}}
+  {{- with .TableOfContents }}
+    {{- if in . "<li" }}
+    <button class="mobile-fab mobile-fab-toc collapsed" id="mobile-toc-btn" aria-label="打开本页大纲" title="本页大纲">
+      <svg class="fab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+      </svg>
+      <span class="fab-label">大纲</span>
+    </button>
+    {{- end }}
+  {{- end }}
+
+  {{/* 遮罩层 - 点击关闭弹层 */}}
+  <div class="mobile-fab-overlay" id="mobile-fab-overlay"></div>
+</div>

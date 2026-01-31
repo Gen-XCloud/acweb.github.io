@@ -1,0 +1,12 @@
+links:
+  - name: GitHub
+    icon: github
+    url: https://github.com/yourusername
+
+  - name: Twitter
+    icon: twitter
+    url: https://twitter.com/yourusername
+
+  - name: Email
+    icon: email
+    url: mailto:your@email.com

@@ -1,0 +1,307 @@
+{
+  "groups": [
+    {
+      "title": "我的站点",
+      "sites": [
+        {
+          "name": "One",
+          "desc": "明心静性，爱自己",
+          "img": "https://img.onedayxyy.cn/images/xyy-logo.ico",
+          "link": "https://onedayxyy.cn/"
+        },
+        {
+          "name": "我的公众号",
+          "desc": "公众号",
+          "img": "https://img.onedayxyy.cn/images/wechat-gzh.jpg",
+          "link": "https://img.onedayxyy.cn/images/wechat-gzh.jpg"
+        },
+        {
+          "name": "我的csdn",
+          "desc": "csdn",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/hg-csdn.jpg",
+          "link": "https://blog.csdn.net/weixin_39246554?spm=1000.2115.3001.5343"
+        },
+        {
+          "name": "我的知乎",
+          "desc": "知乎",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/hg-zhihu.jpg",
+          "link": "https://www.zhihu.com/people/foryouone"
+        },
+        {
+          "name": "我的b站",
+          "desc": "b站",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/hg-bzhan.png",
+          "link": "https://space.bilibili.com/386795051"
+        },
+        {
+          "name": "我的相册",
+          "desc": "相册",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/hg-photo.png",
+          "link": "https://photo.onedayxyy.cn/"
+        }
+      ]
+    },
+    {
+      "title": "VitePress网站",
+      "sites": [
+        {
+          "name": "VitePress",
+          "desc": "VitePress官网",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/vitepress-logo-large-logo.svg",
+          "link": "https://vitepress.dev/zh/"
+        },
+        {
+          "name": "vitepress.yiov.top",
+          "desc": "VitePress中文教程",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/vitepress-logo-large-logo.svg",
+          "link": "https://vitepress.yiov.top/"
+        },
+        {
+          "name": "粥里有勺糖",
+          "desc": "你的指尖,拥有改变世界的力量",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/sugarat.top-logo.jpeg",
+          "link": "https://sugarat.top/"
+        },
+        {
+          "name": "查尔斯的知识库",
+          "desc": "专注 & 洞察 & 分享",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/blog.charles7c.top-logo.png",
+          "link": "https://blog.charles7c.top/"
+        },
+        {
+          "name": "无名小栈",
+          "desc": "大佬，新颖，不错的VitePress主题",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/blog.imsyy.top-logo.png",
+          "link": "https://blog.imsyy.top/"
+        },
+        {
+          "name": "云雀Lark",
+          "desc": "类似 无名小栈 风格网站",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/cloudlark.cn.avif",
+          "link": "https://cloudlark.cn/"
+        },
+        {
+          "name": "Lumen Enhanced Theme",
+          "desc": "集成 Vue 功能组件和主题美化的 VitePress 插件",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/lumen.theojs.cn-logo.avif",
+          "link": "https://lumen.theojs.cn/"
+        },
+        {
+          "name": "罗磊的独立博客",
+          "desc": "首页文章卡片式风格",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/luolei.org-logo.png",
+          "link": "https://luolei.org/"
+        },
+        {
+          "name": "APP比比",
+          "desc": "首页文章卡片式风格",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/www.appbeebee.com-logo.png",
+          "link": "https://www.appbeebee.com/"
+        },
+        {
+          "name": "科技语者",
+          "desc": "首页文章卡片式风格",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/blog.uopy.top.png",
+          "link": "https://blog.uopy.top/"
+        }
+      ]
+    },
+    {
+      "title": "静态站点构建器(SSG)",
+      "sites": [
+        {
+          "name": "VitePress",
+          "desc": "由 Vite 和 Vue 驱动的静态站点生成器",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/vitepress-logo-large-logo.svg",
+          "link": "https://vitepress.dev/zh/"
+        },
+        {
+          "name": "VuePress",
+          "desc": "Vue 驱动的静态网站生成器",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/VuePress.png",
+          "link": "https://vuepress.vuejs.org/zh/"
+        },
+        {
+          "name": "hugo",
+          "desc": "The world's fastest framework for building websites",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/gohugo.io.svg",
+          "link": "https://gohugo.io/"
+        },
+        {
+          "name": "Docusaurus",
+          "desc": "快速构建以内容为核心的最佳网站",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/docusaurus.svg",
+          "link": "https://docusaurus.io/"
+        },
+        {
+          "name": "Valaxy",
+          "desc": "下一代静态博客框架",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/Valaxy.svg",
+          "link": "https://valaxy.site/"
+        },
+        {
+          "name": "Rspress",
+          "desc": "快如闪电的静态站点生成器（简单、高性能、易于扩展）",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/rspress.uihtm.com.png",
+          "link": "https://rspress.uihtm.com/zh/"
+        }
+      ]
+    },
+    {
+      "title": "Docusaurus",
+      "sites": [
+        {
+          "name": "Docusaurus官网",
+          "desc": "快速构建以内容为核心的最佳网站",
+          "img": "https://docusaurus.io/img/docusaurus.svg",
+          "link": "https://docusaurus.io/"
+        },
+        {
+          "name": "docus完整汉化版",
+          "desc": "完美汉化版",
+          "img": "https://docusaurus.nodejs.cn/img/docusaurus.svg",
+          "link": "https://docusaurus.nodejs.cn/"
+        },
+        {
+          "name": "愧怍",
+          "desc": "编程爱好者，编写所感兴趣的项目，现主攻js/ts全栈，希望能为开源社区做出一份贡献",
+          "img": "https://kuizuo.cn/img/logo.avif",
+          "link": "https://kuizuo.cn/"
+        },
+        {
+          "name": "Shake",
+          "desc": "世界继续热闹，愿你不变模样，勇敢且自由😃",
+          "img": "https://www.shaking.site/img/head.jpg",
+          "link": "https://www.shaking.site/"
+        },
+        {
+          "name": "太空编程",
+          "desc": "Docusaurus 大佬",
+          "img": "https://spacexcode.com/img/favicon.ico",
+          "link": "https://spacexcode.com/"
+        }
+      ]
+    },
+    {
+      "title": "搜索引擎",
+      "sites": [
+        {
+          "name": "百度",
+          "desc": "百度——全球最大的中文搜索引擎及最大的中文网站，全球领先的人工智能公司",
+          "link": "http://www.baidu.com/",
+          "img": "https://img.tukuppt.com/png_preview/00/10/46/IHk8cns6Re.jpg!/fw/780",
+          "badge": "搜索引擎"
+        },
+        {
+          "name": "Google",
+          "desc": "全球最大的搜索引擎公司",
+          "link": "http://www.google.com/",
+          "img": "https://ts1.cn.mm.bing.net/th/id/R-C.58c0f536ec073452434270fb559c3f8c?rik=SnOUNtUtPLX6ww&riu=http%3a%2f%2fwww.sz4a.cn%2fPublic%2fUploads%2fimage%2f20230303%2f1677839482835474.png&ehk=J1lqoeszPGEWzDOSZQ3JxzXsklfd0QzgrJu6ZVvESKk%3d&risl=&pid=ImgRaw&r=0",
+          "badge": "搜索引擎",
+          "badgeType": "tip"
+        }
+      ]
+    },
+    {
+      "title": "工具",
+      "sites": [
+        {
+          "name": "菜鸟工具",
+          "desc": "菜鸟工具，为开发设计人员提供在线工具，提供在线 PHP、Python、 CSS、JS 调试，中文简繁体转换，进制转换等工具",
+          "img": "https://static.jyshare.com/images/c-runoob-logo.ico",
+          "link": "https://c.runoob.com/"
+        },
+        {
+          "name": "ProcessOn",
+          "desc": "免费在线流程图思维导图",
+          "img": "https://processon.com/favicon.ico",
+          "link": "https://processon.com/"
+        },
+        {
+          "name": "Apifox",
+          "desc": "API 文档、API 调试、API Mock、API 自动化测试",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/Apifox.png",
+          "link": "https://www.apifox.cn/"
+        },
+        {
+          "name": "DeepL 翻译",
+          "desc": "号称全世界最准的翻译",
+          "img": "https://static.deepl.com/img/logo/DeepL_Logo_darkBlue_v2.svg",
+          "link": "https://www.deepl.com/translator/"
+        },
+        {
+          "name": "removebg",
+          "desc": "在线抠图软件，可以去除图片背景",
+          "img": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.remove.bg/zh&size=50",
+          "link": "https://www.remove.bg/zh/"
+        },
+        {
+          "name": "iconify",
+          "desc": "数千个图标，一个统一的框架",
+          "img": "https://icon-sets.iconify.design/favicon.ico",
+          "link": "https://icon-sets.iconify.design/"
+        },
+        {
+          "name": "iconfont",
+          "desc": "iconfont - 国内功能很强大且图标内容很丰富的矢量图标库",
+          "img": "https://img.alicdn.com/imgextra/i4/O1CN01EYTRnJ297D6vehehJ_!!6000000008020-55-tps-64-64.svg",
+          "link": "https://www.iconfont.cn/"
+        }
+      ]
+    },
+    {
+      "title": "图床软件",
+      "sites": [
+        {
+          "name": "PicList",
+          "desc": "图片上传 云存储管理（可完全替换PicGo）",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/piclist.png",
+          "link": "https://piclist.cn/",
+          "badge": "强烈推荐"
+        },
+        {
+          "name": "PicGo",
+          "desc": "图片上传、管理新体验",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/picgo.png",
+          "link": "https://picgo.github.io/PicGo-Doc/"
+        },
+        {
+          "name": "utools",
+          "desc": "里面含有图床插件",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/www.u-tools.cn.png",
+          "link": "https://www.u-tools.cn/"
+        },
+        {
+          "name": "ShareX",
+          "desc": "可以把图片上传到服务器某个目录下同时保存图片到本地",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/getsharex.com.png",
+          "link": "https://getsharex.com/"
+        }
+      ]
+    },
+    {
+      "title": "壁纸网站",
+      "sites": [
+        {
+          "name": "哲风壁纸",
+          "desc": "好看的壁纸网站",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/haowallpaper.com.ico",
+          "link": "https://haowallpaper.com/",
+          "badge": "不错哦"
+        },
+        {
+          "name": "壁纸汇",
+          "desc": "15013+份高清4K / 8K壁纸图片提供免费下载！",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/bizhihui.png",
+          "link": "https://www.bizhihui.com/"
+        },
+        {
+          "name": "hdqwalls.com",
+          "desc": "壁纸",
+          "img": "https://img.onedayxyy.cn/images/Teek/Teekwebsite/hdqwalls.png",
+          "link": "https://hdqwalls.com/"
+        }
+      ]
+    }
+  ]
+}

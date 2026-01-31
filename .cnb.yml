@@ -1,0 +1,85 @@
+master:
+  push:
+    - runner:
+        cpus: 64
+      # imports:	
+      #   - https://cnb.cool/yuwen-gueen/secrets/-/blob/main/wiki.yml        
+      docker:
+        image: docker.cnb.cool/yuwen-gueen/docker-images-chrom/hugo-teek-blog:latest
+      env:
+        # 产物想要存入的分支名
+        DIST_BRANCH: dist
+      stages:
+        - name: set env
+          script: echo -n $(date +%s)
+          exports:
+            info: CUSTOM_ENV_START_TIME
+        - name: check
+          script: |
+            git fetch origin --prune --tags
+        #- name: install
+        #  script: |
+        #    apt update
+        #    apt install -y rsync
+        #    npm i -g pnpm
+        #    pnpm i
+        - name: check branch
+          script: |
+            if ! git ls-remote --exit-code --heads origin ${DIST_BRANCH}; then
+              echo "Remote branch '${DIST_BRANCH}' not found, creating it..."
+              git checkout --orphan ${DIST_BRANCH}
+              git rm -rf .
+              echo "# ${DIST_BRANCH} initialized" > README.md
+              git add README.md
+              git commit -m "chore: init ${DIST_BRANCH} branch"
+              git push origin ${DIST_BRANCH}
+              git checkout -
+            fi
+        - name: 构建
+          script: |
+            make build-docker
+            git fetch origin ${DIST_BRANCH}:${DIST_BRANCH}
+            rm -rf .deploy-tmp
+            git worktree add .deploy-tmp ${DIST_BRANCH}
+            find .deploy-tmp -mindepth 1 \
+              -not -name ".git" \
+              -not -name ".gitkeep" \
+              -exec rm -rf {} + >/dev/null || true
+            cp -rf ./hugo-teek-site/public/* ./.deploy-tmp/
+        - name: 部署
+          script: |
+            cd ./.deploy-tmp/
+            git add -A
+            if ! git diff --cached --quiet; then
+              git commit -m "deploy: $(date '+%Y-%m-%d %H:%M:%S')" --allow-empty || echo "Nothing to commit"
+              git push origin ${DIST_BRANCH}
+            else
+              echo "No changes to deploy"
+            fi
+            cd ..
+            if [ -d ./.deploy-tmp/.git ]; then
+              git worktree remove .deploy-tmp --force
+            fi
+        - name: ⏱️ 计算耗时
+          script: |
+            # 计算耗时
+            end_time=$(date +%s)
+            duration=$((end_time - $CUSTOM_ENV_START_TIME))
+            minutes=$((duration / 60))
+            seconds=$((duration % 60))
+            time_str="${minutes}分${seconds}秒"
+            echo -n ${time_str}
+          exports:
+            info: CUSTOM_ENV_BUILD_TIME
+            
+#        - name: 钉钉通知
+#          image: docker.cnb.cool/yuwen-gueen/docker-images-chrom/tencentcom-dingtalk-bot-msg:latest_amd64
+#          settings:
+#            content: "「Hugo-Teek Blog」发布完成，耗时: ${CUSTOM_ENV_BUILD_TIME}"
+#            c_type: "text" # 支持: text, markdown, link, actionCard, multiActionCard, feedCard
+#            secret: $DINGDING_SECRET
+#            webhook: $DINGDING_WEBHOOK
+#            isAtAll: false
+#            debug: false # 新增: 是否启用调试模式       
+include:
+- .cnb/vscode.yml                 

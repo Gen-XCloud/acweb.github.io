@@ -1,0 +1,10 @@
+{{- /*
+  公众号解锁功能 - JSON输出模板
+  生成包含完整文章内容的JSON文件，用于解锁后懒加载
+*/ -}}
+{
+  "permalink": {{ .Permalink | jsonify }},
+  "title": {{ .Title | jsonify }},
+  "content": {{ .Content | jsonify }},
+  "date": {{ .Date.Format "2006-01-02" | jsonify }}
+}

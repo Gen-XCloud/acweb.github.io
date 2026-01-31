@@ -1,0 +1,637 @@
+// ========================================
+// VitePress Theme Teek Code Block Style
+// 完全复刻 vitepress-theme-teek-1.5.1 的代码块样式
+// ========================================
+
+:root {
+  --tk-code-block-fold-height: 40px;
+  --tk-code-block-lang-transform: uppercase;
+  --tk-code-block-collapse-height: 700px;
+  --tk-code-block-overlay-height: 400px;
+}
+
+// ========================================
+// VitePress 图标（SVG Data URI）
+// ========================================
+:root {
+  /* clipboard - 亮色模式 */
+  --vp-icon-copy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='rgba(60,60,67,1)' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3C/svg%3E");
+  /* clipboard-copy - 已复制 */
+  --vp-icon-copied: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='rgba(60,60,67,1)' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E");
+}
+
+.dark-mode {
+  /* clipboard - 暗色模式 */
+  --vp-icon-copy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='rgba(223,223,214,1)' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3C/svg%3E");
+  /* clipboard-copy - 已复制 */
+  --vp-icon-copied: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='rgba(223,223,214,1)' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E");
+}
+
+// ========================================
+// 代码块主容器
+// ========================================
+.vp-doc div[class*="language-"],
+.highlight,
+div[class*="language-"] {
+  position: relative;
+  margin: 16px 0;
+  background: #F4F1FF !important;  // 淡紫色背景（编辑器风格）- 强制覆盖
+  border-radius: 8px;
+  overflow-y: hidden;  // 禁止垂直滚动（折叠时隐藏超出内容）
+  overflow-x: auto;    // 保持水平滚动（用于长代码行）
+  touch-action: pan-x;  // 只允许横向滑动手势，覆盖全局 pan-y
+  // 性能优化：使用 max-height 代替 height，减少重排
+  // 使用更快的缓动曲线 easeInOutCubic 提升流畅度
+  transition: max-height 0.5s cubic-bezier(0.65, 0, 0.35, 1), background-color 0.3s;
+  will-change: max-height;  // 提示浏览器优化
+  // 隔离重排范围，避免影响页面其他元素
+  contain: layout style paint;
+  // 启用GPU硬件加速
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);  // 浅色阴影，适配亮色背景
+
+  // 🆕 初始化时禁用动画，避免刷新时看到折叠动画
+  &.initializing {
+    transition: none !important;
+
+    .code-block-overlay {
+      transition: none !important;
+    }
+  }
+
+  // 🆕 移动端增加底部间距，确保"查看更多"按钮完全可见
+  @media (max-width: 960px) {
+    margin-bottom: 24px;
+    padding-bottom: 8px;
+  }
+
+  @media (max-width: 640px) {
+    margin-bottom: 28px;
+    padding-bottom: 10px;
+  }
+
+  // 代码内容区域需要上边距，为三个圆点和语言标签留出空间
+  pre,
+  .vp-code {
+    padding: var(--tk-code-block-fold-height) 0 24px 0; // ◀️ 增加底部内边距，确保代码块最后一行距离底部边缘有12px空白
+    margin: 0;
+    background: transparent;
+  }
+
+  // 行号容器
+  .line-numbers-wrapper {
+    margin-top: var(--tk-code-block-fold-height);
+    padding-top: 0;
+  }
+
+  // ========================================
+  // macOS 风格三个圆点（红黄绿）
+  // ========================================
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: calc(var(--tk-code-block-fold-height) / 2);
+    left: 14px;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fc625d;
+    box-shadow:
+      20px 0 #fdbc40,
+      40px 0 #35cd4b;
+    z-index: 3;
+  }
+
+  // ========================================
+  // 语言标签
+  // ========================================
+  &::after {
+    content: attr(data-lang);
+    position: absolute;
+    z-index: 3;
+    top: calc(var(--tk-code-block-fold-height) / 2);
+    left: 75px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: var(--vp-c-text-1);
+    text-transform: var(--tk-code-block-lang-transform);
+    font-weight: 700;
+    width: fit-content;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  // ========================================
+  // 复制按钮（VitePress 风格）
+  // ========================================
+  .copy-code-button {
+    position: absolute;
+    z-index: 3;
+    top: calc(var(--tk-code-block-fold-height) / 2);
+    right: 36px;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    background-image: var(--vp-icon-copy);
+    background-size: 14px;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.25s, transform 0.2s;
+
+    span {
+      display: none; // 隐藏文字，只显示图标
+    }
+
+    &.copied {
+      background-image: var(--vp-icon-copied);
+      animation: copySuccess 0.3s ease-in-out;
+    }
+
+    &:hover {
+      opacity: 0.8;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+  }
+
+  // 复制成功动画
+  @keyframes copySuccess {
+    0%, 100% {
+      transform: translateY(-50%) scale(1);
+    }
+    50% {
+      transform: translateY(-50%) scale(1.2);
+    }
+  }
+
+  // ========================================
+  // 复制提示（Toast）
+  // ========================================
+  .copy-toast {
+    // 样式已在 JS 中内联定义，这里添加一些增强
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    // 为了让动画更流畅，添加 will-change
+    will-change: opacity, transform;
+  }
+
+  // ========================================
+  // 折叠/展开箭头
+  // ========================================
+  .code-arrow {
+    position: absolute;
+    z-index: 3;
+    top: calc(var(--tk-code-block-fold-height) / 2);
+    right: 14px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    user-select: none;
+    color: var(--vp-c-text-2);
+    transition: all var(--tk-transition-duration, 0.3s);
+
+    &:hover {
+      color: var(--vp-c-text-1);
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+      display: block;
+    }
+
+    // 折叠状态下旋转 90 度
+    &.fold {
+      transform: rotate(90deg) translateX(-50%);
+    }
+  }
+
+  // ========================================
+  // 展开遮罩层（底部渐变 + "查看更多"文字）
+  // ========================================
+  .code-block-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+
+    // 🆕 移动端增加高度，更易看到和点击
+    @media (max-width: 960px) {
+      height: 80px;
+    }
+
+    @media (max-width: 640px) {
+      height: 90px;
+    }
+
+    background: linear-gradient(rgba(10, 10, 10, 0), rgba(10, 10, 10, 0.95));
+    z-index: 10;
+    display: flex; // 始终保持flex布局
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 20px; // VitePress 原版字体大小
+    font-weight: 500;
+    padding: 0 24px;
+
+    // 默认隐藏状态（使用 opacity 和 visibility 实现平滑过渡）
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    // 统一过渡时间和缓动函数，与容器高度变化同步
+    transition:
+      opacity 0.5s cubic-bezier(0.65, 0, 0.35, 1),
+      visibility 0.5s cubic-bezier(0.65, 0, 0.35, 1),
+      color 0.2s ease;
+
+    // 可见状态
+    &.visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    &:hover {
+      color: #ffffff;
+    }
+
+    .overlay-icon {
+      margin-left: 6px;
+      font-size: 18px;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+      margin-left: 8px;
+    }
+  }
+}
+
+// ========================================
+// 代码内容样式
+// ========================================
+.vp-doc div[class*="language-"] pre code,
+.highlight pre code,
+div[class*="language-"] pre code {
+  display: block;
+  background: transparent;
+  font-family: 'Fira Code', 'JetBrains Mono', 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--vp-c-text-1);
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  tab-size: 2;
+}
+
+// ========================================
+// Chroma 内联行号样式 (lineNumbersInTable = false)
+// 使用VitePress风格的内联行号，行号和代码天然对齐
+// ========================================
+
+// 内联行号基础样式
+.highlight .ln,
+.highlight .lnt,
+.chroma .ln,
+.chroma .lnt {
+  display: inline-block;
+  width: 32px;           // 固定宽度
+  margin-right: 12px;    // 与代码的间距
+  padding-right: 8px;    // 右边距
+  text-align: right;     // 右对齐
+  color: var(--vp-code-line-number-color, rgba(255, 255, 255, 0.3));
+  user-select: none;     // 禁止选中行号
+  border-right: 1px solid var(--vp-code-block-divider-color, rgba(255, 255, 255, 0.15));
+  // 行号和代码使用相同的字体设置，确保对齐
+  font-family: var(--vp-font-family-mono, 'Fira Code', 'Monaco', 'Menlo', monospace);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+// 暗色模式行号颜色
+.dark-mode .highlight .ln,
+.dark-mode .highlight .lnt,
+.dark-mode .chroma .ln,
+.dark-mode .chroma .lnt {
+  color: rgba(255, 255, 255, 0.35);
+  border-right-color: rgba(255, 255, 255, 0.15);
+}
+
+// 亮色模式行号颜色
+html:not(.dark-mode) .highlight .ln,
+html:not(.dark-mode) .highlight .lnt,
+html:not(.dark-mode) .chroma .ln,
+html:not(.dark-mode) .chroma .lnt {
+  color: rgba(0, 0, 0, 0.35);
+  border-right-color: rgba(0, 0, 0, 0.1);
+}
+
+// ========================================
+// 代码行高亮（类似 VitePress）
+// ========================================
+.vp-doc div[class*="language-"],
+.highlight,
+div[class*="language-"] {
+  // Chroma 自动生成的高亮行样式
+  .hl {
+    background-color: var(--code-line-highlight);
+    display: block;
+    margin: 0 -24px;
+    padding: 0 24px;
+    width: calc(100% + 48px);
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--vp-c-brand-1, rgba(59, 130, 246, 0.8));
+    }
+  }
+
+  // 行号表格中的高亮行
+  .lntable .hl {
+    display: table-row;
+    margin: 0;
+    padding: 0;
+    width: auto;
+
+    td {
+      background-color: var(--code-line-highlight);
+    }
+
+    td:first-child::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--vp-c-brand-1, rgba(59, 130, 246, 0.8));
+    }
+  }
+
+  // 支持多行高亮
+  .highlighted-lines {
+    .line {
+      &.highlighted {
+        background-color: var(--code-line-highlight);
+        display: block;
+        margin: 0 -24px;
+        padding: 0 24px;
+        width: calc(100% + 48px);
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 3px;
+          background: var(--vp-c-brand-1, rgba(59, 130, 246, 0.8));
+        }
+      }
+    }
+  }
+
+  // 代码diff样式（类似 GitHub）
+  .gd {
+    // 删除的行
+    background-color: rgba(248, 81, 73, 0.15);
+    display: block;
+    margin: 0 -24px;
+    padding: 0 24px;
+    width: calc(100% + 48px);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: rgba(248, 81, 73, 0.8);
+    }
+  }
+
+  .gi {
+    // 添加的行
+    background-color: rgba(52, 211, 153, 0.15);
+    display: block;
+    margin: 0 -24px;
+    padding: 0 24px;
+    width: calc(100% + 48px);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: rgba(52, 211, 153, 0.8);
+    }
+  }
+}
+
+// ========================================
+// 移动端优化
+// ========================================
+@media (max-width: 640px) {
+  .vp-doc div[class*="language-"],
+  .highlight,
+  div[class*="language-"] {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 0;
+
+    // 缩小macOS圆点
+    &::before {
+      width: 10px;
+      height: 10px;
+      left: 12px;
+      box-shadow:
+        16px 0 #fdbc40,
+        32px 0 #35cd4b;
+    }
+
+    // 缩小语言标签并调整位置
+    &::after {
+      font-size: 14px;
+      left: 58px;
+    }
+
+    .copy-code-button {
+      right: 28px;
+    }
+
+    pre code {
+      padding: 0 16px 16px;
+    }
+
+    // 移动端高亮行样式调整
+    .hl,
+    .highlighted-lines .line.highlighted,
+    .gd,
+    .gi {
+      margin: 0 -16px;
+      padding: 0 16px;
+      width: calc(100% + 32px);
+    }
+  }
+}
+
+// ========================================
+// 暗色模式特殊处理
+// ========================================
+.dark-mode {
+  .vp-doc div[class*="language-"],
+  .highlight,
+  div[class*="language-"] {
+    background: #262727 !important;  // 暗色模式保持深色背景 - 强制覆盖
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);  // 暗色模式使用更深的阴影
+  }
+}
+
+// ========================================
+// Chroma 语法高亮颜色
+// 注意: 颜色现在由 _code-highlight-dual-theme.scss 通过 CSS 变量控制
+// 这里保留结构，实际颜色会被 CSS 变量覆盖
+// ========================================
+
+// ========================================
+// 额外的强制覆盖 - 确保浅青色背景生效
+// ========================================
+.chroma,
+pre.chroma,
+.highlight > pre,
+.highlight > .chroma {
+  background: #F4F1FF !important;
+}
+
+.dark-mode .chroma,
+.dark-mode pre.chroma,
+.dark-mode .highlight > pre,
+.dark-mode .highlight > .chroma {
+  background: #262727 !important;
+}
+
+// ========================================
+// 移动端响应式优化（内联行号模式）
+// ========================================
+@media (max-width: 960px) {
+  // 代码块容器不超出屏幕
+  .vp-doc div[class*="language-"],
+  .highlight,
+  div[class*="language-"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    // 容器不滚动，完全隐藏溢出（修复移动端下拉空白问题）
+    overflow-y: hidden !important;  // 禁止垂直滚动
+    overflow-x: auto !important;    // 保持水平滚动
+    touch-action: pan-x !important;  // 移动端强制横向滑动，覆盖全局 pan-y
+    box-sizing: border-box !important;
+    position: relative !important;
+
+    // 工具栏元素确保在容器内绝对定位
+    &::before,
+    &::after {
+      position: absolute !important;
+      z-index: 10 !important;
+      pointer-events: none !important;  // 不阻挡代码选择
+    }
+
+    .copy-code-button,
+    .code-arrow {
+      position: absolute !important;
+      z-index: 10 !important;
+    }
+
+    // pre 元素是唯一的滚动容器
+    pre,
+    .vp-code {
+      max-width: 100% !important;
+      width: 100% !important;
+      // 内容区域可以横向滚动
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      // -webkit-overflow-scrolling: touch;  // 移除：导致移动端折叠代码块仍可垂直滚动
+      box-sizing: border-box !important;
+
+      code {
+        display: block !important;
+        min-width: 100% !important;
+        width: max-content !important;
+        font-size: 13px !important;
+        line-height: 1.6 !important;
+      }
+    }
+
+    // diff行和高亮行不超出
+    .gd,
+    .gi,
+    .hl {
+      width: auto !important;
+      max-width: none !important;
+    }
+  }
+
+  // 移动端内联行号样式（与代码同步）
+  .highlight .ln,
+  .highlight .lnt,
+  .chroma .ln,
+  .chroma .lnt {
+    width: 28px;
+    margin-right: 8px;
+    padding-right: 6px;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+  }
+}
+
+// 小屏幕进一步优化
+@media (max-width: 640px) {
+  .vp-doc div[class*="language-"],
+  .highlight,
+  div[class*="language-"] {
+    pre code {
+      font-size: 12px !important;
+      line-height: 1.5 !important;
+    }
+  }
+
+  // 小屏幕内联行号样式（与代码同步）
+  .highlight .ln,
+  .highlight .lnt,
+  .chroma .ln,
+  .chroma .lnt {
+    width: 24px;
+    margin-right: 6px;
+    padding-right: 4px;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+  }
+}

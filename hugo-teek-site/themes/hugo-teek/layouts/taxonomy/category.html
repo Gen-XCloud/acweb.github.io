@@ -1,0 +1,36 @@
+{{ define "main" }}
+<div class="taxonomy-page categories-page">
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">
+        <span class="page-icon">📁</span>
+        {{ .Title }}
+      </h1>
+      <p class="page-description">共 {{ len .Pages }} 篇文章</p>
+    </div>
+
+    <!-- 分类选择器 -->
+    <div class="taxonomy-selector">
+      <a href="/categories/" class="taxonomy-item">
+        <span class="taxonomy-name">← 返回所有分类</span>
+      </a>
+      {{ range .Site.Taxonomies.categories.ByCount }}
+      <a href="{{ .Page.RelPermalink }}"
+         class="taxonomy-item{{ if eq $.Title .Page.Title }} active{{ end }}">
+        <span class="taxonomy-name">{{ .Page.Title }}</span>
+        <span class="taxonomy-count">{{ .Count }}</span>
+      </a>
+      {{ end }}
+    </div>
+
+    <!-- 文章列表 -->
+    <div class="taxonomy-articles">
+      <div class="post-grid">
+        {{ range .Pages.ByPublishDate.Reverse }}
+        {{ partial "article-card-compact.html" . }}
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

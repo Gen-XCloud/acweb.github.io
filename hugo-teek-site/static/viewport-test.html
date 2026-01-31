@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>视口尺寸测试 - Viewport Test</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: white;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .info-group {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+    }
+
+    .info-group h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #ffd700;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    .info-value {
+      font-weight: 700;
+      font-size: 18px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px 12px;
+      border-radius: 8px;
+    }
+
+    .highlight {
+      background: linear-gradient(90deg, #ff6b6b, #ffd93d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .media-query-status {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .mq-active {
+      background: rgba(76, 217, 100, 0.3);
+      border: 2px solid #4cd964;
+    }
+
+    .mq-inactive {
+      background: rgba(255, 59, 48, 0.3);
+      border: 2px solid #ff3b30;
+    }
+
+    .refresh-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .refresh-btn:active {
+      transform: scale(0.98);
+    }
+
+    .warning {
+      background: rgba(255, 149, 0, 0.2);
+      border: 2px solid #ff9500;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📱 视口尺寸测试</h1>
+
+    <div class="warning" id="warning" style="display: none;">
+      ⚠️ 检测到视口宽度在 769px - 960px 之间，可能受到 100vw 问题影响！
+    </div>
+
+    <div class="info-group">
+      <h2>🔍 视口尺寸（CSS 像素）</h2>
+      <div class="info-item">
+        <span class="info-label">视口宽度</span>
+        <span class="info-value highlight" id="viewport-width">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">视口高度</span>
+        <span class="info-value" id="viewport-height">-</span>
+      </div>
+    </div>
+
+    <div class="info-group">
+      <h2>📺 屏幕尺寸</h2>
+      <div class="info-item">
+        <span class="info-label">屏幕宽度</span>
+        <span class="info-value" id="screen-width">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">屏幕高度</span>
+        <span class="info-value" id="screen-height">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">设备像素比</span>
+        <span class="info-value" id="device-pixel-ratio">-</span>
+      </div>
+    </div>
+
+    <div class="info-group">
+      <h2>📐 实际物理分辨率</h2>
+      <div class="info-item">
+        <span class="info-label">物理宽度</span>
+        <span class="info-value" id="physical-width">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">物理高度</span>
+        <span class="info-value" id="physical-height">-</span>
+      </div>
+    </div>
+
+    <div class="info-group">
+      <h2>🎯 媒体查询状态</h2>
+      <div class="info-item">
+        <span class="info-label">≤ 360px</span>
+        <div class="media-query-status" id="mq-360">检测中...</div>
+      </div>
+      <div class="info-item">
+        <span class="info-label">≤ 768px</span>
+        <div class="media-query-status" id="mq-768">检测中...</div>
+      </div>
+      <div class="info-item">
+        <span class="info-label">≤ 960px</span>
+        <div class="media-query-status" id="mq-960">检测中...</div>
+      </div>
+    </div>
+
+    <div class="info-group">
+      <h2>🌐 浏览器信息</h2>
+      <div class="info-item">
+        <span class="info-label">User Agent</span>
+      </div>
+      <div style="font-size: 12px; opacity: 0.8; word-break: break-all; margin-top: 10px;" id="user-agent">-</div>
+    </div>
+
+    <button class="refresh-btn" onclick="updateInfo()">🔄 刷新数据</button>
+  </div>
+
+  <script>
+    function updateInfo() {
+      // 视口尺寸
+      const vpWidth = window.innerWidth;
+      const vpHeight = window.innerHeight;
+      document.getElementById('viewport-width').textContent = vpWidth + 'px';
+      document.getElementById('viewport-height').textContent = vpHeight + 'px';
+
+      // 屏幕尺寸
+      document.getElementById('screen-width').textContent = screen.width + 'px';
+      document.getElementById('screen-height').textContent = screen.height + 'px';
+
+      // 设备像素比
+      const dpr = window.devicePixelRatio || 1;
+      document.getElementById('device-pixel-ratio').textContent = dpr.toFixed(2) + 'x';
+
+      // 物理分辨率
+      document.getElementById('physical-width').textContent = Math.round(vpWidth * dpr) + 'px';
+      document.getElementById('physical-height').textContent = Math.round(vpHeight * dpr) + 'px';
+
+      // User Agent
+      document.getElementById('user-agent').textContent = navigator.userAgent;
+
+      // 媒体查询检测
+      const mq360 = window.matchMedia('(max-width: 360px)').matches;
+      const mq768 = window.matchMedia('(max-width: 768px)').matches;
+      const mq960 = window.matchMedia('(max-width: 960px)').matches;
+
+      updateMediaQueryStatus('mq-360', mq360);
+      updateMediaQueryStatus('mq-768', mq768);
+      updateMediaQueryStatus('mq-960', mq960);
+
+      // 检测是否在问题区间
+      if (vpWidth > 768 && vpWidth <= 960) {
+        document.getElementById('warning').style.display = 'block';
+      } else {
+        document.getElementById('warning').style.display = 'none';
+      }
+    }
+
+    function updateMediaQueryStatus(id, isActive) {
+      const element = document.getElementById(id);
+      if (isActive) {
+        element.textContent = '✅ 已激活';
+        element.className = 'media-query-status mq-active';
+      } else {
+        element.textContent = '❌ 未激活';
+        element.className = 'media-query-status mq-inactive';
+      }
+    }
+
+    // 初始加载
+    updateInfo();
+
+    // 监听窗口大小变化（横竖屏切换等）
+    window.addEventListener('resize', updateInfo);
+    window.addEventListener('orientationchange', function() {
+      setTimeout(updateInfo, 100);
+    });
+  </script>
+</body>
+</html>

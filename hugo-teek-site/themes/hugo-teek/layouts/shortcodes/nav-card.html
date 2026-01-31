@@ -1,0 +1,30 @@
+{{- $cols := .Get "cols" | default "auto" -}}
+{{- $gap := .Get "gap" | default "16" -}}
+{{- $lineClamp := .Get "lineClamp" | default "2" -}}
+{{- $items := .Get "items" | default "" -}}
+{{- $data := $items | transform.Unmarshal | default slice -}}
+
+{{- $colCount := int (default 0 (replace $cols "auto" "0")) -}}
+{{- $columnMin := "240px" -}}
+{{- if gt $colCount 0 -}}
+  {{- $columnMin = printf "calc(100%% / %d - %dpx)" $colCount (mul (sub $colCount 1) (int $gap)) -}}
+{{- end -}}
+
+<div class="tk-nav-card-container">
+  <div class="tk-nav-card index-{{ $cols }}" style="--row-gap: {{ $gap }}px; --column-gap: {{ $gap }}px; --column-min-width: {{ $columnMin }};">
+    {{- range $data }}
+      {{- $link := .link | default "" -}}
+      <a class="tk-nav-card__item" href="{{ $link }}" target="{{ $.Get "target" | default "_blank" }}">
+        {{- with .icon }}
+        <div class="tk-nav-card__item__img">
+          <img src="{{ . }}" alt="{{ $.name | default "导航图标" }}" loading="lazy">
+        </div>
+        {{- end }}
+        <div class="tk-nav-card__item__info">
+          {{- with .name }}<span class="name">{{ . }}</span>{{ end }}
+          {{- with .desc }}<p class="desc" style="--desc-line-clamp: {{ $lineClamp }};">{{ . }}</p>{{ end }}
+        </div>
+      </a>
+    {{- end }}
+  </div>
+</div>

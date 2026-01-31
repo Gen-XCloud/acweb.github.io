@@ -1,0 +1,31 @@
+/**
+ * PostEditor 样式统一入口
+ *
+ * 使用方式：
+ *
+ * 1. 全部导入（桌面端 + 移动端）：
+ *    @import '@/components/PostEditor/styles/index.scss';
+ *
+ * 2. 只导入桌面端样式：
+ *    @import '@/components/PostEditor/styles/desktop.scss';
+ *
+ * 3. 只导入移动端样式：
+ *    @import '@/components/PostEditor/styles/mobile.scss';
+ *
+ * 4. 自定义加载（推荐）：
+ *    @import '@/components/PostEditor/styles/common/variables.scss';
+ *    @import '@/components/PostEditor/styles/desktop/PostEditorLayout.desktop.scss';
+ */
+
+// 导入公共变量和 Mixin
+@import './common/variables.scss';
+
+// 导入桌面端样式
+@import './desktop/PostEditorLayout.desktop.scss';
+@import './desktop/PostMetadataForm.desktop.scss';
+@import './desktop/PostContentEditor.desktop.scss';
+
+// 导入移动端样式
+@import './mobile/PostEditorLayout.mobile.scss';
+@import './mobile/PostMetadataForm.mobile.scss';
+@import './mobile/PostContentEditor.mobile.scss';

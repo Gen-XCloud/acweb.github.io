@@ -1,0 +1,142 @@
+{{- $categories := .Params.categories | default slice -}}
+{{- $tags := .Params.tags | default slice -}}
+
+{{/* 从 docAnalysis.json 获取字数统计 */}}
+{{- $wordCount := 0 -}}
+{{- $readingTime := 0 -}}
+{{/*
+  性能优化：使用缓存的 docAnalysis 数据加载
+  - 原来每个页面都加载 docAnalysis.json（1687次）
+  - 现在使用 partialCached 全局缓存（仅1次）
+  - 预期性能提升：5-10%
+*/}}
+{{- $docAnalysis := partialCached "docs-meta-data-loader.html" . "global" -}}
+{{- if $docAnalysis -}}
+  {{- with .File -}}
+    {{/* 处理路径：去掉 content/docs/ 或 docs/ 前缀 */}}
+    {{- $relativePath := .Path -}}
+    {{- $relativePath = strings.TrimPrefix "content/docs/" $relativePath -}}
+    {{- $relativePath = strings.TrimPrefix "docs/" $relativePath -}}
+    {{- $relativePath = strings.TrimPrefix "content/" $relativePath -}}
+    {{- $relativePath = strings.TrimPrefix ".content-vp-converted/docs/" $relativePath -}}
+
+  {{/*
+    性能优化：使用 wordsMap 进行 O(1) 查询
+    - 原来使用 eachFileWords 数组，需要 O(n) 线性搜索（1687次遍历）
+    - 现在使用 wordsMap Map，直接 O(1) 查询
+    - 预期性能提升：额外 5-10%
+  */}}
+  {{- if $docAnalysis.wordsMap -}}
+    {{- $fileData := index $docAnalysis.wordsMap $relativePath -}}
+    {{- if $fileData -}}
+      {{- $wordCount = $fileData.wordCount -}}
+      {{- $readingTime = $fileData.readingTime -}}
+    {{- end -}}
+  {{- else -}}
+    {{/* 向后兼容：如果没有 wordsMap，使用旧的 eachFileWords 数组 */}}
+    {{- range $docAnalysis.eachFileWords -}}
+      {{- if eq .fileInfo.relativePath $relativePath -}}
+        {{- $wordCount = .wordCount -}}
+        {{- $readingTime = .readingTime -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* 如果 docAnalysis 中没有数据，回退到 Hugo 内置统计 */}}
+{{- if eq $wordCount 0 -}}
+  {{- $wordCount = .WordCount -}}
+  {{- $readingTime = .ReadingTime -}}
+{{- else -}}
+  {{/* 将 readingTime 从 "5m" 转换为数字 5 */}}
+  {{- $readingTime = int (trim $readingTime "m") -}}
+{{- end -}}
+
+<div class="tk-article-meta">
+  {{- with .Date }}
+  <span class="tk-article-meta__item" role="group" aria-label="创建时间">
+    <svg class="tk-article-meta__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="14" height="14" aria-hidden="true">
+      <path fill="currentColor" d="M160 192a64 64 0 0 1 64-64h576a64 64 0 0 1 64 64v640a64 64 0 0 1-64 64H224a64 64 0 0 1-64-64zm64 64v576h576V256z"/>
+      <path fill="currentColor" d="M256 128h64v128h-64zM704 128h64v128h-64z"/>
+    </svg>
+    <time datetime="{{ .Format "2006-01-02" }}" title="创建时间" class="hover-color">{{ .Format "2006-01-02" }}</time>
+  </span>
+  {{- end }}
+
+  {{- if $categories }}
+  {{- $displayCategories := first 1 $categories }}
+  <span class="tk-article-meta__item tk-article-meta__item--expandable" role="group" aria-label="分类">
+    <svg class="tk-article-meta__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="14" height="14" aria-hidden="true">
+      <path fill="currentColor" d="M128 192a64 64 0 0 1 64-64h640a64 64 0 0 1 64 64v640l-224-128-224 128-224-128-96 54.9z"/>
+    </svg>
+    <span class="tk-article-meta__categories">
+      {{- range $index, $cat := $displayCategories -}}
+        <a href="{{ "/categories/" | relLangURL }}{{ $cat | urlize }}/" class="hover-color">{{ $cat }}</a>
+      {{- end -}}
+      {{- if gt (len $categories) 1 }}
+        <span class="tk-article-meta__more" data-type="categories">+{{ sub (len $categories) 1 }}</span>
+        <span class="tk-article-meta__dropdown">
+          {{- range $index, $cat := (after 1 $categories) -}}
+            <a href="{{ "/categories/" | relLangURL }}{{ $cat | urlize }}/" class="tk-article-meta__dropdown-item">{{ $cat }}</a>
+          {{- end -}}
+        </span>
+      {{- end -}}
+    </span>
+  </span>
+  {{- end }}
+
+  {{- if $tags }}
+  {{- $displayTags := first 1 $tags }}
+  <span class="tk-article-meta__item tk-article-meta__item--expandable" role="group" aria-label="标签">
+    <svg class="tk-article-meta__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="14" height="14" aria-hidden="true">
+      <path fill="currentColor" d="M483.2 790.3 861.4 412c1.7-1.7 2.5-4 2.3-6.3l-25.5-301.4c-.7-7.8-6.8-13.9-14.6-14.6L522.2 64.3c-2.3-.2-4.7.6-6.3 2.3L137.7 444.8a8.03 8.03 0 0 0 0 11.3l334.2 334.2c3.1 3.2 8.2 3.2 11.3 0zm62.6-651.7 224.6 19 19 224.6L477.5 694 233.9 450.5l311.9-311.9z"/>
+      <path fill="currentColor" d="M605.958 324.111a55.988 55.988 0 1 0 79.196-79.196 55.988 55.988 0 1 0-79.196 79.196z"/>
+    </svg>
+    <span class="tk-article-meta__tags">
+      {{- range $index, $tag := $displayTags -}}
+        <a href="{{ "/tags/" | relLangURL }}{{ $tag | urlize }}/" class="hover-color">{{ $tag }}</a>
+      {{- end -}}
+      {{- if gt (len $tags) 1 }}
+        <span class="tk-article-meta__more" data-type="tags">+{{ sub (len $tags) 1 }}</span>
+        <span class="tk-article-meta__dropdown">
+          {{- range $index, $tag := (after 1 $tags) -}}
+            <a href="{{ "/tags/" | relLangURL }}{{ $tag | urlize }}/" class="tk-article-meta__dropdown-item">{{ $tag }}</a>
+          {{- end -}}
+        </span>
+      {{- end -}}
+    </span>
+  </span>
+  {{- end }}
+
+  {{- if gt $wordCount 0 }}
+  <span class="tk-article-meta__item" title="文章字数" role="group" aria-label="文章字数">
+    <svg class="tk-article-meta__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="14" height="14" aria-hidden="true">
+      <path fill="currentColor" d="M480 101.248v64h318.72l-281.088 281.024 45.248 45.184 281.024-281.024V546.56h64v-393.6a52.992 52.992 0 0 0-52.96-52.928H480z"/>
+      <path fill="currentColor" d="M192 191.808v640h640V703.36h64v191.808a52.992 52.992 0 0 1-52.928 52.96H180.992A52.992 52.992 0 0 1 128 895.168V179.84a52.992 52.992 0 0 1 52.928-52.96H384v64H192z"/>
+    </svg>
+    <span class="hover-color" aria-label="文章字数">{{ $wordCount }} 字</span>
+  </span>
+  {{- end }}
+
+  {{- if gt $readingTime 0 }}
+  <span class="tk-article-meta__item" title="阅读时长" role="group" aria-label="阅读时长">
+    <svg class="tk-article-meta__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="14" height="14" aria-hidden="true">
+      <path fill="currentColor" d="M480 256a32 32 0 0 1 64 0v256a32 32 0 0 1-16.6 28.2l-176 96a32 32 0 1 1-30.8-56.4L480 523.8z"/>
+      <path fill="currentColor" d="M512 64a448 448 0 1 0 0 896 448 448 0 0 0 0-896m0 64a384 384 0 1 1 0 768 384 384 0 0 1 0-768"/>
+    </svg>
+    <span class="hover-color" aria-label="阅读时长">{{ $readingTime }} 分钟</span>
+  </span>
+  {{- end }}
+
+  {{- if .Site.Params.analytics.busuanzi.enabled }}
+  {{- if .Site.Params.analytics.busuanzi.page_pv }}
+  <span class="tk-article-meta__item" title="阅读量" role="group" aria-label="阅读量">
+    <svg class="tk-article-meta__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="14" height="14" aria-hidden="true">
+      <path fill="currentColor" d="M512 160c320 0 512 352 512 352S832 864 512 864 0 512 0 512s192-352 512-352m0 64c-225.28 0-384.128 208.064-436.8 288 52.608 79.872 211.456 288 436.8 288 225.28 0 384.128-208.064 436.8-288-52.608-79.872-211.456-288-436.8-288m0 64a224 224 0 1 1 0 448 224 224 0 0 1 0-448m0 64a160.192 160.192 0 0 0-160 160c0 88.192 71.744 160 160 160s160-71.808 160-160-71.744-160-160-160"/>
+    </svg>
+    <span class="hover-color" aria-label="阅读量"><span id="busuanzi_page_pv">--</span> 次</span>
+  </span>
+  {{- end }}
+  {{- end }}
+</div>

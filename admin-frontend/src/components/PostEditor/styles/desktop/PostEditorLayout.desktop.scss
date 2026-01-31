@@ -1,0 +1,27 @@
+/**
+ * PostEditorLayout 桌面端样式
+ */
+
+@import '../common/variables.scss';
+
+/* ========== 主容器 ========== */
+.post-editor-layout {
+  width: 100%;
+}
+
+/* ========== 桌面端头部 ========== */
+.edit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  gap: $spacing-small;
+}
+
+/* ========== 表单样式 ========== */
+.el-form-item {
+  margin-bottom: $spacing-base;
+}

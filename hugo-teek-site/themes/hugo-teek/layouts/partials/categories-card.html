@@ -1,0 +1,63 @@
+<div class="tk-widget-card tk-categories">
+  <div class="tk-widget-header">
+    <h3 class="tk-widget-title tk-widget-title-clickable" data-action="show-all-categories">
+      <svg class="tk-widget-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+      </svg>
+      文章分类
+    </h3>
+  </div>
+
+  <div class="tk-carousel-container">
+    <div class="tk-category-list">
+      {{/* 直接从 docAnalysis.json 读取全站分类统计 */}}
+      {{ $docAnalysis := .Site.Data.docAnalysis }}
+      {{ $sortedCategories := $docAnalysis.categoryStats | default slice }}
+
+      {{ $limit := .Site.Params.category.limit | default 5 }}
+      {{ range $index, $category := $sortedCategories }}
+      <div class="tk-category-item{{ if ge $index $limit }} tk-category-hidden{{ end }}">
+        <a href="#category-{{ $category.name | urlize }}"
+           class="tk-category-link filter-category"
+           data-category="{{ $category.name }}"
+           data-count="{{ $category.count }}">
+          <span class="tk-category-name sle">{{ $category.name }}</span>
+          <span class="tk-category-count">{{ $category.count }}</span>
+        </a>
+      </div>
+      {{ end }}
+      {{ if gt (len $sortedCategories) $limit }}
+      <div class="tk-category-item">
+        <button class="tk-category-link tk-category-more" onclick="toggleCategories(this)">
+          <span class="tk-category-name">更多 ...</span>
+        </button>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleCategories(button) {
+  const container = button.closest('.tk-category-list');
+  const hiddenItems = container.querySelectorAll('.tk-category-hidden');
+  const isExpanded = button.classList.contains('tk-expanded');
+
+  if (isExpanded) {
+    hiddenItems.forEach(item => item.style.display = 'none');
+    button.querySelector('.tk-category-name').textContent = '更多 ...';
+    button.classList.remove('tk-expanded');
+  } else {
+    hiddenItems.forEach(item => item.style.display = 'block');
+    button.querySelector('.tk-category-name').textContent = '收起 ...';
+    button.classList.add('tk-expanded');
+  }
+}
+
+// 初始化隐藏状态
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.tk-category-hidden').forEach(item => {
+    item.style.display = 'none';
+  });
+});
+</script>

@@ -1,0 +1,21 @@
+@import 'variables';
+
+// ========================================
+// 方案4: 护眼色（淡绿/深灰绿）
+// ========================================
+
+:root[data-color-scheme="scheme4"]:not([data-theme="dark"]) {
+  --bg-primary: #{$scheme-eye-light-bg};
+  --bg-secondary: #{$scheme-eye-light-bg-secondary};
+  --text-primary: #{$scheme-eye-light-text};
+  --text-secondary: #{$scheme-eye-light-text-secondary};
+  --border-color: #{$scheme-eye-light-border};
+}
+
+:root[data-color-scheme="scheme4"][data-theme="dark"] {
+  --bg-primary: #{$scheme-eye-dark-bg};
+  --bg-secondary: #{$scheme-eye-dark-bg-secondary};
+  --text-primary: #{$scheme-eye-dark-text};
+  --text-secondary: #{$scheme-eye-dark-text-secondary};
+  --border-color: #{$scheme-eye-dark-border};
+}
